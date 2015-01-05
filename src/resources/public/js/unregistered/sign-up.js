@@ -9,10 +9,10 @@ $(document).ready(function () {
         self.firstName = ko.observable('').extend({required: true});
         self.secondName = ko.observable('').extend({required: true});
         self.middleName = ko.observable('').extend({required: true});
-        self.birthdayVal = ko.observable('').extend({required: true});
-        self.birthday = ko.computed(function () {
-            return new Date( self.birthdayVal()).toLocaleString();
-        });
+        self.birthday = ko.observable('').extend({required: true});
+//        self.birthday = ko.computed(function () {
+//            return new Date( self.birthdayVal());
+//        });
 //        self.birthday = ko.observable('').extend({
 //            required: true,
 //            validation: function(value) {
@@ -45,6 +45,7 @@ $(document).ready(function () {
                 type: 'POST',
                 data: {
                     studentJson: ko.toJSON(self)
+//                    birthday: new Date(self.birthdayVal()).getTime()
                 }
             }).done(function () {
                 window.location = '/sign-in';

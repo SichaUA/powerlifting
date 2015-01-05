@@ -1,6 +1,7 @@
 package com.powerlifting.config;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import freemarker.template.TemplateException;
 import jdk.nashorn.internal.parser.JSONParser;
@@ -13,10 +14,14 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Locale;
+import java.util.Properties;
 
 @Configuration
 @EnableWebMvc
@@ -36,12 +41,18 @@ public class WebConfig extends WebMvcConfigurerAdapter{
 
     @Bean FreeMarkerConfigurer freeMarkerConfigurer() {
         final FreeMarkerConfigurationFactory factory = new FreeMarkerConfigurationFactory();
+        factory.setDefaultEncoding("UTF-8");
         factory.setTemplateLoaderPath("/templates");
 
         final FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
         try{
+            Properties properties = new Properties();
+            properties.setProperty("locale", "uk_UA");
+
+            configurer.setDefaultEncoding("UTF-8");
+            configurer.setFreemarkerSettings(properties);
             configurer.setConfiguration(factory.createConfiguration());
-//            configurer.setDefaultEncoding("Windows-1251");
+
         }catch (IOException | TemplateException e) {
             throw new RuntimeException(e);
         }
@@ -54,7 +65,8 @@ public class WebConfig extends WebMvcConfigurerAdapter{
         final FreeMarkerViewResolver freeMarkerViewResolver = new FreeMarkerViewResolver();
 
         // TODO Change this in future
-//        freeMarkerViewResolver.setContentType("text/html");
+
+        freeMarkerViewResolver.setContentType("text/html");
         freeMarkerViewResolver.setCache(false);
         freeMarkerViewResolver.setPrefix("");
         freeMarkerViewResolver.setSuffix(".ftl");
@@ -62,8 +74,12 @@ public class WebConfig extends WebMvcConfigurerAdapter{
         return freeMarkerViewResolver;
     }
 
+//    @Bean Gson serializer() {
+//        return new Gson();
+//    }
+
     @Bean Gson serializer() {
-        return new Gson();
+        return new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
     }
 
     @Bean JsonParser jsonParser() {

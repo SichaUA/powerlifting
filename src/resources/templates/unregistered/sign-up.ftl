@@ -56,8 +56,8 @@
                             <div class="form-group">
                                 <label class="col-sm-2 col-sm-2 control-label">Birthday</label>
                                 <div class="col-sm-10">
-                                        <input id="datepicker" type="text" class="form-control" value="1/1/2000" data-bind="value: birthdayVal">
-                                        <input id="datepicker" type="text" class="form-control" style="visibility: hidden" data-bind="value: birthday">
+                                        <input id="datepicker" type="text" class="form-control" value="1/1/2000" data-bind="value: birthday">
+                                        <#--<input id="datepicker" type="text" class="form-control" style="visibility: hidden" data-bind="value: birthday">-->
                                 </div>
                             </div>
 

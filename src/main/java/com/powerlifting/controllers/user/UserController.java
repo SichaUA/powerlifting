@@ -16,7 +16,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +29,8 @@ public class UserController {
     @Autowired private CompetitionDao competitionDao;
 
     @RequestMapping("/")
-    public ModelAndView homePage(HttpServletRequest httpServletRequest) {
+    public ModelAndView homePage(HttpServletRequest httpServletRequest, HttpServletResponse response) {
+        response.setContentType("text/html; charset=UTF-8");
         ModelAndView modelAndView = new ModelAndView("mainPage");
 
         CommonUtils.addUserToModel(httpServletRequest, modelAndView);
@@ -56,7 +59,7 @@ public class UserController {
 
     @RequestMapping(value = "/new-user", method = RequestMethod.POST)
     @ResponseBody
-    public String newUser(@RequestParam String studentJson)
+    public String newUser(@RequestParam String studentJson/*, @RequestParam String birthday*/)
     {
         final User user = serializer.fromJson(studentJson, User.class);
 

@@ -1,6 +1,7 @@
 package com.powerlifting.controllers.registered.model;
 
-import java.util.Date;
+
+import java.sql.Date;
 
 public class Competition {
     private Integer id;

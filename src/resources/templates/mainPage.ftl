@@ -1,7 +1,9 @@
+<#setting locale="uk_UA">
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/html">
-<head lang="en">
-    <meta charset="UTF-8">
+<html>
+<head>
+    <#--<meta charset="UTF-8">-->
+    <meta pageEncoding="Cp1251" contentType="text/html; charset=utf-8">
     <title>Home</title>
     <!-- Bootstrap core CSS -->
     <link href="libs/css/bootstrap.css" rel="stylesheet">
@@ -16,7 +18,6 @@
 <body>
 <#include "*/menu.ftl">
 
-<div></div>
 
 <section id="main-content">
     <section class="wrapper">

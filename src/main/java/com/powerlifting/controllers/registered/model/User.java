@@ -1,6 +1,6 @@
 package com.powerlifting.controllers.registered.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class User {
     private Integer userId;
