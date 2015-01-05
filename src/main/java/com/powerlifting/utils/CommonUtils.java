@@ -34,7 +34,7 @@ public class CommonUtils {
 
     public static String getRandomBackground() {
         final List<String> files = CommonUtils.getAllFilesInDirectory("D:\\document\\4 курс\\1 семестр\\" +
-                "Дипломна робота\\powerlifting\\powerlifting\\src\\resources\\public\\img\\backgrounds");
+                       "Дипломна робота\\project\\powerlifting\\src\\resources\\public\\img\\backgrounds");
 
         Random random = new Random();
 
