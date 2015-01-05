@@ -1,0 +1,30 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="powerlifting">
+    <output-path>$PROJECT_DIR$/out/artifacts/powerlifting</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="powerlifting" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Gradle: aopalliance-1.0" />
+          <element id="library" level="project" name="Gradle: commons-logging-1.1.3" />
+          <element id="library" level="project" name="Gradle: freemarker-2.3.20" />
+          <element id="library" level="project" name="Gradle: gson-2.2.4" />
+          <element id="library" level="project" name="Gradle: javax.servlet-api-3.1.0" />
+          <element id="library" level="project" name="Gradle: mysql-connector-java-5.1.34" />
+          <element id="library" level="project" name="Gradle: spring-aop-4.1.1.RELEASE" />
+          <element id="library" level="project" name="Gradle: spring-beans-4.1.2.RELEASE" />
+          <element id="library" level="project" name="Gradle: spring-context-4.1.1.RELEASE" />
+          <element id="library" level="project" name="Gradle: spring-context-support-4.1.1.RELEASE" />
+          <element id="library" level="project" name="Gradle: spring-core-4.1.2.RELEASE" />
+          <element id="library" level="project" name="Gradle: spring-expression-4.1.1.RELEASE" />
+          <element id="library" level="project" name="Gradle: spring-jdbc-4.1.2.RELEASE" />
+          <element id="library" level="project" name="Gradle: spring-tx-4.1.2.RELEASE" />
+          <element id="library" level="project" name="Gradle: spring-web-4.1.1.RELEASE" />
+          <element id="library" level="project" name="Gradle: spring-webmvc-4.1.1.RELEASE" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
