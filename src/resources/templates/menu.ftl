@@ -5,6 +5,18 @@
     <a href="/" class="logo"><b>POWERLIFTING</b></a>
 
     <#if user??>
+        <#if user.role == 3>
+            <div class="nav notify-row" id="top_menu">
+                <ul class="nav top-menu">
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="/admin/moderRequests">
+                            <i class="fa fa-users"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </#if>
+
         <div class="top-menu">
             <ul class="nav pull-right top-menu">
                 <li><a class="logout" href="" data-bind="click: logoutFunction.bind()">Logout</a></li>
@@ -24,22 +36,24 @@
         <ul class="sidebar-menu" id="nav-accordion">
 
             <#if user??>
-                <p class="centered"><a href="#"><img src="img/ui-zac.jpg" class="img-circle" width="60"></a></p>
+                <p class="centered"><img src="/img/${user.photo}" class="img-circle" width="60"></p>
                 <h5 class="centered">${user.firstName} ${user.secondName}</h5>
 
                 <li class="sub-menu">
-                    <a href="#">
+                    <a href="/profile">
                         <i class="fa fa-male"></i>
                         <span>Profile</span>
                     </a>
                 </li>
 
-                <li class="sub-menu">
-                    <a href="#">
-                        <i class="fa fa-graduation-cap"></i>
-                        <span>My Competitions</span>
-                    </a>
-                </li>
+                <#if user.role gte 2>
+                    <li class="sub-menu">
+                        <a href="#">
+                            <i class="fa fa-graduation-cap"></i>
+                            <span>My Competitions</span>
+                        </a>
+                    </li>
+                </#if>
 
                 <li class="sub-menu">
                     <a href="/" data-bind="click: logoutFunction.bind()">
@@ -90,13 +104,13 @@
 </aside>
 
 <!-- js placed at the end of the document so the pages load faster -->
-<script src="libs/js/jquery.js"></script>
-<script class="include" type="text/javascript" src="libs/js/jquery.dcjqaccordion.2.7.js"></script>
-<script src="libs/js/jquery.scrollTo.min.js"></script>
-<script src="libs/js/jquery.nicescroll.js" type="text/javascript"></script>
+<script src="/libs/js/jquery.js"></script>
+<script class="include" type="text/javascript" src="/libs/js/jquery.dcjqaccordion.2.7.js"></script>
+<script src="/libs/js/jquery.scrollTo.min.js"></script>
+<script src="/libs/js/jquery.nicescroll.js" type="text/javascript"></script>
 
-<script type="application/javascript" src="libs/js/knockout-3.2.0.js"></script>
-<script type="application/javascript" src="libs/js/knockout.validation.js"></script>
+<script type="application/javascript" src="/libs/js/knockout-3.2.0.js"></script>
+<script type="application/javascript" src="/libs/js/knockout.validation.js"></script>
 <#if user??>
 <script type="application/javascript" src="/js/menu.js"></script>
 </#if>
@@ -105,4 +119,4 @@
 
 
 <!--common script for all pages-->
-<script src="libs/js/common-scripts.js"></script>
+<script src="/libs/js/common-scripts.js"></script>

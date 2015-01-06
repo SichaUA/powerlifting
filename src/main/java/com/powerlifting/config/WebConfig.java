@@ -46,11 +46,11 @@ public class WebConfig extends WebMvcConfigurerAdapter{
 
         final FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
         try{
-            Properties properties = new Properties();
-            properties.setProperty("locale", "uk_UA");
+//            Properties properties = new Properties();
+//            properties.setProperty("locale", "uk_UA");
 
-            configurer.setDefaultEncoding("UTF-8");
-            configurer.setFreemarkerSettings(properties);
+//            configurer.setDefaultEncoding("UTF-8");
+//            configurer.setFreemarkerSettings(properties);
             configurer.setConfiguration(factory.createConfiguration());
 
         }catch (IOException | TemplateException e) {
@@ -66,7 +66,7 @@ public class WebConfig extends WebMvcConfigurerAdapter{
 
         // TODO Change this in future
 
-        freeMarkerViewResolver.setContentType("text/html");
+//        freeMarkerViewResolver.setContentType("text/html");
         freeMarkerViewResolver.setCache(false);
         freeMarkerViewResolver.setPrefix("");
         freeMarkerViewResolver.setSuffix(".ftl");

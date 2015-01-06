@@ -1,6 +1,7 @@
 package com.powerlifting.utils;
 
 import com.powerlifting.controllers.registered.model.User;
+import com.powerlifting.dao.UserDao;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

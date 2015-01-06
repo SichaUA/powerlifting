@@ -1,5 +1,6 @@
 package com.powerlifting.config;
 
+import com.powerlifting.dao.AdminDao;
 import com.powerlifting.dao.CompetitionDao;
 import com.powerlifting.dao.UserDao;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +31,10 @@ public class DatabaseConfig {
 
     @Bean public UserDao userDao(JdbcTemplate jdbcTemplate) {
         return new UserDao(jdbcTemplate);
+    }
+
+    @Bean public AdminDao adminDao(JdbcTemplate jdbcTemplate) {
+        return new AdminDao(jdbcTemplate);
     }
 
     @Bean public CompetitionDao competitionDao(JdbcTemplate jdbcTemplate) {

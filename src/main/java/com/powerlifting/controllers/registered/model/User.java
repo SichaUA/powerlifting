@@ -12,6 +12,8 @@ public class User {
     private Short gender;
     private Date birthday;
     private String photo;
+    private Integer title;
+    private Integer role;
 
     public Integer getUserId() {
         return userId;
@@ -83,5 +85,21 @@ public class User {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public Integer getTitle() {
+        return title;
+    }
+
+    public void setTitle(Integer title) {
+        this.title = title;
+    }
+
+    public Integer getRole() {
+        return role;
+    }
+
+    public void setRole(Integer role) {
+        this.role = role;
     }
 }

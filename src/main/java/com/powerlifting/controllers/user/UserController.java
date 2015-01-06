@@ -95,4 +95,14 @@ public class UserController {
         return "success";
     }
 
+    @RequestMapping("/profile")
+    public ModelAndView profile(HttpServletRequest httpServletRequest, HttpServletResponse response) {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("user/profile");
+
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+
+        return modelAndView;
+    }
+
 }

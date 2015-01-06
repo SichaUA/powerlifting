@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <title>Sign up</title>
     <!-- Bootstrap core CSS -->
-    <link href="libs/css/bootstrap.css" rel="stylesheet">
+    <link href="/libs/css/bootstrap.css" rel="stylesheet">
     <!--external css-->
-    <link href="libs/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="/libs/font-awesome/css/font-awesome.css" rel="stylesheet" />
 
     <!-- Custom styles for this template -->
-    <link href="libs/css/style.css" rel="stylesheet">
-    <link href="libs/css/style-responsive.css" rel="stylesheet">
+    <link href="/libs/css/style.css" rel="stylesheet">
+    <link href="/libs/css/style-responsive.css" rel="stylesheet">
 
-    <link href="libs/css/datepicker.css" rel="stylesheet">
+    <link href="/libs/css/datepicker.css" rel="stylesheet">
 </head>
 <body>
     <#include "*/menu.ftl">
@@ -102,13 +102,13 @@
         </section>
     </section>
 
-    <script type="application/javascript" src="libs/js/knockout-3.2.0.js"></script>
-    <script type="application/javascript" src="libs/js/knockout.validation.js"></script>
+    <script type="application/javascript" src="/libs/js/knockout-3.2.0.js"></script>
+    <script type="application/javascript" src="/libs/js/knockout.validation.js"></script>
     <script type="application/javascript" src="/js/unregistered/sign-up.js"></script>
 
     <#--<script src="libs/js/jquery.js"></script>-->
-    <script src="libs/js/bootstrap.js"></script>
-    <script src="libs/js/bootstrap-datepicker.js"></script>
+    <script src="/libs/js/bootstrap.js"></script>
+    <script src="/libs/js/bootstrap-datepicker.js"></script>
     <script>
         $('#datepicker').datepicker();
     </script>

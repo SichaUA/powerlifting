@@ -2,17 +2,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <#--<meta charset="UTF-8">-->
-    <meta pageEncoding="Cp1251" contentType="text/html; charset=utf-8">
+    <meta charset="UTF-8">
     <title>Home</title>
     <!-- Bootstrap core CSS -->
-    <link href="libs/css/bootstrap.css" rel="stylesheet">
+    <link href="/libs/css/bootstrap.css" rel="stylesheet">
     <!--external css-->
-    <link href="libs/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="/libs/font-awesome/css/font-awesome.css" rel="stylesheet" />
 
     <!-- Custom styles for this template -->
-    <link href="libs/css/style.css" rel="stylesheet">
-    <link href="libs/css/style-responsive.css" rel="stylesheet">
+    <link href="/libs/css/style.css" rel="stylesheet">
+    <link href="/libs/css/style-responsive.css" rel="stylesheet">
 
 </head>
 <body>
