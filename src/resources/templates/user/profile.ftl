@@ -15,7 +15,7 @@
 
 </head>
 <body>
-<#include "*/menu.ftl">
+<#include "*/commonUser/menu.ftl">
 
 
 <section id="main-content">
@@ -24,7 +24,7 @@
         <div class="row mt">
             <div class="col-lg-12">
                 <div class="form-panel">
-                    <form class="form-horizontal style-form" id="user-form" data-bind="submit: newUser">
+                    <form class="form-horizontal style-form">
                         <div class="form-group">
                             <div class="col-md-10">
                                 <h3>${user.secondName} ${user.firstName} ${user.middleName}</h3>

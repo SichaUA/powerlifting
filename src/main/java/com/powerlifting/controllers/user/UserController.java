@@ -8,10 +8,7 @@ import com.powerlifting.dao.UserDao;
 import com.powerlifting.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServlet;
@@ -31,7 +28,7 @@ public class UserController {
     @RequestMapping("/")
     public ModelAndView homePage(HttpServletRequest httpServletRequest, HttpServletResponse response) {
         response.setContentType("text/html; charset=UTF-8");
-        ModelAndView modelAndView = new ModelAndView("mainPage");
+        ModelAndView modelAndView = new ModelAndView("CommonUser/mainPage");
 
         CommonUtils.addUserToModel(httpServletRequest, modelAndView);
 
@@ -43,7 +40,7 @@ public class UserController {
 
     @RequestMapping("/sign-in")
     public ModelAndView signIn() {
-        ModelAndView modelAndView = new ModelAndView("unregistered/sign-in");
+        ModelAndView modelAndView = new ModelAndView("CommonUser/sign-in");
 
         modelAndView.addObject("background", CommonUtils.getRandomBackground());
 
@@ -52,7 +49,7 @@ public class UserController {
 
     @RequestMapping("/sign-up")
     public ModelAndView signUp() {
-        ModelAndView modelAndView = new ModelAndView("unregistered/sign-up");
+        ModelAndView modelAndView = new ModelAndView("CommonUser/sign-up");
 
         return modelAndView;
     }
@@ -103,6 +100,73 @@ public class UserController {
         CommonUtils.addUserToModel(httpServletRequest, modelAndView);
 
         return modelAndView;
+    }
+
+    @RequestMapping("/edit-profile")
+    public ModelAndView editProfile(HttpServletRequest httpServletRequest, HttpServletResponse response) {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("user/editProfile");
+
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+
+        return modelAndView;
+    }
+
+    @RequestMapping("/competitions/all")
+    public ModelAndView allCompetitions(HttpServletRequest httpServletRequest, HttpServletResponse response) {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("CommonUser/competitions");
+
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+
+        List<Competition> competitions = competitionDao.getAllCompetitions();
+        modelAndView.addObject("competitions", competitions);
+
+        return modelAndView;
+    }
+
+    @RequestMapping("/competitions/current")
+    public ModelAndView currentCompetitions(HttpServletRequest httpServletRequest, HttpServletResponse response) {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("CommonUser/competitions");
+
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+
+        List<Competition> competitions = competitionDao.getCurrentCompetitions();
+        modelAndView.addObject("competitions", competitions);
+
+        return modelAndView;
+    }
+
+    @RequestMapping("/competitions/past")
+    public ModelAndView pastCompetitions(HttpServletRequest httpServletRequest, HttpServletResponse response) {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("CommonUser/competitions");
+
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+
+        List<Competition> competitions = competitionDao.getPastCompetitions();
+        modelAndView.addObject("competitions", competitions);
+
+        return modelAndView;
+    }
+
+    @RequestMapping("/competition/{competitionId}")
+    public ModelAndView competition(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest,
+                                    HttpServletResponse response) throws Exception
+    {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("CommonUser/competition");
+
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+
+        Optional<Competition> competition = competitionDao.getCompetition(competitionId);
+        if(competition.isPresent()) {
+            modelAndView.addObject("competition", competition.get());
+            return modelAndView;
+        }
+
+        throw new Exception("Resource not found");
     }
 
 }

@@ -9,6 +9,8 @@ import org.omg.PortableInterceptor.Interceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -85,4 +87,20 @@ public class WebConfig extends WebMvcConfigurerAdapter{
     @Bean JsonParser jsonParser() {
         return new JsonParser();
     }
+
+    /*@Bean JavaMailSenderImpl mailSender () {
+        final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+        javaMailSender.setHost("mail.powerlifting.com");
+
+        return javaMailSender;
+    }
+
+    @Bean SimpleMailMessage templateMessage () {
+        final SimpleMailMessage mailMessage = new SimpleMailMessage();
+
+        mailMessage.setFrom("helpservice@powerlifting.com");
+        mailMessage.setSubject("Registration confirmation");
+
+        return mailMessage;
+    }*/
 }

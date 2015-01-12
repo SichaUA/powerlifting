@@ -9,7 +9,7 @@
             <div class="nav notify-row" id="top_menu">
                 <ul class="nav top-menu">
                     <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="/admin/moderRequests">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="/admin/assignUserToNewStatus">
                             <i class="fa fa-users"></i>
                         </a>
                     </li>
@@ -55,7 +55,7 @@
                     </li>
                 </#if>
 
-                <li class="sub-menu">
+                <li id="logout" class="sub-menu">
                     <a href="/" data-bind="click: logoutFunction.bind()">
                         <i class="fa fa-sign-out"></i>
                         <span>Logout</span>
@@ -80,9 +80,9 @@
                     <span>Competitions</span>
                 </a>
                 <ul class="sub">
-                    <li><a  href="#">All</a></li>
-                    <li><a  href="#">Current</a></li>
-                    <li><a  href="#">Past</a></li>
+                    <li><a  href="/competitions/all">All</a></li>
+                    <li><a  href="/competitions/current">Current</a></li>
+                    <li><a  href="/competitions/past">Past</a></li>
                 </ul>
             </li>
 

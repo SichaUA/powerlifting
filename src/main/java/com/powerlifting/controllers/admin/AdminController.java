@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,23 +21,28 @@ import javax.servlet.http.HttpServletResponse;
 public class AdminController {
     @Autowired private AdminDao adminDao;
 
-    @RequestMapping("/moderRequests")
-    public ModelAndView moderRequests(HttpServletRequest httpServletRequest, HttpServletResponse response) {
+    @RequestMapping("/assignUserToNewStatus")
+    public ModelAndView assignUserToNewStatus(HttpServletRequest httpServletRequest, HttpServletResponse response) {
         response.setContentType("text/html; charset=UTF-8");
-        ModelAndView modelAndView = new ModelAndView("admin/modersRequests");
+        ModelAndView modelAndView = new ModelAndView("admin/assignUserToNewStatus");
 
         CommonUtils.addUserToModel(httpServletRequest, modelAndView);
-
-        modelAndView.addObject("moders", adminDao.getModerRequests());
 
         return modelAndView;
     }
 
-    @RequestMapping(value = "/addModer", method = RequestMethod.POST)
-    public String addModer(@RequestParam String studentJson) {
-        ModelAndView modelAndView = new ModelAndView("admin/modersRequests");
+    @RequestMapping(value = "/new-moder", method = RequestMethod.POST)
+    @ResponseBody
+    public String newModer(@RequestParam String moderEmail) {
+        adminDao.assignUserToNewStatus(moderEmail, 2);
 
-        modelAndView.addObject("moders", adminDao.getModerRequests());
+        return "success";
+    }
+
+    @RequestMapping(value = "/new-admin", method = RequestMethod.POST)
+    @ResponseBody
+    public String newAdmin(@RequestParam String adminEmail) {
+        adminDao.assignUserToNewStatus(adminEmail, 3);
 
         return "success";
     }

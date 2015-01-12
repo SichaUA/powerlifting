@@ -13,11 +13,19 @@ public class AdminDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<User> getModerRequests() {
-        final String sql = "SELECT * " +
-                           "FROM user u " +
-                           "WHERE u.role = 1";
+//    public List<User> getModerRequests() {
+//        final String sql = "SELECT * " +
+//                           "FROM user u " +
+//                           "WHERE u.role = 1";
+//
+//        return jdbcTemplate.query(sql, new UserRowMapper());
+//    }
 
-        return jdbcTemplate.query(sql, new UserRowMapper());
+    public void assignUserToNewStatus(String email, int status) {
+        final String sql = "UPDATE user u " +
+                           "SET u.role = ? " +
+                           "WHERE u.email = ?";
+
+        jdbcTemplate.update(sql, status, email);
     }
 }

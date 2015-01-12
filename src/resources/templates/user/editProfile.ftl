@@ -15,7 +15,7 @@
     <link href="/libs/css/datepicker.css" rel="stylesheet">
 </head>
 <body>
-<#include "*/menu.ftl">
+<#include "*/commonUser/menu.ftl">
 
 <section id="main-content">
     <section class="wrapper">

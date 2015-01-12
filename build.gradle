@@ -20,4 +20,7 @@ dependencies {
     compile "org.springframework:spring-webmvc:4.1.1.RELEASE"
     compile "org.springframework:spring-context-support:4.1.1.RELEASE"
     compile "org.springframework:spring-jdbc:4.1.2.RELEASE"
+
+    compile "javax.mail:mail:1.4.7"
+    compile "jaf:activation:1.0.2"
 }

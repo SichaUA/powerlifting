@@ -10,16 +10,6 @@ $(document).ready(function () {
         self.secondName = ko.observable('').extend({required: true});
         self.middleName = ko.observable('').extend({required: true});
         self.birthday = ko.observable('').extend({required: true});
-//        self.birthday = ko.computed(function () {
-//            return new Date( self.birthdayVal());
-//        });
-//        self.birthday = ko.observable('').extend({
-//            required: true,
-//            validation: function(value) {
-//                return ko.validation.utils.isEmptyVal(val) || moment(val, 'MM/DD/YYYY').isValid();
-//            },
-//            message: 'Please provide a valid date'
-//        });
         self.gender = ko.observable(true).extend({required: true});
         self.password = ko.observable('').extend({required: true});
         self.confirmPassword = ko.observable('').extend({
