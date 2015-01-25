@@ -10,5 +10,6 @@ $(document).ready(function () {
         }
     };
 
-    ko.applyBindings(viewModel, document.getElementById('logout'));
+    ko.applyBindings(viewModel, /*$('#logout-top')*/ document.getElementById('logout-top'));
+    ko.applyBindings(viewModel, /*$('#logout')*/ document.getElementById('logout'));
 });

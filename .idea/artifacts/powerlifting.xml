@@ -24,7 +24,8 @@
           <element id="library" level="project" name="Gradle: spring-web-4.1.1.RELEASE" />
           <element id="library" level="project" name="Gradle: spring-webmvc-4.1.1.RELEASE" />
           <element id="library" level="project" name="Gradle: activation-1.1" />
-          <element id="library" level="project" name="Gradle: mail-1.4.7" />
+          <element id="library" level="project" name="Gradle: javax.mail-1.5.2" />
+          <element id="library" level="project" name="Gradle: commons-codec-1.10" />
         </element>
       </element>
     </root>

@@ -12,6 +12,7 @@ public class CompetitionRowMapper implements RowMapper<Competition> {
         final Competition competition = new Competition();
 
         competition.setId(rs.getInt("competitionId"));
+        competition.setAuthor(rs.getInt("author"));
         competition.setName(rs.getString("name"));
         competition.setCity(rs.getString("city"));
         competition.setStartDate(rs.getDate("startDate"));

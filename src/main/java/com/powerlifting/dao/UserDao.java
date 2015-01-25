@@ -32,4 +32,11 @@ public class UserDao {
 
         return CommonUtils.selectOne(jdbcTemplate, sql, new UserRowMapper(), user.getEmail(), user.getPassword());
     }
+
+    public void participateTheCompetition(Integer competitionId, Integer userId) {
+        final String sql = "INSERT INTO competition_participant " +
+                           "(user, competition) VALUES (?, ?);";
+
+        jdbcTemplate.update(sql, userId, competitionId);
+    }
 }

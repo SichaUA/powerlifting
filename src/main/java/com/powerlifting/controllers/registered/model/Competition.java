@@ -5,6 +5,7 @@ import java.sql.Date;
 
 public class Competition {
     private Integer id;
+    private Integer author;
     private String city;
     private String name;
     private Date startDate;
@@ -14,6 +15,14 @@ public class Competition {
 
     public Integer getId() {
         return id;
+    }
+
+    public Integer getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Integer author) {
+        this.author = author;
     }
 
     public void setId(Integer id) {

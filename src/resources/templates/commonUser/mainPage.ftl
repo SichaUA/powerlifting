@@ -23,7 +23,9 @@
         <h3><i class="fa fa-angle-right"></i> Home</h3>
         <div class="row">
 
-            <#include "*/competitionList.ftl">
+            <#list competitions as competition>
+                <#include "*/competitionList.ftl">
+            </#list>
 
         </div>
 

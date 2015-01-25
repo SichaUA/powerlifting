@@ -46,4 +46,21 @@ public class CompetitionDao {
 
         return CommonUtils.selectOne(jdbcTemplate, sql, new CompetitionRowMapper(), competitionId);
     }
+
+    public List<Competition> getCompetitionsCreatedByUser(Integer userId) {
+        final String sql = "SELECT * " +
+                           "FROM competition c " +
+                           "WHERE c.author = ?";
+
+        return jdbcTemplate.query(sql, new CompetitionRowMapper(), userId);
+    }
+
+    public void createNewCompetition(Competition competition, Integer userId) {
+        final String sql = "INSERT INTO competition " +
+                           "(city, name, startDate, endDate, gender, info, author) " +
+                           "VALUES(?, ?, ?, ?, ?, ?, ?);";
+
+        jdbcTemplate.update(sql, competition.getCity(), competition.getName(), competition.getStartDate(),
+                competition.getEndDate(), competition.getGender(), competition.getInfo(), userId);
+    }
 }

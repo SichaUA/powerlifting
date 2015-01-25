@@ -5,8 +5,11 @@ import com.powerlifting.controllers.registered.model.Competition;
 import com.powerlifting.controllers.registered.model.User;
 import com.powerlifting.dao.CompetitionDao;
 import com.powerlifting.dao.UserDao;
+import com.powerlifting.mail.ApplicationMailer;
 import com.powerlifting.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,7 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -24,6 +29,7 @@ public class UserController {
     @Autowired private Gson serializer;
     @Autowired private UserDao userDao;
     @Autowired private CompetitionDao competitionDao;
+    @Autowired private ApplicationMailer mailer;
 
     @RequestMapping("/")
     public ModelAndView homePage(HttpServletRequest httpServletRequest, HttpServletResponse response) {
@@ -59,8 +65,15 @@ public class UserController {
     public String newUser(@RequestParam String studentJson/*, @RequestParam String birthday*/)
     {
         final User user = serializer.fromJson(studentJson, User.class);
+        user.setPassword(CommonUtils.md5Hex(user.getPassword()));
 
         userDao.createUser(user);
+
+        final Map messageParams = new HashMap<>();
+        messageParams.put("user", userDao.getUserByCredentials(user).get());
+
+//        mailer.sendSimpleMessage(user.getEmail(), "POWERLIFTING FUCK YEAH!", "FUCK YEAH!");
+        mailer.sendMail(user.getEmail(), "Welcome in POWERLIFTING!", "/registerMessage.ftl", messageParams);
 
         return "success";
     }
@@ -70,6 +83,7 @@ public class UserController {
     public String signInRequest(@RequestParam String requestJson, HttpServletRequest httpServletRequest)
     {
         final User requestUser = serializer.fromJson(requestJson, User.class);
+        requestUser.setPassword(CommonUtils.md5Hex(requestUser.getPassword()));
 
         Optional<User> user = userDao.getUserByCredentials(requestUser);
         if(user.isPresent()) {

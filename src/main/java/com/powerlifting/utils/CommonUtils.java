@@ -2,6 +2,7 @@ package com.powerlifting.utils;
 
 import com.powerlifting.controllers.registered.model.User;
 import com.powerlifting.dao.UserDao;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -57,5 +58,9 @@ public class CommonUtils {
         if(user != null) {
             modelAndView.addObject("user", user);
         }
+    }
+
+    public static String md5Hex(String st) {
+        return DigestUtils.md5Hex(st);
     }
 }

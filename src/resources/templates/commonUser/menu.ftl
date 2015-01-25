@@ -1,8 +1,9 @@
-<header class="header black-bg">
-    <div class="sidebar-toggle-box">
-        <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Navigation"></div>
-    </div>
-    <a href="/" class="logo"><b>POWERLIFTING</b></a>
+<div id="menu">
+    <header class="header black-bg">
+        <div class="sidebar-toggle-box">
+            <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Navigation"></div>
+        </div>
+        <a href="/" class="logo"><b>POWERLIFTING</b></a>
 
     <#if user??>
         <#if user.role == 3>
@@ -19,7 +20,11 @@
 
         <div class="top-menu">
             <ul class="nav pull-right top-menu">
-                <li><a class="logout" href="" data-bind="click: logoutFunction.bind()">Logout</a></li>
+                <li id="logout-top">
+                    <a class="logout" href="/" data-bind="click: logoutFunction.bind()">
+                        <span>Logout</span>
+                    </a>
+                </li>
             </ul>
         </div>
     <#else>
@@ -29,16 +34,52 @@
             </ul>
         </div>
     </#if>
-</header>
+    </header>
 
-<aside>
-    <div id="sidebar"  class="nav-collapse ">
-        <ul class="sidebar-menu" id="nav-accordion">
+    <aside>
+        <div id="sidebar" class="nav-collapse ">
+            <ul class="sidebar-menu" id="nav-accordion">
+                <#if !user??>
+                    <h5 class="centered">Welcome!</h5>
+                <#else>
+                    <p class="centered"><img src="/img/${user.photo}" class="img-circle" width="60"></p>
+                    <h5 class="centered">${user.firstName} ${user.secondName}</h5>
+                </#if>
+
+                <li class="mt">
+                    <a href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-empire"></i>
+                        <span>Competitions</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="/competitions/all">All</a></li>
+                        <li><a href="/competitions/current">Current</a></li>
+                        <li><a href="/competitions/past">Past</a></li>
+                    </ul>
+                </li>
+
+            <#if !user??>
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-sign-in"></i>
+                        <span>Enter</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="/sign-in">Sign in</a></li>
+                        <li><a href="/sign-up">Sign up</a></li>
+                    </ul>
+                </li>
+            </#if>
 
             <#if user??>
-                <p class="centered"><img src="/img/${user.photo}" class="img-circle" width="60"></p>
-                <h5 class="centered">${user.firstName} ${user.secondName}</h5>
-
+                <hr>
                 <li class="sub-menu">
                     <a href="/profile">
                         <i class="fa fa-male"></i>
@@ -46,14 +87,13 @@
                     </a>
                 </li>
 
-                <#if user.role gte 2>
-                    <li class="sub-menu">
-                        <a href="#">
-                            <i class="fa fa-graduation-cap"></i>
-                            <span>My Competitions</span>
-                        </a>
-                    </li>
-                </#if>
+
+                <li class="sub-menu">
+                    <a href="/user/my-competitions">
+                        <i class="fa fa-graduation-cap"></i>
+                        <span>My Competitions</span>
+                    </a>
+                </li>
 
                 <li id="logout" class="sub-menu">
                     <a href="/" data-bind="click: logoutFunction.bind()">
@@ -61,47 +101,12 @@
                         <span>Logout</span>
                     </a>
                 </li>
-
-                <hr>
-            <#else>
-                <h5 class="centered">Welcome!</h5>
             </#if>
 
-            <li class="mt">
-                <a href="/">
-                    <i class="fa fa-home"></i>
-                    <span>Home</span>
-                </a>
-            </li>
-
-            <li class="sub-menu">
-                <a href="javascript:;" >
-                    <i class="fa fa-empire"></i>
-                    <span>Competitions</span>
-                </a>
-                <ul class="sub">
-                    <li><a  href="/competitions/all">All</a></li>
-                    <li><a  href="/competitions/current">Current</a></li>
-                    <li><a  href="/competitions/past">Past</a></li>
-                </ul>
-            </li>
-
-            <#if !user??>
-                <li class="sub-menu">
-                    <a href="javascript:;" >
-                        <i class="fa fa-sign-in"></i>
-                        <span>Enter</span>
-                    </a>
-                    <ul class="sub">
-                        <li><a  href="/sign-in">Sign in</a></li>
-                        <li><a  href="/sign-up">Sign up</a></li>
-                    </ul>
-                </li>
-            </#if>
-
-        </ul>
-    </div>
-</aside>
+            </ul>
+        </div>
+    </aside>
+</div>
 
 <!-- js placed at the end of the document so the pages load faster -->
 <script src="/libs/js/jquery.js"></script>
