@@ -55,6 +55,16 @@ public class CompetitionDao {
         return jdbcTemplate.query(sql, new CompetitionRowMapper(), userId);
     }
 
+    public List<Competition> getCompetitionsUserParticipate(Integer userId) {
+        final String sql = "SELECT * " +
+                           "FROM competition c " +
+                           "WHERE c.competitionId IN(SELECT cp.competition " +
+                           "FROM competition_participant cp " +
+                           "WHERE cp.user = ?)";
+
+        return jdbcTemplate.query(sql, new CompetitionRowMapper(), userId);
+    }
+
     public void createNewCompetition(Competition competition, Integer userId) {
         final String sql = "INSERT INTO competition " +
                            "(city, name, startDate, endDate, gender, info, author) " +

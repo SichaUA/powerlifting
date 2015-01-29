@@ -58,16 +58,20 @@
 
             <div class="tab-content row mt">
                 <div id="participated-competitions" class="participated-competitions tab-pane active" role="tabpanel">
-                    Participated tab panel
+                    <#list pCompetitions as competition>
+                        <#include "*/commonUser/competitionList.ftl">
+                    </#list>
                 </div>
 
                 <div id="impending-competitions" class="impending-competitions tab-pane" role="tabpanel">
-                    Impending tab panel
+                    <#list iCompetitions as competition>
+                        <#include "*/commonUser/competitionList.ftl">
+                    </#list>
                 </div>
 
                 <#if user.role == 2>
                     <div id="created-competitions" class="created-competitions tab-pane" role="tabpanel">
-                        <#list CreatedCompetitions as competition>
+                        <#list createdCompetitions as competition>
                             <#include "*/commonUser/competitionList.ftl">
                         </#list>
                     </div>

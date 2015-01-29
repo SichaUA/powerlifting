@@ -5,7 +5,6 @@ import com.powerlifting.controllers.registered.model.Competition;
 import com.powerlifting.controllers.registered.model.User;
 import com.powerlifting.dao.CompetitionDao;
 import com.powerlifting.dao.UserDao;
-import com.powerlifting.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +16,10 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/user")
@@ -37,8 +38,26 @@ public class RegisteredController {
         if(user != null) {
             modelAndView.addObject("user", user);
 
+            List<Competition> competitions = competitionDao.getCompetitionsUserParticipate(user.getUserId());
+
+//          split all competitions into participated and impending
+            List<Competition> pCompetitions = new ArrayList<>();
+            List<Competition> iCompetitions = new ArrayList<>();
+            final java.sql.Date currentDate = new java.sql.Date(new java.util.Date().getTime());
+            for(Iterator<Competition> i = competitions.iterator(); i.hasNext(); ) {
+                Competition competition = i.next();
+                if(competition.getStartDate().before(currentDate) || competition.getStartDate().equals(currentDate)) {
+                    pCompetitions.add(competition);
+                }else{
+                    iCompetitions.add(competition);
+                }
+            }
+
+            modelAndView.addObject("pCompetitions", pCompetitions);
+            modelAndView.addObject("iCompetitions", iCompetitions);
+
             if(user.getRole() == 2) {
-                modelAndView.addObject("CreatedCompetitions", competitionDao.getCompetitionsCreatedByUser(user.getUserId()));
+                modelAndView.addObject("createdCompetitions", competitionDao.getCompetitionsCreatedByUser(user.getUserId()));
             }
         }
 
