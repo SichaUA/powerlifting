@@ -6,15 +6,21 @@ import java.sql.Date;
 public class Competition {
     private Integer id;
     private Integer author;
-    private String city;
     private String name;
+    private String city;
     private Date startDate;
     private Date endDate;
     private Short gender;
     private String info;
+    private Integer type;
+    private Integer ageGroup;
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getAuthor() {
@@ -25,8 +31,12 @@ public class Competition {
         this.author = author;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCity() {
@@ -35,14 +45,6 @@ public class Competition {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Date getStartDate() {
@@ -75,5 +77,21 @@ public class Competition {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Integer getAgeGroup() {
+        return ageGroup;
+    }
+
+    public void setAgeGroup(Integer ageGroup) {
+        this.ageGroup = ageGroup;
     }
 }

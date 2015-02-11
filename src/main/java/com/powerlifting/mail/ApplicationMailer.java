@@ -34,23 +34,6 @@ public class ApplicationMailer {
      * */
     public void sendMail(String to, String subject, String template, Map model) throws SenderException
     {
-        /*MimeMessagePreparator preparator = new MimeMessagePreparator() {
-            @Override
-            public void prepare(MimeMessage mimeMessage) throws Exception {
-                MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-                message.setTo(to);
-                message.setSubject(subject);
-                String text = FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate(template, "UTF-8"), model);
-                message.setText(text, true);
-            }
-        };
-
-        try{
-            mailSender.send(preparator);
-        }catch (MailException e) {
-
-        }*/
-
         SimpleMailMessage message = new SimpleMailMessage();
 
         final String result;
@@ -64,6 +47,7 @@ public class ApplicationMailer {
         }
 
         message.setTo(to);
+        message.setFrom("powerlifting.service@gmail.com");
         message.setSubject(subject);
         message.setText(result);
         mailSender.send(message);
@@ -76,6 +60,7 @@ public class ApplicationMailer {
         SimpleMailMessage message = new SimpleMailMessage();
 
         message.setTo(to);
+        message.setFrom("powerlifting.service@gmail.com");
         message.setSubject(subject);
         message.setText(body);
         mailSender.send(message);

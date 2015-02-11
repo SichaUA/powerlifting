@@ -2,6 +2,7 @@ package com.powerlifting.config;
 
 import com.powerlifting.dao.AdminDao;
 import com.powerlifting.dao.CompetitionDao;
+import com.powerlifting.dao.ModerDao;
 import com.powerlifting.dao.UserDao;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,5 +40,9 @@ public class DatabaseConfig {
 
     @Bean public CompetitionDao competitionDao(JdbcTemplate jdbcTemplate) {
         return new CompetitionDao(jdbcTemplate);
+    }
+
+    @Bean public ModerDao moderDao(JdbcTemplate jdbcTemplate) {
+        return new ModerDao(jdbcTemplate);
     }
 }

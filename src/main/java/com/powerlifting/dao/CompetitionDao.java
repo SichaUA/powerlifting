@@ -73,4 +73,10 @@ public class CompetitionDao {
         jdbcTemplate.update(sql, competition.getCity(), competition.getName(), competition.getStartDate(),
                 competition.getEndDate(), competition.getGender(), competition.getInfo(), userId);
     }
+
+    public void deleteCompetition(Integer competitionId) {
+        String sql = "DELETE FROM competition WHERE competitionId = ?";
+
+        jdbcTemplate.update(sql, competitionId);
+    }
 }
