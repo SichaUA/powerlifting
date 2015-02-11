@@ -2,6 +2,7 @@ package com.powerlifting.controllers.user;
 
 import com.google.gson.Gson;
 import com.powerlifting.controllers.registered.model.Competition;
+import com.powerlifting.controllers.registered.model.Title;
 import com.powerlifting.controllers.registered.model.User;
 import com.powerlifting.dao.CompetitionDao;
 import com.powerlifting.dao.UserDao;
@@ -12,17 +13,20 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class UserController {
@@ -72,58 +76,10 @@ public class UserController {
         final Map messageParams = new HashMap<>();
         messageParams.put("user", userDao.getUserByCredentials(user).get());
 
-//        mailer.sendSimpleMessage(user.getEmail(), "POWERLIFTING FUCK YEAH!", "FUCK YEAH!");
+        mailer.sendSimpleMessage(user.getEmail(), "POWERLIFTING FUCK YEAH!", "FUCK YEAH!");
         mailer.sendMail(user.getEmail(), "Welcome in POWERLIFTING!", "/registerMessage.ftl", messageParams);
 
         return "success";
-    }
-
-    @RequestMapping(value = "/sign-in-request", method = RequestMethod.POST)
-    @ResponseBody
-    public String signInRequest(@RequestParam String requestJson, HttpServletRequest httpServletRequest)
-    {
-        final User requestUser = serializer.fromJson(requestJson, User.class);
-        requestUser.setPassword(CommonUtils.md5Hex(requestUser.getPassword()));
-
-        Optional<User> user = userDao.getUserByCredentials(requestUser);
-        if(user.isPresent()) {
-            final HttpSession session = httpServletRequest.getSession();
-            session.setAttribute("user", user.get());
-
-            return "success";
-        }
-
-        return "error";
-    }
-
-    @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    @ResponseBody
-    public String logout(HttpServletRequest httpServletRequest)
-    {
-        HttpSession session = httpServletRequest.getSession();
-        session.invalidate();
-
-        return "success";
-    }
-
-    @RequestMapping("/profile")
-    public ModelAndView profile(HttpServletRequest httpServletRequest, HttpServletResponse response) {
-        response.setContentType("text/html; charset=UTF-8");
-        ModelAndView modelAndView = new ModelAndView("user/profile");
-
-        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
-
-        return modelAndView;
-    }
-
-    @RequestMapping("/edit-profile")
-    public ModelAndView editProfile(HttpServletRequest httpServletRequest, HttpServletResponse response) {
-        response.setContentType("text/html; charset=UTF-8");
-        ModelAndView modelAndView = new ModelAndView("user/editProfile");
-
-        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
-
-        return modelAndView;
     }
 
     @RequestMapping("/competitions/all")

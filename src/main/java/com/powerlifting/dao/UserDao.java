@@ -65,7 +65,7 @@ public class UserDao {
     public List<Title> getListOfTitles() {
         final String sql =
                 "SELECT * " +
-                "FROM `title/discharge` ";
+                "FROM `dictionary_title/discharge` ";
 
         return jdbcTemplate.query(sql, new TitleRowMapper());
     }
@@ -73,7 +73,7 @@ public class UserDao {
     public void changeUserTitle(Integer userId, Integer newTitle) {
         final String sql =
                 "UPDATE user " +
-                "SET `title/discharge` = ? " +
+                "SET `dictionary_title/discharge` = ? " +
                 "WHERE userId = ?";
 
         jdbcTemplate.update(sql, newTitle, userId);

@@ -11,6 +11,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,8 +37,8 @@ public class CommonUtils {
     }
 
     public static String getRandomBackground() {
-        final List<String> files = CommonUtils.getAllFilesInDirectory("D:\\document\\4 курс\\1 семестр\\" +
-                       "Дипломна робота\\project\\powerlifting\\src\\resources\\public\\img\\backgrounds");
+        final List<String> files = CommonUtils.getAllFilesInDirectory("C:\\powerlifting\\powerlifting\\src\\" +
+                                                                        "main\\resources\\public\\img\\backgrounds");
 
         Random random = new Random();
 
@@ -62,5 +64,17 @@ public class CommonUtils {
 
     public static String md5Hex(String st) {
         return DigestUtils.md5Hex(st);
+    }
+
+    public static void updateUserInSession(HttpServletRequest httpServletRequest, User user) {
+        final HttpSession session = httpServletRequest.getSession();
+        session.setAttribute("user", user);
+    }
+
+    public String generateRandomPassword() {
+        SecureRandom secureRandom = new SecureRandom();
+
+        String password = new BigInteger(130, secureRandom).toString();
+        return password;
     }
 }

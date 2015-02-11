@@ -12,6 +12,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -119,5 +120,9 @@ public class WebConfig extends WebMvcConfigurerAdapter{
 
     @Bean ApplicationMailer applicationMailer() {
         return new ApplicationMailer();
+    }
+
+    @Bean CommonsMultipartResolver multipartResolver () {
+        return new CommonsMultipartResolver();
     }
 }
