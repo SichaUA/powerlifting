@@ -36,16 +36,27 @@
 
                         <div class="form-group">
                             <div class="col-md-11">
-                                <input id="judge-input" type="text" class="form-control" placeholder="Judge second name" autofocus/>
+                                <input id="judge-input" type="text" class="form-control" placeholder="Judge name or email" autofocus/>
                             </div>
 
                             <div class="col-md-1">
                                 <input type="submit" class="btn btn-round btn-primary" value="Add"/>
                             </div>
+
+                            <br>
+                            <br>
+                            <br>
+
+                            <div class="btn-group btn-group-justified">
+                                <div class="col-md-4 col-md-offset-8">
+                                    <input type="button" class="btn btn-round btn-info btn-sm" value="Select Judge From Users" onclick="assignJudge()"/>
+                                    <input type="button" class="btn btn-round btn-info btn-sm" value="Register New Judge" onclick="createNewJudge()"/>
+                                </div>
+                            </div>
                         </div>
                     </form>
 
-                    <form class="form-horizontal style-form">
+                    <form id="delete-form" class="form-horizontal style-form">
                         <div class="form-group">
                             <div class="col-md-12">
                                 <h4>Current Judges</h4>

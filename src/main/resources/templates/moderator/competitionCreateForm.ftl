@@ -58,19 +58,19 @@
                             <div class="col-sm-10">
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="1" data-bind="checked: gender">
+                                        <input type="radio" name="genderRadios" id="gender1" value="1" data-bind="checked: gender">
                                         Male
                                     </label>
                                 </div>
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="0" data-bind="checked: gender">
+                                        <input type="radio" name="genderRadios" id="gender2" value="0" data-bind="checked: gender">
                                         Female
                                     </label>
                                 </div>
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="2" data-bind="checked: gender">
+                                        <input type="radio" name="genderRadios" id="gender3" value="2" data-bind="checked: gender">
                                         Both
                                     </label>
                                 </div>
@@ -78,9 +78,46 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Type</label>
+                            <div class="col-sm-10">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="typeRadios" id="type1" value="0" data-bind="checked: type">
+                                        Eventing
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="typeRadios" id="type2" value="1" data-bind="checked: type">
+                                        Bench Press
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="typeRadios" id="type2" value="2" data-bind="checked: type">
+                                        Deadlift
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Age Group</label>
+                            <div class="col-sm-10">
+                                <#list ageGroups as ageGroup>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="ageGroupRadios" id="ageGroup${ageGroup.groupId}" value="${ageGroup.groupId}" data-bind="checked: ageGroup">
+                                            ${ageGroup.group} (${ageGroup.description})
+                                        </label>
+                                    </div>
+                                </#list>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label class="col-sm-2 col-sm-2 control-label">Aditional information</label>
                             <div class="col-sm-10">
-                                <#--<input class="form-control" placeholder="" data-bind="value: info">-->
                                 <textarea class="form-control" rows="5" style="resize: vertical" data-bind="value: info"></textarea>
                             </div>
                         </div>

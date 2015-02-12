@@ -73,53 +73,23 @@ public class UserDao {
     public void changeUserTitle(Integer userId, Integer newTitle) {
         final String sql =
                 "UPDATE user " +
-                "SET `dictionary_title/discharge` = ? " +
+                "SET `title/discharge` = ? " +
                 "WHERE userId = ?";
 
         jdbcTemplate.update(sql, newTitle, userId);
     }
 
-    public List<User> getAllJudgeOfCompetition(Integer competitionId) {
-        final String sql =
-                "SELECT * " +
-                "FROM competition_judge cj JOIN user u ON cj.user = u.userId " +
-                "WHERE cj.competition = ? ";
+    public List<User> getUsersLike(String text) {
+        text = "%" + text + "%";
 
-        return jdbcTemplate.query(sql, new UserRowMapper(), competitionId);
-    }
-
-    public void deleteJudgeFromCompetition(Integer competitionId, Integer judgeId) {
-        final String sql =
-                "DELETE FROM competition_judge " +
-                "WHERE user = ? AND competition = ? ";
-
-        jdbcTemplate.update(sql, judgeId, competitionId);
-    }
-
-    public List<User> getJudgesLikeWhichNotJudgeInCompetition(String text, Integer competitionId) {
-        text += "%";
         final String sql =
                 "SELECT * " +
                 "FROM user " +
-                "WHERE secondName LIKE ? " +
-                    "AND userId IN (SELECT j.userId " +
-                                   "FROM judge j) " +
-                    "AND userId NOT IN (SELECT user " +
-                                       "FROM competition_judge " +
-                                       "WHERE competition = ?)";
+                "WHERE CONCAT(secondName, \" \", firstName, \" \", middleName, \" \", email) LIKE ? " +
+                "AND userId NOT IN (SELECT j.userId " +
+                                   "FROM judge j)";
 
-        return jdbcTemplate.query(sql, new UserRowMapper(), text, competitionId);
+        return jdbcTemplate.query(sql, new UserRowMapper(), text);
     }
 
-    public void addJudgeToCompetition(String judgeEmail, Integer competitionId) {
-        final String sql =
-                "INSERT INTO competition_judge (user, competition) " +
-                "VALUES((SELECT userId " +
-                        "FROM judge j " +
-                        "WHERE j.userId = (SELECT u.userId " +
-                                          "FROM user u " +
-                                          "WHERE u.email = ?)), ?)";
-
-        jdbcTemplate.update(sql, judgeEmail, competitionId);
-    }
 }

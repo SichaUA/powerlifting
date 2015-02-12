@@ -94,6 +94,24 @@
                             </div>
 
                             <div class="form-group">
+                                <div class="col-md-6">
+                                    <h4>
+                                        <b>Type:</b>
+                                        <#if competition.type == 0>
+                                            Eventing
+                                        <#elseif competition.type == 1>
+                                            Bench press
+                                        <#else>
+                                            Deadlift
+                                        </#if>
+                                    </h4>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4><b>Age Group:</b> ${ageGroup}</h4>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <div class="col-md-12">
                                     <h4><b>Additional information:</b></h4>
                                 </div>

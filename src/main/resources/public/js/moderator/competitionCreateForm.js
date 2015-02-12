@@ -10,6 +10,8 @@ $(document).ready(function () {
         self.startDate = ko.observable((today.getMonth() + 1) + "/" + today.getDate() + "/" + today.getFullYear()).extend({required: true});
         self.endDate = ko.observable((today.getMonth() + 1) + "/" + today.getDate() + "/" + today.getFullYear()).extend({required: true});
         self.gender = ko.observable(true).extend({required: true});
+        self.type = ko.observable(true).extend({required: true});
+        self.ageGroup = ko.observable(true).extend({required: true});
         self.info = ko.observable('').extend({required: true});
 
         self.errors = ko.validation.group(self);
@@ -30,7 +32,7 @@ $(document).ready(function () {
                     competitionJson: ko.toJSON(self)
                 }
             }).done(function () {
-                window.location = '/user/my-competitions';
+                window.location = '/my-competitions';
             })
         }
     }

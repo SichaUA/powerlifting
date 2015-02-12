@@ -76,7 +76,7 @@ public class UserController {
         final Map messageParams = new HashMap<>();
         messageParams.put("user", userDao.getUserByCredentials(user).get());
 
-        mailer.sendSimpleMessage(user.getEmail(), "POWERLIFTING FUCK YEAH!", "FUCK YEAH!");
+//        mailer.sendSimpleMessage(user.getEmail(), "POWERLIFTING FUCK YEAH!", "FUCK YEAH!");
         mailer.sendMail(user.getEmail(), "Welcome in POWERLIFTING!", "/registerMessage.ftl", messageParams);
 
         return "success";
@@ -133,6 +133,7 @@ public class UserController {
         Optional<Competition> competition = competitionDao.getCompetition(competitionId);
         if(competition.isPresent()) {
             modelAndView.addObject("competition", competition.get());
+            modelAndView.addObject("ageGroup", competitionDao.getCompetitionAgeGroupById(competition.get().getAgeGroup()));
             return modelAndView;
         }
 

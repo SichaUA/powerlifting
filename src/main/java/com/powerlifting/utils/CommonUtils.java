@@ -71,7 +71,7 @@ public class CommonUtils {
         session.setAttribute("user", user);
     }
 
-    public String generateRandomPassword() {
+    public static String generateRandomPassword() {
         SecureRandom secureRandom = new SecureRandom();
 
         String password = new BigInteger(130, secureRandom).toString();

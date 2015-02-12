@@ -2,14 +2,14 @@ $(document).ready(function () {
     var userViewModel = {
         participate : function () {
             $.ajax({
-                url: '/user/participate-competition',
+                url: '/participate-competition',
                 type: 'POST',
                 data: {
 //                  get competition id from url
                     competitionId: window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1)
                 }
             }).done(function () {
-                window.location = '/user/my-competitions';
+                window.location = '/my-competitions';
             })
         },
         
@@ -23,7 +23,7 @@ $(document).ready(function () {
                 }
             }).done(function (response) {
                 if(response == 'success') {
-                    window.location = '/user/my-competitions';
+                    window.location = '/my-competitions';
                 }
             })
         },

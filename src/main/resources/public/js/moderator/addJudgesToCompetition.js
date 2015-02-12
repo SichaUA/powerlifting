@@ -13,6 +13,14 @@ function deleteJudge(judgeId) {
     });
 }
 
+function assignJudge() {
+    window.location = '/moder/assignJudge/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+}
+
+function createNewJudge() {
+    window.location = '/moder/createNewJudge/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+}
+
 $(document).ready(function () {
 
     $('#judge-input').autocomplete({
@@ -30,9 +38,12 @@ $(document).ready(function () {
         }
     });
 
-    $('#add-judge-form').submit(function () {
+    $('#add-judge-form').submit(function (e) {
+        e.preventDefault();
+
         var judge = $('#judge-input').val().split(' ');
         var email = judge[judge.length-1];
+
         $.ajax({
             url: '/moder/AddJudgeToCompetition/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1),
             method: 'POST',
@@ -40,7 +51,6 @@ $(document).ready(function () {
                 judgeEmail: email
             }
         }).done(function (response) {
-            alert(response);
             if (response === 'success') {
                 location.reload();
             } else {

@@ -123,7 +123,7 @@
                                     <h4 class="modal-title">Title changing</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <p>You can change your title, but if you will participate in competition you nead a document which confirm this title.</p>
+                                    <p>You can change your title, but if you will participate in competition you need a document which confirm this title.</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button data-dismiss="modal" class="btn btn-default" type="button" data-bind="click: changeTitle.bind()">Ok</button>

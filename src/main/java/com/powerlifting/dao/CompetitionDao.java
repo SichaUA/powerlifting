@@ -1,6 +1,8 @@
 package com.powerlifting.dao;
 
+import com.powerlifting.controllers.registered.model.AgeGroup;
 import com.powerlifting.controllers.registered.model.Competition;
+import com.powerlifting.dao.rowMappers.AgeGroupRowMapper;
 import com.powerlifting.dao.rowMappers.CompetitionRowMapper;
 import com.powerlifting.utils.CommonUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -67,16 +69,33 @@ public class CompetitionDao {
 
     public void createNewCompetition(Competition competition, Integer userId) {
         final String sql = "INSERT INTO competition " +
-                           "(city, name, startDate, endDate, gender, info, author) " +
-                           "VALUES(?, ?, ?, ?, ?, ?, ?);";
+                           "(author, city, name, startDate, endDate, gender, info, type, ageGroup) " +
+                           "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
-        jdbcTemplate.update(sql, competition.getCity(), competition.getName(), competition.getStartDate(),
-                competition.getEndDate(), competition.getGender(), competition.getInfo(), userId);
+        jdbcTemplate.update(sql, userId, competition.getCity(), competition.getName(), competition.getStartDate(),
+                competition.getEndDate(), competition.getGender(), competition.getInfo(), competition.getType(), competition.getAgeGroup());
     }
 
     public void deleteCompetition(Integer competitionId) {
         String sql = "DELETE FROM competition WHERE competitionId = ?";
 
         jdbcTemplate.update(sql, competitionId);
+    }
+
+    public String getCompetitionAgeGroupById(Integer ageGroupId) {
+        final String sql =
+                "SELECT description " +
+                "FROM dictionary_age_group " +
+                "WHERE groupId = ?";
+
+        return jdbcTemplate.queryForObject(sql, String.class, ageGroupId);
+    }
+
+    public List<AgeGroup> getAllAgeGroups() {
+        final String sql =
+                "SELECT * " +
+                "FROM dictionary_age_group";
+
+        return jdbcTemplate.query(sql, new AgeGroupRowMapper());
     }
 }
