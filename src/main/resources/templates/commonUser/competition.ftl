@@ -38,10 +38,10 @@
                                             <button class="btn btn-primary btn-round btn-lg" data-bind="click: participate.bind()">Participate</button>
                                         </#if>
                                         <#if competition.author == user.userId>
-                                            <button class="btn btn-info btn-round btn-lg">Edit</button>
+                                            <#--<button class="btn btn-info btn-round btn-lg">Edit</button>-->
                                             <a data-toggle="modal" href="${competition.id}#delete-modal"><button class="btn btn-info btn-danger btn-lg">Delete</button></a>
                                             <button class="btn btn-info btn-round btn-lg" data-bind="click: addJudges.bind()">Add Judges</button>
-                                            <button class="btn btn-info btn-round btn-lg" data-bind="click: ">Add Participants</button>
+                                            <button class="btn btn-info btn-round btn-lg" data-bind="click: addParticipants.bind()">Add Participants</button>
                                             <!-- Delete Modal -->
                                             <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="delete-modal" class="modal fade">
                                                 <div class="modal-dialog">

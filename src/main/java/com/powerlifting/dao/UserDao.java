@@ -38,7 +38,7 @@ public class UserDao {
 
     public void participateTheCompetition(Integer competitionId, Integer userId) {
         final String sql =
-                "INSERT INTO competition_participant " +
+                "INSERT INTO participant " +
                 "(user, competition) VALUES (?, ?);";
 
         jdbcTemplate.update(sql, userId, competitionId);

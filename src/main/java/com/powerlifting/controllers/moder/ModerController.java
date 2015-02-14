@@ -1,13 +1,13 @@
 package com.powerlifting.controllers.moder;
 
 import com.google.gson.Gson;
-import com.powerlifting.controllers.registered.model.Category;
 import com.powerlifting.controllers.registered.model.Competition;
 import com.powerlifting.controllers.registered.model.Judge;
 import com.powerlifting.controllers.registered.model.User;
 import com.powerlifting.dao.CompetitionDao;
+import com.powerlifting.dao.ParticipantDao;
 import com.powerlifting.dao.UserDao;
-import com.powerlifting.dao.rowMappers.JudgeDao;
+import com.powerlifting.dao.JudgeDao;
 import com.powerlifting.mail.ApplicationMailer;
 import com.powerlifting.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,7 @@ public class ModerController {
     @Autowired private UserDao userDao;
     @Autowired private CompetitionDao competitionDao;
     @Autowired private JudgeDao judgeDao;
+    @Autowired private ParticipantDao participantDao;
     @Autowired private ApplicationMailer mailer;
 
     @RequestMapping(value = "/createCompetition")
@@ -192,12 +193,12 @@ public class ModerController {
 
     @RequestMapping(value = "/new-judge/{competitionId}", method = RequestMethod.POST)
     @ResponseBody
-    public String newUser(@PathVariable Integer competitionId, @RequestParam String judgeJson, @RequestParam Boolean addJudgeToCompetition, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    public String newJudge(@PathVariable Integer competitionId, @RequestParam String judgeJson, @RequestParam Boolean addJudgeToCompetition, HttpServletRequest httpServletRequest, HttpServletResponse response)
     {
         response.setContentType("text/html; charset=UTF-8");
 
         final Judge judge = serializer.fromJson(judgeJson, Judge.class);
-        String judgePassword = CommonUtils.generateRandomPassword();
+        String judgePassword = CommonUtils.generateRandomPassword(8);
         judge.setPassword(CommonUtils.md5Hex(judgePassword));
 
         judgeDao.createNewJudgeAsUser(judge);
@@ -218,7 +219,106 @@ public class ModerController {
         return "success";
     }
 
-    @RequestMapping(value = "/createAndAddParticipantToCompetition/{id}")
+    @RequestMapping(value = "/add-participants/{competitionId}")
+    public ModelAndView addParticipants(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response) throws Exception{
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("moderator/addParticipantToCompetition");
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+        modelAndView.addObject("participants", participantDao.getAllParticipantOfCompetition(competitionId));
+
+        Optional<Competition> competition = competitionDao.getCompetition(competitionId);
+        if(competition.isPresent()) {
+            modelAndView.addObject("competition", competition.get());
+            return modelAndView;
+        }
+
+        throw new Exception("Resource not found");
+    }
+
+    @RequestMapping(value = "/deleteParticipantFromCompetition/{competitionId}", method = RequestMethod.POST)
+    public @ResponseBody String deleteParticipantFromCompetition(@PathVariable Integer competitionId, @RequestParam Integer participantId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        Optional<Competition> competition = competitionDao.getCompetition(competitionId);
+        if(competition.isPresent()) {
+            HttpSession session = httpServletRequest.getSession();
+            final User user = (User)session.getAttribute("user");
+
+            if(competition.get().getAuthor() == user.getUserId()) {
+                participantDao.deleteParticipantFromCompetition(participantId, competitionId);
+                return "success";
+            }
+        }
+        return "error";
+    }
+
+    @RequestMapping(value = "/getUsersLikeWhichNotInCompetition/{competitionId}", method = RequestMethod.GET)
+    public @ResponseBody List<User> getUsersLikeWhichNotInCompetition(@PathVariable Integer competitionId, @RequestParam String term, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        return participantDao.getUsersLikeWhichNotInCompetition(term, competitionId);
+    }
+
+    @RequestMapping(value = "/AddParticipantToCompetition/{competitionId}", method = RequestMethod.POST)
+    public @ResponseBody String AddParticipantToCompetition(@PathVariable Integer competitionId, @RequestParam String participantEmail,
+                                                            HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        Optional<Competition> competition = competitionDao.getCompetition(competitionId);
+        if(competition.isPresent()) {
+            HttpSession session = httpServletRequest.getSession();
+            final User user = (User)session.getAttribute("user");
+
+            if(competition.get().getAuthor() == user.getUserId()) {
+                participantDao.AddParticipantToCompetition(participantEmail, competitionId);
+                return "success";
+            }
+        }
+        return "error";
+    }
+
+    @RequestMapping(value = "/createNewUser/{competitionId}")
+    public ModelAndView createNewUser(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("moderator/createNewUser");
+
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/new-user/{competitionId}", method = RequestMethod.POST)
+    @ResponseBody
+    public String newUser(@PathVariable Integer competitionId, @RequestParam String participantJson, @RequestParam Boolean addParticipantToCompetition,
+                          HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        final User user = serializer.fromJson(participantJson, User.class);
+        String userPassword = CommonUtils.generateRandomPassword(8);
+        user.setPassword(CommonUtils.md5Hex(userPassword));
+
+        userDao.createUser(user);
+
+        if(addParticipantToCompetition) {
+            final Optional<User> createdUser = userDao.getUserByCredentials(user);
+            if(createdUser.isPresent()) {
+                userDao.participateTheCompetition(competitionId, createdUser.get().getUserId());
+            }
+        }
+
+        final Map messageParams = new HashMap<>();
+        messageParams.put("user", user);
+        mailer.sendMail(user.getEmail(), "Welcome in POWERLIFTING!", "/registerMessage.ftl", messageParams);
+
+        return "success";
+    }
+
+    /*@RequestMapping(value = "/createAndAddParticipantToCompetition/{id}")
     public ModelAndView CreateAndAddParticipant(HttpServletRequest httpServletRequest, HttpServletResponse response) {
         response.setContentType("text/html; charset=UTF-8");
         ModelAndView modelAndView = new ModelAndView("moderator/AddParticipantToCompetition");
@@ -234,5 +334,5 @@ public class ModerController {
 
 
         return "success";
-    }
+    }*/
 }

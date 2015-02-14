@@ -30,6 +30,10 @@ $(document).ready(function () {
 
         addJudges : function () {
             window.location = '/moder/add-judges/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1);
+        },
+
+        addParticipants : function() {
+            window.location = '/moder/add-participants/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1);
         }
     };
 

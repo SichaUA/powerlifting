@@ -1,9 +1,6 @@
 package com.powerlifting.config;
 
-import com.powerlifting.dao.AdminDao;
-import com.powerlifting.dao.CompetitionDao;
-import com.powerlifting.dao.UserDao;
-import com.powerlifting.dao.rowMappers.JudgeDao;
+import com.powerlifting.dao.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,5 +41,9 @@ public class DatabaseConfig {
 
     @Bean public JudgeDao judgeDao(JdbcTemplate jdbcTemplate) {
         return new JudgeDao(jdbcTemplate);
+    }
+
+    @Bean public ParticipantDao participantDao(JdbcTemplate jdbcTemplate) {
+        return new ParticipantDao(jdbcTemplate);
     }
 }

@@ -71,10 +71,15 @@ public class CommonUtils {
         session.setAttribute("user", user);
     }
 
-    public static String generateRandomPassword() {
-        SecureRandom secureRandom = new SecureRandom();
+    public static String generateRandomPassword(int lenght) {
+        String alphabet = "qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM";
+        Random rand = new Random();
+        String res = "";
 
-        String password = new BigInteger(130, secureRandom).toString();
-        return password;
+        for(int i = 0; i < lenght; i++) {
+            res += alphabet.charAt(rand.nextInt(alphabet.length()));
+        }
+
+        return res;
     }
 }

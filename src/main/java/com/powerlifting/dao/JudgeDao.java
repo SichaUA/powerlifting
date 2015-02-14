@@ -1,8 +1,10 @@
-package com.powerlifting.dao.rowMappers;
+package com.powerlifting.dao;
 
 import com.powerlifting.controllers.registered.model.Category;
 import com.powerlifting.controllers.registered.model.Judge;
 import com.powerlifting.controllers.registered.model.User;
+import com.powerlifting.dao.rowMappers.CategoryRowMapper;
+import com.powerlifting.dao.rowMappers.UserRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Date;

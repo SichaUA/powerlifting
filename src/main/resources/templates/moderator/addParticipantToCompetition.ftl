@@ -1,8 +1,9 @@
+<#setting locale="uk_UA">
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/html">
-<head lang="en">
+<html>
+<head>
     <meta charset="UTF-8">
-    <title>Add Participants</title>
+    <title>Adding participants to competition</title>
     <!-- Bootstrap core CSS -->
     <link href="/libs/css/bootstrap.css" rel="stylesheet">
     <!--external css-->
@@ -12,91 +13,85 @@
     <link href="/libs/css/style.css" rel="stylesheet">
     <link href="/libs/css/style-responsive.css" rel="stylesheet">
 
-    <link href="/libs/css/datepicker.css" rel="stylesheet">
+    <link href="/libs/css/autocomplete.css" rel="stylesheet">
+
 </head>
 <body>
 <#include "*/commonUser/menu.ftl">
 
+
 <section id="main-content">
     <section class="wrapper">
-        <h3><i class="fa fa-angle-right"></i> Add Participant</h3>
-
+        <h3><i class="fa fa-angle-right"></i> Add Participants To Competition</h3>
         <div class="row mt">
             <div class="col-lg-12">
                 <div class="form-panel">
-                    <form class="form-horizontal style-form" id="participant-form" data-bind="submit: newParticipant">
+
+                    <form id="add-participant-form" class="form-horizontal style-form centered">
                         <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Email</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" placeholder="example@email.com" data-bind="value: email">
+                            <div class="col-md-12">
+                                <h3>${competition.name}</h3>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">First Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" placeholder="Vasya" data-bind="value: firstName">
+                            <div class="col-md-11">
+                                <input id="participant-input" type="text" class="form-control" placeholder="User name or email" autofocus/>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Second Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" placeholder="Pupkin" data-bind="value: secondName">
+                            <div class="col-md-1">
+                                <input type="submit" class="btn btn-round btn-primary" value="Add"/>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Middle Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" placeholder="Vasylyovych" data-bind="value: middleName">
-                            </div>
-                        </div>
+                            <br>
+                            <br>
+                            <br>
 
-                        <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Birthday</label>
-                            <div class="col-sm-10">
-                                <input id="datepicker" type="text" class="form-control" data-bind="value: birthday">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Gender</label>
-                            <div class="col-sm-10">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="1" data-bind="checked: gender">
-                                        Male
-                                    </label>
-                                </div>
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="0" data-bind="checked: gender">
-                                        Female
-                                    </label>
+                            <div class="btn-group btn-group-justified">
+                                <div class="col-md-2 col-md-offset-10">
+                                    <input type="button" class="btn btn-round btn-info btn-sm" value="Register New User" onclick="createNewUser()"/>
                                 </div>
                             </div>
                         </div>
-
-                        <input type="submit" value="Add" class="btn btn-theme">
                     </form>
+
+                    <form id="delete-form" class="form-horizontal style-form">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <h4>Current Participants</h4>
+                            </div>
+
+                            <div class="col-md-12">
+                                <#list participants as participant>
+                                    <div class="col-md-4 col-sm-4 mb">
+                                        <div class="darkblue-panel pn">
+                                            <div class="darkblue-header">
+                                                <h5>${participant.secondName} ${participant.firstName} ${participant.middleName}</h5>
+                                            </div>
+                                            <img src="/img/avatars/${participant.photo}" class="img-circle" height="120">
+                                            <p>${participant.email}</p>
+                                            <footer>
+                                                <div class="centered">
+                                                    <button class="btn btn-danger btn-round" value="${participant.userId}" onclick="deleteParticipant(value)">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </footer>
+                                        </div>
+                                    </div>
+                                </#list>
+                            </div>
+                        </div>
+                    </form>
+
                 </div>
             </div>
         </div>
-
     </section>
 </section>
+<script type="application/javascript" src="/libs/js/bootstrap.min.js"></script>
+<script type="application/javascript" src="/libs/js/jquery.autocomplete.js"></script>
 
-<script type="application/javascript" src="/libs/js/knockout-3.2.0.js"></script>
-<script type="application/javascript" src="/libs/js/knockout.validation.js"></script>
-<script type="application/javascript" src="/js/unregistered/sign-up.js"></script>
-
-<script src="/libs/js/bootstrap.js"></script>
-<script src="/libs/js/bootstrap-datepicker.js"></script>
-<script>
-    $('#datepicker').datepicker();
-</script>
-
-
+<script src="/js/moderator/addParticipantToCompetition.js"></script>
 </body>
 </html>

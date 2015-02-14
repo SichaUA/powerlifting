@@ -1,41 +1,54 @@
-$(document).ready(function () {
-    var today = new Date();
-
-    function ParticipantViewModel() {
-        var self = this;
-
-        self.email = ko.observable('').extend({
-            required: true,
-            email: true
-        });
-        self.firstName = ko.observable('').extend({required: true});
-        self.secondName = ko.observable('').extend({required: true});
-        self.middleName = ko.observable('').extend({required: true});
-        self.birthday = ko.observable((today.getMonth() + 1) + "/" + today.getDate() + "/" + today.getFullYear()).extend({required: true});
-        self.gender = ko.observable(true).extend({required: true});
-
-        self.errors = ko.validation.group(self);
-
-        self.newParticipant = function () {
-            self.birthday = ko.observable($('#datepicker').val());
-
-            if(self.errors().length) {
-                self.errors.showAllMessages();
-                return;
-            }
-
-            $.ajax({
-                url: '/moder/add-participant',
-                type: 'POST',
-                data: {
-                    participantJson: ko.toJSON(self)
-                }
-            }).done(function () {
-                //window.location = '/sign-in';
-            })
+function deleteParticipant(participantId) {
+    $.ajax({
+        url: '/moder/deleteParticipantFromCompetition/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1),
+        method: 'POST',
+        data: {participantId: participantId}
+    }).done(function (response) {
+        alert(response);
+        if (response === 'success') {
+            location.reload();
+        } else {
+            alert('Error!');
         }
-    }
+    });
+}
 
-    var participantViewModel = new ParticipantViewModel();
-    ko.applyBindings(participantViewModel, document.getElementById('participant-form'));
+function createNewUser() {
+    window.location = '/moder/createNewUser/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+}
+
+$(document).ready(function () {
+    $('#participant-input').autocomplete({
+        serviceUrl: ('/moder/getUsersLikeWhichNotInCompetition/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1)),
+        paramName: "term",
+        delimiter: ",",
+        transformResult: function(response) {
+            return {
+                suggestions: $.map($.parseJSON(response), function(item) {
+                    return { value: (item.secondName + ' ' + item.firstName + ' ' + item.middleName + ' ' + item.email), data: item.userId };
+                })
+            };
+        }
+    });
+
+    $('#add-participant-form').submit(function (e) {
+        e.preventDefault();
+
+        var participant = $('#participant-input').val().split(' ');
+        var email = participant[participant.length-1];
+
+        $.ajax({
+            url: '/moder/AddParticipantToCompetition/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1),
+            method: 'POST',
+            data: {
+                participantEmail: email
+            }
+        }).done(function (response) {
+            if (response === 'success') {
+                location.reload();
+            } else {
+                alert('Error!');
+            }
+        });
+    });
 });
