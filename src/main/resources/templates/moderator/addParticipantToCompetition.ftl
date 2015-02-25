@@ -27,7 +27,7 @@
             <div class="col-lg-12">
                 <div class="form-panel">
 
-                    <form id="add-participant-form" class="form-horizontal style-form centered">
+                    <form id="add-participant-form" class="form-horizontal style-form">
                         <div class="form-group">
                             <div class="col-md-12">
                                 <h3>${competition.name}</h3>
@@ -38,7 +38,6 @@
                             <div class="col-md-11">
                                 <input id="participant-input" type="text" class="form-control" placeholder="User name or email" autofocus/>
                             </div>
-
                             <div class="col-md-1">
                                 <input type="submit" class="btn btn-round btn-primary" value="Add"/>
                             </div>

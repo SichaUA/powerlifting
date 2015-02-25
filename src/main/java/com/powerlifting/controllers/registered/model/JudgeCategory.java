@@ -1,6 +1,6 @@
 package com.powerlifting.controllers.registered.model;
 
-public class Category {
+public class JudgeCategory {
     private Integer categoryId;
     private String category;
 

@@ -1,12 +1,12 @@
 package com.powerlifting.controllers.user;
 
 import com.google.gson.Gson;
-import com.powerlifting.controllers.registered.model.Competition;
-import com.powerlifting.controllers.registered.model.Title;
-import com.powerlifting.controllers.registered.model.User;
+import com.powerlifting.controllers.registered.model.*;
 import com.powerlifting.dao.CompetitionDao;
+import com.powerlifting.dao.ParticipantDao;
 import com.powerlifting.dao.UserDao;
 import com.powerlifting.mail.ApplicationMailer;
+import com.powerlifting.mail.Email;
 import com.powerlifting.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -33,7 +33,8 @@ public class UserController {
     @Autowired private Gson serializer;
     @Autowired private UserDao userDao;
     @Autowired private CompetitionDao competitionDao;
-    @Autowired private ApplicationMailer mailer;
+    @Autowired private ParticipantDao participantDao;
+    @Autowired private Email email;
 
     @RequestMapping("/")
     public ModelAndView homePage(HttpServletRequest httpServletRequest, HttpServletResponse response) {
@@ -73,11 +74,7 @@ public class UserController {
 
         userDao.createUser(user);
 
-        final Map messageParams = new HashMap<>();
-        messageParams.put("user", userDao.getUserByCredentials(user).get());
-
-//        mailer.sendSimpleMessage(user.getEmail(), "POWERLIFTING FUCK YEAH!", "FUCK YEAH!");
-        mailer.sendMail(user.getEmail(), "Welcome in POWERLIFTING!", "/registerMessage.ftl", messageParams);
+        email.sendRegisterEmail(user);
 
         return "success";
     }
@@ -138,6 +135,44 @@ public class UserController {
         }
 
         throw new Exception("Resource not found");
+    }
+
+    @RequestMapping("/participantsStandings/{competitionId}")
+    public ModelAndView participantsStandings(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest,
+                                              HttpServletResponse response) {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("CommonUser/participantsStandings");
+
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+
+        final List<ParticipantAllInf> participants = participantDao.getAllParticipantOfCompetitionWithAllInf(competitionId);
+        Collections.sort(participants, new Comparator<ParticipantAllInf>() {
+            @Override
+            public int compare(ParticipantAllInf o1, ParticipantAllInf o2) {
+                return o1.getTotal() < o2.getTotal()? 1 : -1;
+            }
+        });
+        modelAndView.addObject("participants", participants);
+
+        Set<Integer> weightCategoriesOfParticipants = new HashSet<>();
+        for(Iterator<ParticipantAllInf> i = participants.iterator(); i.hasNext(); ) {
+            ParticipantAllInf participantAllInf = i.next();
+            weightCategoriesOfParticipants.add(participantAllInf.getCategory());
+        }
+
+        final List<WeightCategory> weightCategories = participantDao.getAllWeightCategories();
+        List<WeightCategory> resultWeightCategories = new ArrayList<>();
+        for(Iterator<WeightCategory> i = weightCategories.iterator(); i.hasNext(); ) {
+            WeightCategory weightCategory = i.next();
+            if(weightCategoriesOfParticipants.contains(weightCategory.getCategoryId())) {
+                resultWeightCategories.add(weightCategory);
+            }
+        }
+
+        modelAndView.addObject("categories", resultWeightCategories);
+
+
+        return modelAndView;
     }
 
 }

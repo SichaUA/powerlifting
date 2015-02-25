@@ -61,7 +61,7 @@ public class CompetitionDao {
         final String sql = "SELECT * " +
                            "FROM competition c " +
                            "WHERE c.competitionId IN(SELECT cp.competition " +
-                           "FROM competition_participant cp " +
+                           "FROM participant cp " +
                            "WHERE cp.user = ?)";
 
         return jdbcTemplate.query(sql, new CompetitionRowMapper(), userId);

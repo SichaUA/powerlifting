@@ -44,11 +44,7 @@ $(document).ready(function () {
                 participantEmail: email
             }
         }).done(function (response) {
-            if (response === 'success') {
-                location.reload();
-            } else {
-                alert('Error!');
-            }
+            window.location = response;
         });
     });
 });

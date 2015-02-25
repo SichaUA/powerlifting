@@ -31,6 +31,7 @@
                             </div>
 
                             <#--TODO finish this to every type of user-->
+                            <input type="button" class="btn btn-round btn-info" value="Standings of participants" onclick="goToStandings()"/>
                             <#if user??>
                                 <div class="form-group">
                                     <div id="controls" class="col-md-12">

@@ -1,3 +1,7 @@
+function goToStandings() {
+    window.location = '/participantsStandings/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1);
+}
+
 $(document).ready(function () {
     var userViewModel = {
         participate : function () {

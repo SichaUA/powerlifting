@@ -1,9 +1,9 @@
 package com.powerlifting.dao;
 
-import com.powerlifting.controllers.registered.model.Category;
+import com.powerlifting.controllers.registered.model.JudgeCategory;
 import com.powerlifting.controllers.registered.model.Judge;
 import com.powerlifting.controllers.registered.model.User;
-import com.powerlifting.dao.rowMappers.CategoryRowMapper;
+import com.powerlifting.dao.rowMappers.JudgeCategoryRowMapper;
 import com.powerlifting.dao.rowMappers.UserRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -34,7 +34,7 @@ public class JudgeDao {
         jdbcTemplate.update(sql, judgeId, competitionId);
     }
 
-    public List<User> getJudgesLikeWhichNotJudgeInCompetition(String text, Integer competitionId) {
+    public List<User> getJudgesLikeWhichNotJudgeInCompetition(String text, Integer competitionId, Integer limit) {
         text = "%" + text + "%";
         final String sql =
                 "SELECT * " +
@@ -44,9 +44,10 @@ public class JudgeDao {
                         "FROM judge j) " +
                         "AND userId NOT IN (SELECT user " +
                         "FROM competition_judge " +
-                        "WHERE competition = ?)";
+                        "WHERE competition = ?) " +
+                        "LIMIT ?";
 
-        return jdbcTemplate.query(sql, new UserRowMapper(), text, competitionId);
+        return jdbcTemplate.query(sql, new UserRowMapper(), text, competitionId, limit);
     }
 
     public void addJudgeToCompetition(String judgeEmail, Integer competitionId) {
@@ -61,12 +62,12 @@ public class JudgeDao {
         jdbcTemplate.update(sql, judgeEmail, competitionId);
     }
 
-    public List<Category> getAllCategory() {
+    public List<JudgeCategory> getAllCategory() {
         final String sql =
                 "SELECT * " +
                 "FROM dictionary_judge_category ";
 
-        return jdbcTemplate.query(sql, new CategoryRowMapper());
+        return jdbcTemplate.query(sql, new JudgeCategoryRowMapper());
     }
 
 

@@ -1,14 +1,17 @@
 package com.powerlifting.controllers.moder;
 
 import com.google.gson.Gson;
+import com.mysql.jdbc.SQLError;
 import com.powerlifting.controllers.registered.model.Competition;
 import com.powerlifting.controllers.registered.model.Judge;
+import com.powerlifting.controllers.registered.model.Region;
 import com.powerlifting.controllers.registered.model.User;
 import com.powerlifting.dao.CompetitionDao;
 import com.powerlifting.dao.ParticipantDao;
 import com.powerlifting.dao.UserDao;
 import com.powerlifting.dao.JudgeDao;
 import com.powerlifting.mail.ApplicationMailer;
+import com.powerlifting.mail.Email;
 import com.powerlifting.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.sql.SQLDataException;
+import java.sql.SQLException;
 import java.util.*;
 
 @Controller
@@ -28,7 +33,7 @@ public class ModerController {
     @Autowired private CompetitionDao competitionDao;
     @Autowired private JudgeDao judgeDao;
     @Autowired private ParticipantDao participantDao;
-    @Autowired private ApplicationMailer mailer;
+    @Autowired private Email email;
 
     @RequestMapping(value = "/createCompetition")
     public ModelAndView createCompetition(HttpServletRequest httpServletRequest, HttpServletResponse response) {
@@ -111,7 +116,7 @@ public class ModerController {
     {
         response.setContentType("text/html; charset=UTF-8");
 
-        return judgeDao.getJudgesLikeWhichNotJudgeInCompetition(term, competitionId);
+        return judgeDao.getJudgesLikeWhichNotJudgeInCompetition(term, competitionId, 9);
     }
 
     @RequestMapping(value = "/AddJudgeToCompetition/{competitionId}", method = RequestMethod.POST)
@@ -150,7 +155,7 @@ public class ModerController {
     {
         response.setContentType("text/html; charset=UTF-8");
 
-        return userDao.getUsersLike(term);
+        return userDao.getUsersLike(term, 9);
     }
 
     @RequestMapping(value = "/assignUserToJudge/{competitionId}", method = RequestMethod.POST)
@@ -202,19 +207,21 @@ public class ModerController {
         judge.setPassword(CommonUtils.md5Hex(judgePassword));
 
         judgeDao.createNewJudgeAsUser(judge);
+
+        User user = new User();
+        user.setEmail(judge.getEmail());
+        user.setPassword(judge.getPassword());
+        email.moderRegisterUserEmail(user, judgePassword);
+
         judgeDao.assignUserToJudge(judge.getEmail(), judge.getCategory(), judge.getAssignmentDate());
 
         if(addJudgeToCompetition) {
             judgeDao.addJudgeToCompetition(judge.getEmail(), competitionId);
+            final Optional<Competition> competition = competitionDao.getCompetition(competitionId);
+            if(competition.isPresent()) {
+                email.appointJudgeToCompetitionMessage(user, competition.get(), userDao.getUserById(competition.get().getAuthor()).get());
+            }
         }
-
-        final Map messageParams = new HashMap<>();
-        User user = new User();
-        user.setEmail(judge.getEmail());
-        user.setPassword(judge.getPassword());
-        messageParams.put("user", userDao.getUserByCredentials(user).get());
-
-        mailer.sendMail(user.getEmail(), "Welcome in POWERLIFTING!", "/registerMessage.ftl", messageParams);
 
         return "success";
     }
@@ -233,6 +240,46 @@ public class ModerController {
         }
 
         throw new Exception("Resource not found");
+    }
+
+    @RequestMapping(value = "/add-participant-info/{userId}/{competitionId}")
+    public ModelAndView addParticipants(@PathVariable Integer userId, @PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response) throws Exception{
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("moderator/addParticipantInformation");
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+
+        Optional<Competition> competition = competitionDao.getCompetition(competitionId);
+        Optional<User> participant = userDao.getUserById(userId);
+        if(competition.isPresent() && participant.isPresent()) {
+            modelAndView.addObject("competition", competition.get());
+            modelAndView.addObject("participant", participant.get());
+            modelAndView.addObject("categories", participantDao.getAllWeightCategories());
+            return modelAndView;
+        }
+
+        throw new Exception("Resource not found");
+    }
+
+    @RequestMapping(value = "/getRegionLike", method = RequestMethod.GET)
+    public @ResponseBody List<Region> getRegionLike(@RequestParam String term, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        return userDao.getRegionLike(term, 9);
+    }
+
+    @RequestMapping(value = "/newRegion", method = RequestMethod.POST)
+    public @ResponseBody String newRegion(@RequestParam String regionName, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        try{
+            userDao.addNewRegion(regionName);
+        }catch(Exception e) {
+            return e.getMessage();
+        }
+
+        return "success";
     }
 
     @RequestMapping(value = "/deleteParticipantFromCompetition/{competitionId}", method = RequestMethod.POST)
@@ -258,25 +305,50 @@ public class ModerController {
     {
         response.setContentType("text/html; charset=UTF-8");
 
-        return participantDao.getUsersLikeWhichNotInCompetition(term, competitionId);
+        return participantDao.getUsersLikeWhichNotInCompetition(term, competitionId, 9);
     }
 
     @RequestMapping(value = "/AddParticipantToCompetition/{competitionId}", method = RequestMethod.POST)
-    public @ResponseBody String AddParticipantToCompetition(@PathVariable Integer competitionId, @RequestParam String participantEmail,
-                                                            HttpServletRequest httpServletRequest, HttpServletResponse response)
+    public @ResponseBody String addParticipantToCompetition(@PathVariable Integer competitionId, @RequestParam String participantEmail,
+                                                            HttpServletRequest httpServletRequest, HttpServletResponse response) throws Exception {
+        response.setContentType("text/html; charset=UTF-8");
+
+        Optional<Competition> competition = competitionDao.getCompetition(competitionId);
+        Optional<User> participant = userDao.getUserByEmail(participantEmail);
+
+        if(competition.isPresent() && participant.isPresent()) {
+            return "/moder/add-participant-info/" + participant.get().getUserId() + "/" + competition.get().getId();
+        }
+
+        throw new Exception("Resources not found");
+    }
+
+    @RequestMapping(value = "/insertParticipantToCompetition/{participantId}/{competitionId}", method = RequestMethod.POST)
+    public @ResponseBody String insertParticipantToCompetition(@PathVariable Integer participantId, @PathVariable Integer competitionId,
+                                                               @RequestParam Integer category,
+                                                               @RequestParam String region,
+                                                               @RequestParam Boolean ownParticipation,
+                                                               @RequestParam Float sq,
+                                                               @RequestParam Float bp,
+                                                               @RequestParam Float dl,
+                                                               HttpServletRequest httpServletRequest, HttpServletResponse response)
     {
         response.setContentType("text/html; charset=UTF-8");
 
         Optional<Competition> competition = competitionDao.getCompetition(competitionId);
-        if(competition.isPresent()) {
-            HttpSession session = httpServletRequest.getSession();
-            final User user = (User)session.getAttribute("user");
+        Optional<User> participant = userDao.getUserById(participantId);
+        HttpSession session = httpServletRequest.getSession();
+        User user = (User)session.getAttribute("user");
 
-            if(competition.get().getAuthor() == user.getUserId()) {
-                participantDao.AddParticipantToCompetition(participantEmail, competitionId);
-                return "success";
+        if(competition.isPresent() && participant.isPresent() && competition.get().getAuthor() == user.getUserId()) {
+            Integer own = 0;
+            if(ownParticipation) {
+                own = 1;
             }
+            participantDao.addParticipantToCompetition(participantId, competitionId, category, region, sq, bp, dl, own);
+            return "success";
         }
+
         return "error";
     }
 
@@ -311,28 +383,8 @@ public class ModerController {
             }
         }
 
-        final Map messageParams = new HashMap<>();
-        messageParams.put("user", user);
-        mailer.sendMail(user.getEmail(), "Welcome in POWERLIFTING!", "/registerMessage.ftl", messageParams);
+        email.sendRegisterEmail(user);
 
         return "success";
     }
-
-    /*@RequestMapping(value = "/createAndAddParticipantToCompetition/{id}")
-    public ModelAndView CreateAndAddParticipant(HttpServletRequest httpServletRequest, HttpServletResponse response) {
-        response.setContentType("text/html; charset=UTF-8");
-        ModelAndView modelAndView = new ModelAndView("moderator/AddParticipantToCompetition");
-        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
-
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/add-participant")
-    public String addParticipant(@RequestParam String participantJson, HttpServletRequest httpServletRequest, HttpServletResponse response) {
-        response.setContentType("text/html; charset=UTF-8");
-        final User user = serializer.fromJson(participantJson, User.class);
-
-
-        return "success";
-    }*/
 }

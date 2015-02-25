@@ -1,7 +1,9 @@
 package com.powerlifting.dao;
 
+import com.powerlifting.controllers.registered.model.Region;
 import com.powerlifting.controllers.registered.model.Title;
 import com.powerlifting.controllers.registered.model.User;
+import com.powerlifting.dao.rowMappers.RegionRowMapper;
 import com.powerlifting.dao.rowMappers.TitleRowMapper;
 import com.powerlifting.dao.rowMappers.UserRowMapper;
 import com.powerlifting.utils.CommonUtils;
@@ -34,6 +36,24 @@ public class UserDao {
                 "WHERE u.email = ? AND u.password = ?";
 
         return CommonUtils.selectOne(jdbcTemplate, sql, new UserRowMapper(), user.getEmail(), user.getPassword());
+    }
+
+    public Optional<User> getUserById(Integer userId) {
+        final String sql =
+                "SELECT * " +
+                "FROM user " +
+                "WHERE userId = ?";
+
+        return CommonUtils.selectOne(jdbcTemplate, sql, new UserRowMapper(), userId);
+    }
+
+    public Optional<User> getUserByEmail(String email) {
+        final String sql =
+                "SELECT * " +
+                "FROM user " +
+                "WHERE email = ?";
+
+        return CommonUtils.selectOne(jdbcTemplate, sql, new UserRowMapper(), email);
     }
 
     public void participateTheCompetition(Integer competitionId, Integer userId) {
@@ -79,7 +99,7 @@ public class UserDao {
         jdbcTemplate.update(sql, newTitle, userId);
     }
 
-    public List<User> getUsersLike(String text) {
+    public List<User> getUsersLike(String text, Integer limit) {
         text = "%" + text + "%";
 
         final String sql =
@@ -87,9 +107,27 @@ public class UserDao {
                 "FROM user " +
                 "WHERE CONCAT(secondName, \" \", firstName, \" \", middleName, \" \", email) LIKE ? " +
                 "AND userId NOT IN (SELECT j.userId " +
-                                   "FROM judge j)";
+                                   "FROM judge j) " +
+                "LIMIT ?";
 
-        return jdbcTemplate.query(sql, new UserRowMapper(), text);
+        return jdbcTemplate.query(sql, new UserRowMapper(), text, limit);
+    }
+
+    public List<Region> getRegionLike(String text, Integer limit) {
+        text = "%" + text + "%";
+        final String sql =
+                "SELECT * " +
+                "FROM dictionary_region " +
+                "WHERE name LIKE ? " +
+                "LIMIT ?";
+
+        return jdbcTemplate.query(sql, new RegionRowMapper(), text, limit);
+    }
+
+    public void addNewRegion(String regionName) {
+        final String sql = "INSERT INTO dictionary_region (name) VALUES (?)";
+
+        jdbcTemplate.update(sql, regionName);
     }
 
 }
