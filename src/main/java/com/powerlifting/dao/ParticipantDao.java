@@ -1,5 +1,6 @@
 package com.powerlifting.dao;
 
+import com.powerlifting.controllers.registered.model.ParticipantAddingInfo;
 import com.powerlifting.controllers.registered.model.ParticipantAllInf;
 import com.powerlifting.controllers.registered.model.User;
 import com.powerlifting.controllers.registered.model.WeightCategory;
@@ -29,8 +30,9 @@ public class ParticipantDao {
     public List<ParticipantAllInf> getAllParticipantOfCompetitionWithAllInf(Integer competitionId) {
         final String sql =
                 "SELECT * " +
-                "FROM (participant p JOIN user u ON p.user = u.userId) JOIN dictionary_region d ON p.from = d.regionId " +
-                "WHERE p.competition = ?";
+                "FROM (participant p JOIN user u ON p.user = u.userId) JOIN dictionary_region d ON p.from = d.regionId JOIN dictionary_age_group da ON da.groupId = p.ageGroup " +
+                "WHERE p.competition = ? " +
+                "ORDER BY gender, category, total DESC ";
 
         return jdbcTemplate.query(sql, new ParticipantAllInfRowMapper(), competitionId);
     }
@@ -58,14 +60,18 @@ public class ParticipantDao {
         return jdbcTemplate.query(sql, new UserRowMapper(), text, competitionId, limit);
     }
 
-    public void addParticipantToCompetition(Integer userId, Integer competitionId, Integer category, String from, Float sq, Float bp, Float dl, Integer ownParticipation) {
+    public void addParticipantToCompetition(Integer userId, Integer competitionId, ParticipantAddingInfo participantAddingInfo) {
         final String sql =
-                "INSERT INTO participant (user, competition, category, `from`, squat, benchPress, deadlift, ownParticipation) " +
-                "VALUES (?, ?, ?, (SELECT regionId " +
-                                  "FROM dictionary_region " +
-                                  "WHERE name = ?), ?, ?, ?, ?)";
+                "INSERT INTO participant (user, competition, ageGroup, category, `from`, squat, benchPress, deadlift, total, ownParticipation, firstCoach, " +
+                                            "personalCoach, firstAdditionalCoach, secondAdditionalCoach) " +
+                "VALUES (?, ?, ?, ?, (SELECT regionId " +
+                                     "FROM dictionary_region " +
+                                     "WHERE name = ?), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        jdbcTemplate.update(sql, userId, competitionId, category, from, sq, bp, dl, ownParticipation);
+        jdbcTemplate.update(sql, userId, competitionId, participantAddingInfo.getAgeGroup(), participantAddingInfo.getCategory(), participantAddingInfo.getRegion(),
+                participantAddingInfo.getSQ(), participantAddingInfo.getBP(), participantAddingInfo.getDL(), participantAddingInfo.getTotal(),
+                participantAddingInfo.getOwnParticipation()? 1 : 0, participantAddingInfo.getFirstCoach(), participantAddingInfo.getPersonalCoach(),
+                participantAddingInfo.getFirstAdditionalCoach(), participantAddingInfo.getSecondAdditionalCoach());
     }
 
     public List<WeightCategory> getAllWeightCategories() {
@@ -74,5 +80,14 @@ public class ParticipantDao {
                 "FROM dictionary_weight_category ";
 
         return jdbcTemplate.query(sql, new WeightCategoryRowMapper());
+    }
+
+    public List<WeightCategory> getWeightCategoriesUserInCompetition(Integer competitionId) {
+        final String sql =
+                "SELECT DISTINCT categoryId, gender, minWeight, maxWeight, name " +
+                "FROM dictionary_weight_category d LEFT JOIN participant p ON (d.categoryId = p.category) " +
+                "WHERE p.competition = ? ";
+
+        return jdbcTemplate.query(sql, new WeightCategoryRowMapper(), competitionId);
     }
 }

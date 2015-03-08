@@ -130,49 +130,47 @@ public class UserController {
         Optional<Competition> competition = competitionDao.getCompetition(competitionId);
         if(competition.isPresent()) {
             modelAndView.addObject("competition", competition.get());
-            modelAndView.addObject("ageGroup", competitionDao.getCompetitionAgeGroupById(competition.get().getAgeGroup()));
+            modelAndView.addObject("ageGroups", competitionDao.getCompetitionAgeGroupsById(competition.get().getId()));
             return modelAndView;
         }
 
         throw new Exception("Resource not found");
     }
 
-    @RequestMapping("/participantsStandings/{competitionId}")
-    public ModelAndView participantsStandings(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest,
-                                              HttpServletResponse response) {
+    @RequestMapping("/participantsNomination/{competitionId}")
+    public ModelAndView participantsNomination(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest,
+                                              HttpServletResponse response) throws Exception {
         response.setContentType("text/html; charset=UTF-8");
-        ModelAndView modelAndView = new ModelAndView("CommonUser/participantsStandings");
+        ModelAndView modelAndView = new ModelAndView("CommonUser/participantsNomination");
 
         CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+        Optional<Competition> competition = competitionDao.getCompetition(competitionId);
+        if(competition.isPresent()) {
+            modelAndView.addObject("competition", competition.get());
 
-        final List<ParticipantAllInf> participants = participantDao.getAllParticipantOfCompetitionWithAllInf(competitionId);
-        Collections.sort(participants, new Comparator<ParticipantAllInf>() {
-            @Override
-            public int compare(ParticipantAllInf o1, ParticipantAllInf o2) {
-                return o1.getTotal() < o2.getTotal()? 1 : -1;
+            final List<ParticipantAllInf> participants = participantDao.getAllParticipantOfCompetitionWithAllInf(competitionId);
+            /*Collections.sort(participants, new Comparator<ParticipantAllInf>() {
+                @Override
+                public int compare(ParticipantAllInf o1, ParticipantAllInf o2) {
+                    return o1.getTotal() < o2.getTotal()? 1 : -1;
+                }
+            });*/
+            modelAndView.addObject("participants", participants);
+
+            Set<Integer> weightCategoriesOfParticipants = new HashSet<>();
+            for(Iterator<ParticipantAllInf> i = participants.iterator(); i.hasNext(); ) {
+                ParticipantAllInf participantAllInf = i.next();
+                weightCategoriesOfParticipants.add(participantAllInf.getCategory());
             }
-        });
-        modelAndView.addObject("participants", participants);
 
-        Set<Integer> weightCategoriesOfParticipants = new HashSet<>();
-        for(Iterator<ParticipantAllInf> i = participants.iterator(); i.hasNext(); ) {
-            ParticipantAllInf participantAllInf = i.next();
-            weightCategoriesOfParticipants.add(participantAllInf.getCategory());
+            final List<WeightCategory> weightCategories = participantDao.getWeightCategoriesUserInCompetition(competitionId);
+            modelAndView.addObject("categories", weightCategories);
+
+
+            return modelAndView;
         }
 
-        final List<WeightCategory> weightCategories = participantDao.getAllWeightCategories();
-        List<WeightCategory> resultWeightCategories = new ArrayList<>();
-        for(Iterator<WeightCategory> i = weightCategories.iterator(); i.hasNext(); ) {
-            WeightCategory weightCategory = i.next();
-            if(weightCategoriesOfParticipants.contains(weightCategory.getCategoryId())) {
-                resultWeightCategories.add(weightCategory);
-            }
-        }
-
-        modelAndView.addObject("categories", resultWeightCategories);
-
-
-        return modelAndView;
+        throw new Exception("Resource not found");
     }
 
 }

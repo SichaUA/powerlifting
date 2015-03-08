@@ -1,5 +1,5 @@
-function goToStandings() {
-    window.location = '/participantsStandings/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1);
+function goToNomination() {
+    window.location = '/participantsNomination/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1);
 }
 
 $(document).ready(function () {
@@ -38,6 +38,10 @@ $(document).ready(function () {
 
         addParticipants : function() {
             window.location = '/moder/add-participants/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1);
+        },
+
+        splitIntoSequences : function() {
+            window.location = '/moder/splitParticipantsIntoSequences/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1);
         }
     };
 

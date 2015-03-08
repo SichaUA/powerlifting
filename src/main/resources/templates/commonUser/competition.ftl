@@ -30,19 +30,25 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input type="button" class="btn btn-round btn-info" value="Nomination" onclick="goToNomination()"/>
+                                </div>
+                            </div>
+
                             <#--TODO finish this to every type of user-->
-                            <input type="button" class="btn btn-round btn-info" value="Standings of participants" onclick="goToStandings()"/>
-                            <#if user??>
+                            <#if user?? && competition.author == user.userId>
                                 <div class="form-group">
                                     <div id="controls" class="col-md-12">
                                         <#if competition.author != user.userId>
-                                            <button class="btn btn-primary btn-round btn-lg" data-bind="click: participate.bind()">Participate</button>
+                                            <#--<button class="btn btn-primary btn-round btn-lg" data-bind="click: participate.bind()">Participate</button>-->
                                         </#if>
                                         <#if competition.author == user.userId>
-                                            <#--<button class="btn btn-info btn-round btn-lg">Edit</button>-->
+                                        <#--<button class="btn btn-info btn-round btn-lg">Edit</button>-->
                                             <a data-toggle="modal" href="${competition.id}#delete-modal"><button class="btn btn-info btn-danger btn-lg">Delete</button></a>
                                             <button class="btn btn-info btn-round btn-lg" data-bind="click: addJudges.bind()">Add Judges</button>
                                             <button class="btn btn-info btn-round btn-lg" data-bind="click: addParticipants.bind()">Add Participants</button>
+                                            <button class="btn btn-info btn-round btn-lg" data-bind="click: splitIntoSequences.bind()">Split Into Sequences</button>
                                             <!-- Delete Modal -->
                                             <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="delete-modal" class="modal fade">
                                                 <div class="modal-dialog">
@@ -66,6 +72,7 @@
                                     </div>
                                 </div>
                             </#if>
+
 
                             <div class="form-group">
                                 <div class="col-md-6">
@@ -108,7 +115,12 @@
                                     </h4>
                                 </div>
                                 <div class="col-md-6">
-                                    <h4><b>Age Group:</b> ${ageGroup}</h4>
+                                    <h4>
+                                        <b>Age Groups:</b>
+                                        <#list ageGroups as ageGroup>
+                                            ${ageGroup}
+                                        </#list>
+                                    </h4>
                                 </div>
                             </div>
 

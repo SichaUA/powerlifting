@@ -14,6 +14,7 @@ public class ParticipantAllInfRowMapper implements RowMapper<ParticipantAllInf>{
         participantAllInf.setParticipantId(rs.getInt("participantId"));
         participantAllInf.setUserId(rs.getInt("userId"));
         participantAllInf.setCompetition(rs.getInt("competition"));
+        participantAllInf.setAgeGroup(new AgeGroupRowMapper().mapRow(rs, rowNum));
         participantAllInf.setCategory(rs.getInt("category"));
         participantAllInf.setFrom(rs.getInt("from"));
         participantAllInf.setFromName(rs.getString("name"));
@@ -22,6 +23,10 @@ public class ParticipantAllInfRowMapper implements RowMapper<ParticipantAllInf>{
         participantAllInf.setDeadLift(rs.getFloat("deadlift"));
         participantAllInf.setTotal(rs.getFloat("total"));
         participantAllInf.setOwnParticipation(rs.getInt("ownParticipation"));
+        participantAllInf.setFirstCoach(rs.getString("firstCoach"));
+        participantAllInf.setPersonalCoach(rs.getString("personalCoach"));
+        participantAllInf.setFirstAdditionalCoach(rs.getString("firstAdditionalCoach"));
+        participantAllInf.setSecondAdditionalCoach(rs.getString("secondAdditionalCoach"));
         participantAllInf.setEmail(rs.getString("email"));
         participantAllInf.setPassword(rs.getString("password"));
         participantAllInf.setFirstName(rs.getString("firstName"));

@@ -6,6 +6,7 @@ public class ParticipantAllInf {
     private Integer participantId;
     private Integer userId;
     private Integer competition;
+    private AgeGroup ageGroup;
     private Integer category;
     private Integer from;
     private String fromName;
@@ -14,6 +15,10 @@ public class ParticipantAllInf {
     private Float deadLift;
     private Float total;
     private Integer ownParticipation;
+    private String firstCoach;
+    private String personalCoach;
+    private String firstAdditionalCoach;
+    private String secondAdditionalCoach;
     private String email;
     private String password;
     private String firstName;
@@ -47,6 +52,14 @@ public class ParticipantAllInf {
 
     public void setCompetition(Integer competition) {
         this.competition = competition;
+    }
+
+    public AgeGroup getAgeGroup() {
+        return ageGroup;
+    }
+
+    public void setAgeGroup(AgeGroup ageGroup) {
+        this.ageGroup = ageGroup;
     }
 
     public Integer getCategory() {
@@ -111,6 +124,38 @@ public class ParticipantAllInf {
 
     public void setOwnParticipation(Integer ownParticipation) {
         this.ownParticipation = ownParticipation;
+    }
+
+    public String getFirstCoach() {
+        return firstCoach;
+    }
+
+    public void setFirstCoach(String firstCoach) {
+        this.firstCoach = firstCoach;
+    }
+
+    public String getPersonalCoach() {
+        return personalCoach;
+    }
+
+    public void setPersonalCoach(String personalCoach) {
+        this.personalCoach = personalCoach;
+    }
+
+    public String getFirstAdditionalCoach() {
+        return firstAdditionalCoach;
+    }
+
+    public void setFirstAdditionalCoach(String firstAdditionalCoach) {
+        this.firstAdditionalCoach = firstAdditionalCoach;
+    }
+
+    public String getSecondAdditionalCoach() {
+        return secondAdditionalCoach;
+    }
+
+    public void setSecondAdditionalCoach(String secondAdditionalCoach) {
+        this.secondAdditionalCoach = secondAdditionalCoach;
     }
 
     public String getEmail() {

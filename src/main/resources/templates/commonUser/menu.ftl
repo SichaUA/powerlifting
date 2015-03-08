@@ -14,6 +14,11 @@
                             <i class="fa fa-users"></i>
                         </a>
                     </li>
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="*/../../admin/editRegions">
+                            <i class="fa fa-globe"></i>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </#if>

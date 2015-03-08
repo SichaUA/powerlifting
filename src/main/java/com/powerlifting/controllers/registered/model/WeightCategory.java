@@ -6,6 +6,7 @@ public class WeightCategory {
     private Integer minWeight;
     private Integer maxWeight;
     private String name;
+    private Integer participantCount;
 
     public Integer getCategoryId() {
         return categoryId;
@@ -45,5 +46,13 @@ public class WeightCategory {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getParticipantCount() {
+        return participantCount;
+    }
+
+    public void setParticipantCount(Integer participantCount) {
+        this.participantCount = participantCount;
     }
 }

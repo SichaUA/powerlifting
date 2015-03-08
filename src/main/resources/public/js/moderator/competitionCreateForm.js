@@ -11,7 +11,10 @@ $(document).ready(function () {
         self.endDate = ko.observable((today.getMonth() + 1) + "/" + today.getDate() + "/" + today.getFullYear()).extend({required: true});
         self.gender = ko.observable(true).extend({required: true});
         self.type = ko.observable(true).extend({required: true});
-        self.ageGroup = ko.observable(true).extend({required: true});
+        self.ageGroup1 = ko.observable(true).extend();
+        self.ageGroup2 = ko.observable(true).extend();
+        self.ageGroup3 = ko.observable(true).extend();
+        self.ageGroup4 = ko.observable(true).extend();
         self.info = ko.observable('').extend({required: true});
 
         self.errors = ko.validation.group(self);
@@ -29,7 +32,8 @@ $(document).ready(function () {
                 url: '/moder/new-competition',
                 type: 'POST',
                 data: {
-                    competitionJson: ko.toJSON(self)
+                    competitionJson: ko.toJSON(self),
+                    ageGroups: ko.toJSON([self.ageGroup1(), self.ageGroup2(), self.ageGroup3(), self.ageGroup4()])
                 }
             }).done(function () {
                 window.location = '/my-competitions';

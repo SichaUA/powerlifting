@@ -35,7 +35,18 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Category</label>
+                            <label class="col-sm-2 col-sm-2 control-label">Age Group*</label>
+                            <div class="col-sm-10">
+                                <select id="category-select" class="form-control" data-bind="value: ageGroup">
+                                <#list ageGroups as ageGroup>
+                                    <option value="${ageGroup.groupId}">${ageGroup.group} (${ageGroup.description})</option>
+                                </#list>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Category*</label>
                             <div class="col-sm-10">
                                 <select id="category-select" class="form-control" data-bind="value: category">
                                 <#list categories as category>
@@ -48,12 +59,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Region</label>
-                            <div class="col-sm-8">
+                            <label class="col-sm-2 col-sm-2 control-label">Region*</label>
+                            <div class="col-sm-10">
                                 <input id="region-input" type="text" class="form-control" placeholder="Region" data-bind="value: region"/>
-                            </div>
-                            <div class="col-sm-2 centered">
-                                <input type="button" class="btn btn-round btn-toolbar" value="New Region" onclick="$('#region-modal').modal('show')"/>
                             </div>
 
                             <div class="col-md-12">
@@ -87,33 +95,46 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Total</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" data-bind="value: total"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">First Coach Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" data-bind="value: firstCoach"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Personal Coach Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" data-bind="value: personalCoach"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">First Additional Coach Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" data-bind="value: firstAdditionalCoach"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Second Additional Coach Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" data-bind="value: secondAdditionalCoach"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <div class="col-sm-12">
                                 <input type="submit" class="btn btn-round btn-primary" value="Add"/>
                             </div>
                         </div>
                     </form>
-
-                    <!-- New Region Modal -->
-                    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="region-modal" class="modal fade">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h4 id="modal-title" class="modal-title">Enter New Region</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form id="new-region-form" class="form-horizontal style-form">
-                                        <input id="new-region-input" type="text" class="form-control"/>
-                                        <div class="modal-footer">
-                                            <input data-dismiss="modal" class="btn btn-default" type="submit" value="Ok" onclick="$('#new-region-form').submit()"/>
-                                            <input data-dismiss="modal" class="btn btn-danger" type="button" value="Cancel">
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- New Region Modal -->
 
                 </div>
             </div>

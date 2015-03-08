@@ -13,7 +13,6 @@ public class Competition {
     private Short gender;
     private String info;
     private Integer type;
-    private Integer ageGroup;
 
     public Integer getId() {
         return id;
@@ -85,13 +84,5 @@ public class Competition {
 
     public void setType(Integer type) {
         this.type = type;
-    }
-
-    public Integer getAgeGroup() {
-        return ageGroup;
-    }
-
-    public void setAgeGroup(Integer ageGroup) {
-        this.ageGroup = ageGroup;
     }
 }

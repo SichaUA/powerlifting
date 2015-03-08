@@ -1,16 +1,11 @@
 package com.powerlifting.controllers.moder;
 
 import com.google.gson.Gson;
-import com.mysql.jdbc.SQLError;
-import com.powerlifting.controllers.registered.model.Competition;
-import com.powerlifting.controllers.registered.model.Judge;
-import com.powerlifting.controllers.registered.model.Region;
-import com.powerlifting.controllers.registered.model.User;
+import com.powerlifting.controllers.registered.model.*;
 import com.powerlifting.dao.CompetitionDao;
 import com.powerlifting.dao.ParticipantDao;
 import com.powerlifting.dao.UserDao;
 import com.powerlifting.dao.JudgeDao;
-import com.powerlifting.mail.ApplicationMailer;
 import com.powerlifting.mail.Email;
 import com.powerlifting.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLDataException;
-import java.sql.SQLException;
 import java.util.*;
 
 @Controller
@@ -46,14 +39,26 @@ public class ModerController {
     }
 
     @RequestMapping(value = "/new-competition", method = RequestMethod.POST)
-    public @ResponseBody String newUser(@RequestParam String competitionJson, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    public @ResponseBody String newUser(@RequestParam String competitionJson,@RequestParam String ageGroups,
+                                        HttpServletRequest httpServletRequest, HttpServletResponse response)
     {
         response.setContentType("text/html; charset=UTF-8");
         final Competition competition = serializer.fromJson(competitionJson, Competition.class);
+        final List<Boolean> ageGroupsList = serializer.fromJson(ageGroups, ArrayList.class);
         HttpSession session = httpServletRequest.getSession();
         final User user = (User)session.getAttribute("user");
 
-        competitionDao.createNewCompetition(competition, user.getUserId());
+        Integer competitionId = competitionDao.createNewCompetitionReturningId(competition, user.getUserId());
+
+        List<Integer> checkedAgeGroups = new ArrayList<>();
+        for(int i = 0; i < ageGroupsList.size(); i++) {
+            Boolean currAgeGroup = ageGroupsList.get(i);
+            if(currAgeGroup) {
+                checkedAgeGroups.add(i+1);
+            }
+        }
+
+        competitionDao.addAgeGroupsToCompetition(competitionId, checkedAgeGroups);
 
         return "success";
     }
@@ -253,6 +258,7 @@ public class ModerController {
         if(competition.isPresent() && participant.isPresent()) {
             modelAndView.addObject("competition", competition.get());
             modelAndView.addObject("participant", participant.get());
+            modelAndView.addObject("ageGroups", competitionDao.getAgeGroupsOfCompetition(competitionId));
             modelAndView.addObject("categories", participantDao.getAllWeightCategories());
             return modelAndView;
         }
@@ -325,14 +331,10 @@ public class ModerController {
 
     @RequestMapping(value = "/insertParticipantToCompetition/{participantId}/{competitionId}", method = RequestMethod.POST)
     public @ResponseBody String insertParticipantToCompetition(@PathVariable Integer participantId, @PathVariable Integer competitionId,
-                                                               @RequestParam Integer category,
-                                                               @RequestParam String region,
-                                                               @RequestParam Boolean ownParticipation,
-                                                               @RequestParam Float sq,
-                                                               @RequestParam Float bp,
-                                                               @RequestParam Float dl,
+                                                               @RequestParam String participantAddingInfoJson,
                                                                HttpServletRequest httpServletRequest, HttpServletResponse response)
     {
+        final ParticipantAddingInfo participantAddingInfo = serializer.fromJson(participantAddingInfoJson, ParticipantAddingInfo.class);
         response.setContentType("text/html; charset=UTF-8");
 
         Optional<Competition> competition = competitionDao.getCompetition(competitionId);
@@ -341,11 +343,8 @@ public class ModerController {
         User user = (User)session.getAttribute("user");
 
         if(competition.isPresent() && participant.isPresent() && competition.get().getAuthor() == user.getUserId()) {
-            Integer own = 0;
-            if(ownParticipation) {
-                own = 1;
-            }
-            participantDao.addParticipantToCompetition(participantId, competitionId, category, region, sq, bp, dl, own);
+            participantDao.addParticipantToCompetition(participantId, competitionId, participantAddingInfo);
+
             return "success";
         }
 
@@ -384,6 +383,73 @@ public class ModerController {
         }
 
         email.sendRegisterEmail(user);
+
+        return "success";
+    }
+
+    @RequestMapping(value = "/splitParticipantsIntoSequences/{competitionId}")
+    public ModelAndView splitParticipantsIntoSequences(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response) throws Exception {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("moderator/participantSequences");
+
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+        Optional<Competition> competition = competitionDao.getCompetition(competitionId);
+
+        if(competition.isPresent()) {
+//            modelAndView.addObject("streams", competitionDao.getCompetitionStreams(competitionId));
+
+            return modelAndView;
+        }
+        throw new Exception("Resource not found");
+    }
+
+    @RequestMapping(value = "/getSequences/{competitionId}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String getSequences(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        return serializer.toJson(competitionDao.getCompetitionSequences(competitionId));
+    }
+
+    @RequestMapping(value = "/addNewSequence/{competitionId}")
+    public ModelAndView addNewSequence(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response) throws Exception {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("moderator/addNewSequence");
+
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+        Optional<Competition> competition = competitionDao.getCompetition(competitionId);
+
+        if(competition.isPresent()) {
+            modelAndView.addObject("competition", competition.get());
+            return modelAndView;
+        }
+        throw new Exception("Resource not found");
+    }
+
+    @RequestMapping(value = "/getAgeGroupsAndWeightCategories/{competitionId}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String getAgeGroups(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        List<AgeGroupWithWeightCategory> allAgeGroupAndWeightCategoriesNotUsedInSequences = competitionDao.getAllAgeGroupAndWeightCategoriesNotUsedInSequences(competitionId);
+        int number = 0;
+        for(Iterator<AgeGroupWithWeightCategory> i = allAgeGroupAndWeightCategoriesNotUsedInSequences.iterator(); i.hasNext(); number++) {
+            i.next().setId(number);
+        }
+
+        return serializer.toJson(allAgeGroupAndWeightCategoriesNotUsedInSequences);
+    }
+
+    @RequestMapping(value = "/addNewSequence/{competitionId}", method = RequestMethod.POST)
+    @ResponseBody
+    public String getWeightCategories(@PathVariable Integer competitionId, @RequestParam String newSequenceJSON, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+        final AddSequenceRequest newSequence = serializer.fromJson(newSequenceJSON, AddSequenceRequest.class);
+
+        competitionDao.addNewSequenceWithCategories(newSequence, competitionId);
 
         return "success";
     }

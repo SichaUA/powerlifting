@@ -104,14 +104,30 @@
                         <div class="form-group">
                             <label class="col-sm-2 col-sm-2 control-label">Age Group</label>
                             <div class="col-sm-10">
-                                <#list ageGroups as ageGroup>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="ageGroupRadios" id="ageGroup${ageGroup.groupId}" value="${ageGroup.groupId}" data-bind="checked: ageGroup">
-                                            ${ageGroup.group} (${ageGroup.description})
-                                        </label>
-                                    </div>
-                                </#list>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="ageGroup1" value="1" data-bind="checked: ageGroup1">
+                                        1 вікова група (чоловіки/жінки)
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="ageGroup2" value="2" data-bind="checked: ageGroup2">
+                                        2 вікова група (юніори/юніорки)
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="ageGroup3" value="3" data-bind="checked: ageGroup3">
+                                        3 вікова група (юнаки/дівчата)
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="ageGroup4" value="4" data-bind="checked: ageGroup4">
+                                        4 вікова група (ветерани)
+                                    </label>
+                                </div>
                             </div>
                         </div>
 

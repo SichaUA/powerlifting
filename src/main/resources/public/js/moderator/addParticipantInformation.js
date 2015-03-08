@@ -33,12 +33,18 @@ $(document).ready(function () {
     function ParticipantViewModel() {
         var self = this;
 
+        self.ageGroup = ko.observable();
         self.category = ko.observable();
         self.region = ko.observable('');
-        self.ownParticipation = ko.observable();
-        self.SQ = ko.observable('').extend({required: true});
-        self.BP = ko.observable('').extend({required: true});
-        self.DL = ko.observable('').extend({required: true});
+        self.ownParticipation = ko.observable(false);
+        self.SQ = ko.observable('').extend();
+        self.BP = ko.observable('').extend();
+        self.DL = ko.observable('').extend();
+        self.total = ko.observable('').extend();
+        self.firstCoach = ko.observable('');
+        self.personalCoach = ko.observable('');
+        self.firstAdditionalCoach = ko.observable('');
+        self.secondAdditionalCoach = ko.observable('');
 
         self.errors = ko.validation.group(self);
 
@@ -54,16 +60,24 @@ $(document).ready(function () {
             var loc = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
             var participant = loc.substring(loc.lastIndexOf('/') + 1);
 
+            if(self.SQ() == '') {
+                self.SQ = ko.observable(0);
+            }
+            if(self.BP() == '') {
+                self.BP = ko.observable(0);
+            }
+            if(self.DL() == '') {
+                self.DL = ko.observable(0);
+            }
+            if(self.total() == '') {
+                self.DL = ko.observable(0);
+            }
+
             $.ajax({
                 url: '/moder/insertParticipantToCompetition/' + participant + '/' + competition,
                 type: 'POST',
                 data: {
-                    category: self.category(),
-                    region: self.region(),
-                    ownParticipation: (self.ownParticipation()? self.ownParticipation() : false),
-                    sq: self.SQ(),
-                    bp: self.BP(),
-                    dl: self.DL()
+                    participantAddingInfoJson: ko.toJSON(self)
                 }
             }).done(function (response) {
                 window.location = '/moder/add-participants/' + competition;
