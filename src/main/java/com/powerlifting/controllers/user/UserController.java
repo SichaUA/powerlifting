@@ -72,7 +72,7 @@ public class UserController {
         final User user = serializer.fromJson(studentJson, User.class);
         user.setPassword(CommonUtils.md5Hex(user.getPassword()));
 
-        userDao.createUser(user);
+        userDao.createUserReturningId(user);
 
         email.sendRegisterEmail(user);
 

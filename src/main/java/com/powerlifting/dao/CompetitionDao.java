@@ -274,4 +274,149 @@ public class CompetitionDao {
             }
         });
     }
+
+    public List<Pair<WeightCategory, AgeGroup>> getCategoriesOfSequence(Integer sequenceId) {
+        final String sql =
+                "SELECT * " +
+                "FROM sequence_category sc JOIN dictionary_weight_category wc ON (sc.category = wc.categoryId) JOIN dictionary_age_group ag ON (sc.ageGroup = ag.groupId) " +
+                "WHERE sequence = ? ";
+
+        List<SequenceCategory> sequenceCategories = jdbcTemplate.query(sql, new SequenceCategoryRowMapper(), sequenceId);
+        List<Pair<WeightCategory, AgeGroup>> pairList = new ArrayList<>();
+        for(Iterator<SequenceCategory> i = sequenceCategories.iterator(); i.hasNext(); ) {
+            final SequenceCategory sequenceCategory = i.next();
+            pairList.add(new Pair<>(sequenceCategory.getCategory(), sequenceCategory.getAgeGroup()));
+        }
+
+        return pairList;
+    }
+
+    public Optional<Sequence> getSequenceById(Integer sequenceId) {
+        final String sql =
+                "SELECT * " +
+                "FROM sequence " +
+                "WHERE sequenceId = ? ";
+
+        Optional<Sequence> sequence = CommonUtils.selectOne(jdbcTemplate, sql, new SequenceRowMapper(), sequenceId);
+        if(sequence.isPresent()) {
+            sequence.get().setCategories(getCategoriesOfSequence(sequenceId));
+        }
+
+        return sequence;
+    }
+
+    public void insertFirstSequenceGroup(Integer sequenceId) {
+        final String sql = "INSERT INTO `group` (sequenceId, groupNum) VALUES(?, 1)";
+
+        jdbcTemplate.update(sql, sequenceId);
+    }
+
+    public Integer getSequenceGroupCount(Integer sequenceId) {
+        final String sql =
+                "SELECT count(groupNum) " +
+                "FROM `group` " +
+                "WHERE sequenceId = ? ";
+
+        return jdbcTemplate.queryForObject(sql, Integer.class, sequenceId);
+    }
+
+    public List<Group> getSequenceGroups(Integer sequenceId) {
+        final String sql =
+                "SELECT * " +
+                "FROM `group` g " +
+                "WHERE g.sequenceId = ? ";
+
+        return jdbcTemplate.query(sql, new GroupRowMapper(), sequenceId);
+    }
+
+    public List<ParticipantInfo> getAllSequenceParticipant(Integer sequenceId) {
+        final String sql =
+                "SELECT p.*, dr.name as fromName, u.*, da.*, dw.*, gp.groupId as participantGroup " +
+                "FROM participant p JOIN dictionary_region dr ON (p.`from` = dr.regionId) JOIN user u ON (p.user = u.userId) " +
+                    "JOIN dictionary_age_group da ON (p.ageGroup = da.groupId) JOIN dictionary_weight_category dw ON (p.category = dw.categoryId) " +
+                    "JOIN sequence s ON (s.competition = p.competition) " +
+                    "JOIN `group` g ON (g.sequenceId = s.sequenceId) " +
+                    "LEFT JOIN  `group_participant` gp ON (gp.participant = p.participantId) " +
+                "WHERE s.sequenceId = ? AND p.ageGroup IN (SELECT ageGroup " +
+                                                          "FROM sequence s1 JOIN sequence_category sc ON (s1.sequenceId = sc.sequence) " +
+                                                          "WHERE s1.sequenceId = s.sequenceId AND p.category IN (SELECT category " +
+                                                                                                                "FROM sequence s2 JOIN sequence_category sc1 ON (s2.sequenceId = sc1.sequence) " +
+                                                                                                                "WHERE s2.sequenceId = s1.sequenceId)) " +
+                "GROUP BY p.participantId " +
+                "ORDER BY u.gender, category, total DESC";
+
+        //change groupId in participantInfoList to groupNum
+        List<ParticipantInfo> participantInfoList = jdbcTemplate.query(sql, new ParticipantInfoRowMapper(), sequenceId);
+        List<Group> groups = getSequenceGroups(sequenceId);
+
+        for(Iterator<ParticipantInfo> i = participantInfoList.iterator(); i.hasNext(); ) {
+            ParticipantInfo participantInfo = i.next();
+            for(Iterator<Group> j = groups.iterator(); j.hasNext(); ) {
+                Group group = j.next();
+                if(participantInfo.getSelectedGroup() == group.getGroupId()) {
+                    participantInfo.setSelectedGroup(group.getGroupNum());
+                }
+            }
+        }
+
+        return participantInfoList;
+    }
+
+    public void deleteGroupFromSequence(Integer sequenceId, List<Integer> groupNums) {
+        final String sql =
+                "DELETE FROM `group` " +
+                "WHERE sequenceId = ? AND groupNum = ? ";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setInt(1, sequenceId);
+                ps.setInt(2, groupNums.get(i));
+            }
+
+            @Override
+            public int getBatchSize() {
+                return groupNums.size();
+            }
+        });
+    }
+
+    public void insertGroupsToSequence(Integer sequenceId, List<Integer> groups) {
+        final String sql =
+                "INSERT INTO `group` (sequenceId, groupNum) " +
+                "VALUES (?, ?) ";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setInt(1, sequenceId);
+                ps.setInt(2, groups.get(i));
+            }
+
+            @Override
+            public int getBatchSize() {
+                return groups.size();
+            }
+        });
+    }
+
+    public void deleteParticipantFromGroup(Integer sequenceId, Integer participantId) {
+        final String sql =
+                "DELETE FROM group_participant " +
+                "WHERE participant = ? AND groupId IN (SELECT g.groupId " +
+                                                      "FROM `group` g " +
+                                                      "WHERE g.sequenceId = ?) ";
+
+        jdbcTemplate.update(sql, participantId, sequenceId);
+    }
+
+    public void insertParticipantToGroup(Integer sequenceId, Integer groupId, Integer participantId) {
+        final String sql =
+                "INSERT INTO group_participant (groupId, participant) " +
+                "VALUES((SELECT g.groupId " +
+                        "FROM `group` g " +
+                        "WHERE g.sequenceId = ? AND g.groupNum = ?), ?) ";
+
+        jdbcTemplate.update(sql, sequenceId, groupId, participantId);
+    }
 }

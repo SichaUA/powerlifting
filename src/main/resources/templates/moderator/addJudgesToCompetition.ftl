@@ -70,7 +70,9 @@
                                                     <h5>${judge.secondName} ${judge.firstName} ${judge.middleName}</h5>
                                                 </div>
                                                 <img src="/img/avatars/${judge.photo}" class="img-circle" height="120">
-                                                <p>${judge.email}</p>
+                                                <#if judge.email??>
+                                                    <p>${judge.email}</p>
+                                                </#if>
                                                 <footer>
                                                     <div class="centered">
                                                         <button class="btn btn-danger btn-round" value="${judge.userId}" onclick="deleteJudge(value)">
@@ -90,6 +92,8 @@
         </div>
     </section>
 </section>
+<#include "*/modal/modal.ftl">
+
 <script type="application/javascript" src="/libs/js/bootstrap.min.js"></script>
 <script type="application/javascript" src="/libs/js/jquery.autocomplete.js"></script>
 

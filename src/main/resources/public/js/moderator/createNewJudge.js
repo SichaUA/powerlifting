@@ -5,7 +5,6 @@ $(document).ready(function () {
         var self = this;
 
         self.email = ko.observable('').extend({
-            required: true,
             email: true
         });
         self.firstName = ko.observable('').extend({required: true});

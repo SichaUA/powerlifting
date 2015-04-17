@@ -26,14 +26,21 @@
                 <h3><i class="fa fa-angle-right"></i> Participants Sequences</h3>
             </div>
             <div class="col-md-2">
-                <input type="button" class="btn btn-round btn-info" value="Add sequence" onclick="addSequence()"/>
+                <input type="button" class="btn btn-round btn-primary" value="Add sequence" onclick="addSequence()"/>
             </div>
             <div id="sequences-table" class="col-lg-12" data-bind="foreach: sequences">
                 <div class="content-panel">
                     <table class="table table-striped table-advance table-hover">
-                        <h4><i class="fa fa-angle-right"></i> Sequence #<span data-bind="text: sequenceNumber"></span></h4>
-                        <p>Date: <span data-bind="text: date"></span></p>
-                        <p data-bind="text: info"></p>
+                        <div class="col-md-8">
+                            <h4><i class="fa fa-angle-right"></i> Sequence #<span data-bind="text: sequenceNumber"></span></h4>
+                            <p>Date: <span data-bind="text: date"></span></p>
+                            <p data-bind="text: info"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="button" class="btn btn-round btn-info" value="Add judges" data-bind="click: $root.addJudges"/>
+                            <input type="button" class="btn btn-round btn-info" value="Split into groups" data-bind="click: $root.splitIntoGroups"/>
+                        </div>
+
                         <hr>
                         <thead>
                             <tr>

@@ -1,3 +1,5 @@
+var users = [];
+
 function deleteParticipant(participantId) {
     $.ajax({
         url: '/moder/deleteParticipantFromCompetition/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1),
@@ -23,25 +25,31 @@ $(document).ready(function () {
         paramName: "term",
         delimiter: ",",
         transformResult: function(response) {
-            return {
-                suggestions: $.map($.parseJSON(response), function(item) {
-                    return { value: (item.secondName + ' ' + item.firstName + ' ' + item.middleName + ' ' + item.email), data: item.userId };
-                })
-            };
+            users =  $.map($.parseJSON(response), function(item) {
+                return { value: (item.secondName + ' ' + item.firstName + ' ' + item.middleName + ' ' + item.birthday), data: item.userId };
+            });
+
+            return {suggestions: users};
         }
     });
 
     $('#add-participant-form').submit(function (e) {
         e.preventDefault();
 
-        var participant = $('#participant-input').val().split(' ');
-        var email = participant[participant.length-1];
+        var participant = $('#participant-input').val();
+        var userId;
+        for(var i = 0; i < users.length; i++) {
+            if(users[i].value == participant) {
+                userId = users[i].data;
+                break;
+            }
+        }
 
         $.ajax({
             url: '/moder/AddParticipantToCompetition/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1),
             method: 'POST',
             data: {
-                participantEmail: email
+                participantId: userId
             }
         }).done(function (response) {
             window.location = response;

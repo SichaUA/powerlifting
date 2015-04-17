@@ -46,7 +46,7 @@
                             <#list categories as category>
                                 <#if category.gender == 0>
                                     <tr>
-                                        <td colspan="9" class="th-category"><h4>${category.name}</h4></td>
+                                        <td colspan="10" class="th-category"><h4>${category.name}</h4></td>
                                     </tr>
 
                                     <#assign x = 1>

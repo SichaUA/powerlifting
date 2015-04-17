@@ -5,7 +5,6 @@ $(document).ready(function () {
         var self = this;
 
         self.email = ko.observable('').extend({
-            required: true,
             email: true
         });
         self.firstName = ko.observable('').extend({required: true});
@@ -32,8 +31,12 @@ $(document).ready(function () {
                     participantJson: ko.toJSON(self),
                     addParticipantToCompetition: self.addJudgeToCompetition()
                 }
-            }).done(function () {
-                window.location = '/moder/add-participants/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+            }).done(function (response) {
+                if(response == 'success') {
+                    window.location = '/moder/add-participants/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+                }else{
+                    window.location = response;
+                }
             })
         }
     }

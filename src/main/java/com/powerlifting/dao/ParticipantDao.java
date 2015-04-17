@@ -51,7 +51,7 @@ public class ParticipantDao {
         final String sql =
                 "SELECT * " +
                 "FROM user u " +
-                "WHERE CONCAT(u.secondName, \" \", u.firstName, \" \", u.middleName, \" \", u.email) LIKE ? AND " +
+                "WHERE CONCAT(u.secondName, \" \", u.firstName, \" \", u.middleName) LIKE ? AND " +
                 "u.userId NOT IN (SELECT p.user " +
                                  "FROM participant p " +
                                  "WHERE p.competition = ?) " +

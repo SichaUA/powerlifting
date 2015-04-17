@@ -74,6 +74,14 @@ $(document).ready(function () {
         for(var i = 0; i < sequences.length; i++) {
             self.sequences.push(new Sequence(sequences[i]));
         }
+        
+        self.addJudges = function (sequence) {
+            window.location = '/moder/addJudgesToSequence/' + sequence.sequenceId;
+        };
+
+        self.splitIntoGroups = function (sequence) {
+            window.location = '/moder/splitIntoGroups/' + sequence.sequenceId;
+        };
     }
 
     var sequenceViewModel = new SequenceViewModel();

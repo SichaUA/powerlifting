@@ -1,12 +1,15 @@
 package com.powerlifting.dao;
 
-import com.powerlifting.controllers.registered.model.JudgeCategory;
-import com.powerlifting.controllers.registered.model.Judge;
-import com.powerlifting.controllers.registered.model.User;
-import com.powerlifting.dao.rowMappers.JudgeCategoryRowMapper;
-import com.powerlifting.dao.rowMappers.UserRowMapper;
+import com.powerlifting.controllers.registered.model.*;
+import com.powerlifting.dao.rowMappers.*;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -38,28 +41,24 @@ public class JudgeDao {
         text = "%" + text + "%";
         final String sql =
                 "SELECT * " +
-                        "FROM user " +
-                        "WHERE CONCAT(secondName, \" \", firstName, \" \", middleName, \" \", email) LIKE ? " +
-                        "AND userId IN (SELECT j.userId " +
-                        "FROM judge j) " +
-                        "AND userId NOT IN (SELECT user " +
-                        "FROM competition_judge " +
-                        "WHERE competition = ?) " +
-                        "LIMIT ?";
+                "FROM user u " +
+                "WHERE CONCAT(secondName, \" \", firstName, \" \", middleName) LIKE ? " +
+                "AND userId IN (SELECT j.userId " +
+                               "FROM judge j) " +
+                "AND userId NOT IN (SELECT user " +
+                                   "FROM competition_judge " +
+                                   "WHERE competition = ?) " +
+                "LIMIT ?";
 
         return jdbcTemplate.query(sql, new UserRowMapper(), text, competitionId, limit);
     }
 
-    public void addJudgeToCompetition(String judgeEmail, Integer competitionId) {
+    public void addJudgeToCompetition(Integer judgeId, Integer competitionId) {
         final String sql =
                 "INSERT INTO competition_judge (user, competition) " +
-                        "VALUES((SELECT userId " +
-                        "FROM judge j " +
-                        "WHERE j.userId = (SELECT u.userId " +
-                        "FROM user u " +
-                        "WHERE u.email = ?)), ?)";
+                "VALUES(?, ?)";
 
-        jdbcTemplate.update(sql, judgeEmail, competitionId);
+        jdbcTemplate.update(sql, judgeId, competitionId);
     }
 
     public List<JudgeCategory> getAllCategory() {
@@ -71,22 +70,82 @@ public class JudgeDao {
     }
 
 
-    public void assignUserToJudge(String userEmail, Integer categoryId, Date assignmentDate) {
+    public void assignUserToJudge(Integer userId, Integer categoryId, Date assignmentDate) {
         final String sql =
                 "INSERT INTO judge (userId, category, assignmentDate) " +
-                "VALUES ((SELECT u.userId " +
-                         "FROM user u " +
-                         "WHERE u.email = ?), ?, ?)";
+                "VALUES (?, ?, ?)";
 
-        jdbcTemplate.update(sql, userEmail, categoryId, assignmentDate);
+        jdbcTemplate.update(sql, userId, categoryId, assignmentDate);
     }
 
-    public void createNewJudgeAsUser(Judge judge) {
+    public Integer createNewJudgeAsUserReturningId(Judge judge) {
         final String sql =
                 "INSERT INTO user (email, firstName, secondName, middleName, password, birthday, gender) " +
                 "VALUES(?, ?, ?, ?, ?, ?, ?); ";
 
-        jdbcTemplate.update(sql, judge.getEmail(), judge.getFirstName(), judge.getSecondName(), judge.getMiddleName(),
-                            judge.getPassword(), judge.getBirthday(), judge.getGender());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(sql, new String[]{"userId"});
+
+                ps.setString(1, judge.getEmail().isEmpty() ? null : judge.getEmail());
+                ps.setString(2, judge.getFirstName());
+                ps.setString(3, judge.getSecondName());
+                ps.setString(4, judge.getMiddleName());
+                ps.setString(5, judge.getPassword());
+                ps.setDate(6, new java.sql.Date(judge.getBirthday().getTime()));
+                ps.setInt(7, judge.getGender());
+
+                return ps;
+            }
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
+    }
+
+    public List<SequenceJudge> getJudgesOfSequence(Integer sequenceId) {
+        final String sql =
+                "SELECT * " +
+                "FROM judge j JOIN sequence_judge sj ON j.userId = sj.judge JOIN user u ON j.userId = u.userId " +
+                "WHERE sj.sequenceId = ? ";
+
+        return jdbcTemplate.query(sql, new SequenceJudgeRowMapper(), sequenceId);
+    }
+
+    public List<Judge> getCompetitionJudgeWhichNotInSequence(Integer sequenceId) {
+        final String sql =
+                "SELECT * " +
+                "FROM sequence s JOIN competition_judge cj ON (s.competition = cj.competition) JOIN user u ON (cj.user = u.userId) JOIN judge j ON (j.userId = u.userId) " +
+                "WHERE s.sequenceId = ? AND cj.user NOT IN " +
+                    "(SELECT judge " +
+                    " FROM sequence_judge sj " +
+                    " WHERE sj.sequenceId = s.sequenceId" +
+                    ")";
+
+        return jdbcTemplate.query(sql, new JudgeRowMapper(), sequenceId);
+    }
+
+    public List<JudgeType> getAllJudgeTypes() {
+        final String sql =
+                "SELECT * " +
+                "FROM dictionary_judge_type ";
+
+        return jdbcTemplate.query(sql, new JudgeTypeRowMapper());
+    }
+
+    public void addJudgeToSequence(Integer sequenceId, Integer judgeId, Integer typeId) {
+        final String sql = "REPLACE INTO sequence_judge (sequenceId, judge, judgeType) VALUES (?, ?, ?)";
+
+        jdbcTemplate.update(sql, sequenceId, judgeId, typeId);
+    }
+
+    public void deleteJudgeFromSequence(Integer sequenceId, Integer judgeId) {
+        final String sql =
+                "DELETE FROM sequence_judge " +
+                "WHERE sequenceId = ? AND judge = ?";
+
+        jdbcTemplate.update(sql, sequenceId, judgeId);
     }
 }

@@ -25,6 +25,28 @@
             <div class="col-lg-12">
                 <div class="form-panel">
                     <form class="form-horizontal style-form" id="judge-form" data-bind="submit: newJudge">
+
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">First Name*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="Vasya" data-bind="value: firstName">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Second Name*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="Pupkin" data-bind="value: secondName">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Middle Name*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="Vasylyovych" data-bind="value: middleName">
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-sm-2 col-sm-2 control-label">Email</label>
                             <div class="col-sm-10">
@@ -33,35 +55,14 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">First Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" placeholder="Vasya" data-bind="value: firstName">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Second Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" placeholder="Pupkin" data-bind="value: secondName">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Middle Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" placeholder="Vasylyovych" data-bind="value: middleName">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Birthday</label>
+                            <label class="col-sm-2 col-sm-2 control-label">Birthday*</label>
                             <div class="col-sm-10">
                                 <input id="birthday-datepicker" type="text" class="form-control" data-bind="value: birthday">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Gender</label>
+                            <label class="col-sm-2 col-sm-2 control-label">Gender*</label>
                             <div class="col-sm-10">
                                 <div class="radio">
                                     <label>
@@ -79,7 +80,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Category</label>
+                            <label class="col-sm-2 col-sm-2 control-label">Category*</label>
                             <div class="col-sm-10">
                                 <select id="category-select" class="form-control" data-bind="value: category">
                                 <#list categories as category>
@@ -92,7 +93,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Date of category appointment</label>
+                            <label class="col-sm-2 col-sm-2 control-label">Date of category appointment*</label>
                             <div class="col-sm-10">
                                 <input id="appointment-datepicker" type="text" class="form-control" data-bind="value: assignmentDate">
                             </div>

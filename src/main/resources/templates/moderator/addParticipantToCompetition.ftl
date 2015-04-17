@@ -36,7 +36,7 @@
 
                         <div class="form-group">
                             <div class="col-md-11">
-                                <input id="participant-input" type="text" class="form-control" placeholder="User name or email" autofocus/>
+                                <input id="participant-input" type="text" class="form-control" placeholder="User name" autofocus/>
                             </div>
                             <div class="col-md-1">
                                 <input type="submit" class="btn btn-round btn-primary" value="Add"/>

@@ -125,7 +125,7 @@ public class ModerController {
     }
 
     @RequestMapping(value = "/AddJudgeToCompetition/{competitionId}", method = RequestMethod.POST)
-    public @ResponseBody String addJudgeToCompetition(@PathVariable Integer competitionId, @RequestParam String judgeEmail, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    public @ResponseBody String addJudgeToCompetition(@PathVariable Integer competitionId, @RequestParam Integer judgeId, HttpServletRequest httpServletRequest, HttpServletResponse response)
     {
         response.setContentType("text/html; charset=UTF-8");
 
@@ -135,7 +135,7 @@ public class ModerController {
             final User user = (User)session.getAttribute("user");
 
             if(competition.get().getAuthor() == user.getUserId()) {
-                judgeDao.addJudgeToCompetition(judgeEmail, competitionId);
+                judgeDao.addJudgeToCompetition(judgeId, competitionId);
                 return "success";
             }
         }
@@ -164,7 +164,7 @@ public class ModerController {
     }
 
     @RequestMapping(value = "/assignUserToJudge/{competitionId}", method = RequestMethod.POST)
-    public @ResponseBody String assignUserToJudge(@PathVariable Integer competitionId, @RequestParam String userEmail,
+    public @ResponseBody String assignUserToJudge(@PathVariable Integer competitionId, @RequestParam Integer userId,
                                                   @RequestParam Integer categoryId, @RequestParam Date categoryDate,
                                                   @RequestParam Boolean addJudgeToCompetition,
                                                   HttpServletRequest httpServletRequest, HttpServletResponse response)
@@ -177,10 +177,10 @@ public class ModerController {
             final User user = (User)session.getAttribute("user");
 
             if(competition.get().getAuthor() == user.getUserId()) {
-                judgeDao.assignUserToJudge(userEmail, categoryId, categoryDate);
+                judgeDao.assignUserToJudge(userId, categoryId, categoryDate);
 
                 if(addJudgeToCompetition) {
-                    judgeDao.addJudgeToCompetition(userEmail, competitionId);
+                    judgeDao.addJudgeToCompetition(userId, competitionId);
                 }
 
                 return "success";
@@ -211,17 +211,17 @@ public class ModerController {
         String judgePassword = CommonUtils.generateRandomPassword(8);
         judge.setPassword(CommonUtils.md5Hex(judgePassword));
 
-        judgeDao.createNewJudgeAsUser(judge);
+        final Integer userId = judgeDao.createNewJudgeAsUserReturningId(judge);
 
         User user = new User();
         user.setEmail(judge.getEmail());
         user.setPassword(judge.getPassword());
         email.moderRegisterUserEmail(user, judgePassword);
 
-        judgeDao.assignUserToJudge(judge.getEmail(), judge.getCategory(), judge.getAssignmentDate());
+        judgeDao.assignUserToJudge(userId, judge.getCategory(), judge.getAssignmentDate());
 
         if(addJudgeToCompetition) {
-            judgeDao.addJudgeToCompetition(judge.getEmail(), competitionId);
+            judgeDao.addJudgeToCompetition(userId, competitionId);
             final Optional<Competition> competition = competitionDao.getCompetition(competitionId);
             if(competition.isPresent()) {
                 email.appointJudgeToCompetitionMessage(user, competition.get(), userDao.getUserById(competition.get().getAuthor()).get());
@@ -315,12 +315,12 @@ public class ModerController {
     }
 
     @RequestMapping(value = "/AddParticipantToCompetition/{competitionId}", method = RequestMethod.POST)
-    public @ResponseBody String addParticipantToCompetition(@PathVariable Integer competitionId, @RequestParam String participantEmail,
+    public @ResponseBody String addParticipantToCompetition(@PathVariable Integer competitionId, @RequestParam Integer participantId,
                                                             HttpServletRequest httpServletRequest, HttpServletResponse response) throws Exception {
         response.setContentType("text/html; charset=UTF-8");
 
         Optional<Competition> competition = competitionDao.getCompetition(competitionId);
-        Optional<User> participant = userDao.getUserByEmail(participantEmail);
+        Optional<User> participant = userDao.getUserById(participantId);
 
         if(competition.isPresent() && participant.isPresent()) {
             return "/moder/add-participant-info/" + participant.get().getUserId() + "/" + competition.get().getId();
@@ -373,16 +373,15 @@ public class ModerController {
         String userPassword = CommonUtils.generateRandomPassword(8);
         user.setPassword(CommonUtils.md5Hex(userPassword));
 
-        userDao.createUser(user);
+        final Integer userId = userDao.createUserReturningId(user);
+        email.sendRegisterEmail(user);
 
         if(addParticipantToCompetition) {
-            final Optional<User> createdUser = userDao.getUserByCredentials(user);
-            if(createdUser.isPresent()) {
-                userDao.participateTheCompetition(competitionId, createdUser.get().getUserId());
+            final Optional<Competition> competition = competitionDao.getCompetition(competitionId);
+            if(competition.isPresent()) {
+                return "/moder/add-participant-info/" + userId + "/" + competition.get().getId();
             }
         }
-
-        email.sendRegisterEmail(user);
 
         return "success";
     }
@@ -450,6 +449,115 @@ public class ModerController {
         final AddSequenceRequest newSequence = serializer.fromJson(newSequenceJSON, AddSequenceRequest.class);
 
         competitionDao.addNewSequenceWithCategories(newSequence, competitionId);
+
+        return "success";
+    }
+
+    @RequestMapping(value = "/addJudgesToSequence/{sequenceId}")
+    public ModelAndView addJudgesToSequence(@PathVariable Integer sequenceId, HttpServletRequest httpServletRequest, HttpServletResponse response) throws Exception {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("moderator/addJudgesToSequence");
+
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+        Optional<Sequence> sequence = competitionDao.getSequenceById(sequenceId);
+        if(sequence.isPresent()) {
+            modelAndView.addObject("sequence", sequence.get());
+            modelAndView.addObject("alreadyJudges", judgeDao.getJudgesOfSequence(sequenceId));
+            modelAndView.addObject("competitionJudge", judgeDao.getCompetitionJudgeWhichNotInSequence(sequenceId));
+            modelAndView.addObject("judgeCategories", judgeDao.getAllCategory());
+            modelAndView.addObject("judgeTypes", judgeDao.getAllJudgeTypes());
+
+            return modelAndView;
+        }
+        throw new Exception("Sequence not found");
+    }
+
+    @RequestMapping(value = "/addJudgeToSequence/{sequenceId}", method = RequestMethod.POST)
+    @ResponseBody
+    public String addJudgeToSequence(@PathVariable Integer sequenceId, @RequestParam Integer judgeId, @RequestParam Integer typeId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        judgeDao.addJudgeToSequence(sequenceId, judgeId, typeId);
+
+        return "success";
+    }
+
+    @RequestMapping(value = "/deleteJudgeFromSequence/{sequenceId}", method = RequestMethod.POST)
+    @ResponseBody
+    public String deleteJudgeFromSequence(@PathVariable Integer sequenceId, @RequestParam Integer judgeId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        judgeDao.deleteJudgeFromSequence(sequenceId, judgeId);
+
+        return "success";
+    }
+
+    @RequestMapping(value = "/splitIntoGroups/{sequenceId}")
+    public ModelAndView splitIntoGroups(@PathVariable Integer sequenceId, HttpServletRequest httpServletRequest, HttpServletResponse response) throws Exception {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("moderator/splitSequenceIntoGroups");
+
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+        Optional<Sequence> sequence = competitionDao.getSequenceById(sequenceId);
+        if(sequence.isPresent()) {
+            /*modelAndView.addObject("sequence", sequence.get());
+            modelAndView.addObject("alreadyJudges", judgeDao.getJudgesOfSequence(sequenceId));
+            modelAndView.addObject("competitionJudge", judgeDao.getCompetitionJudgeWhichNotInSequence(sequenceId));
+            modelAndView.addObject("judgeCategories", judgeDao.getAllCategory());
+            modelAndView.addObject("judgeTypes", judgeDao.getAllJudgeTypes());*/
+            Integer groupsCount = competitionDao.getSequenceGroupCount(sequenceId);
+            if(groupsCount == 0) {
+                competitionDao.insertFirstSequenceGroup(sequenceId);
+                groupsCount = 1;
+            }
+            modelAndView.addObject("groupCount", groupsCount);
+            modelAndView.addObject("participants", competitionDao.getAllSequenceParticipant(sequenceId));
+
+            return modelAndView;
+        }
+        throw new Exception("Sequence not found");
+    }
+
+    @RequestMapping(value = "/changeSequenceGroupCount/{sequenceId}", method = RequestMethod.POST)
+    @ResponseBody
+    public String changeSequenceGroupCount(@PathVariable Integer sequenceId, @RequestParam Integer groupCount, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        final Integer existsGroup = competitionDao.getSequenceGroupCount(sequenceId);
+        if(existsGroup > groupCount) {
+            //delete groups
+            List<Integer> groups = new ArrayList<>();
+            for(int i = existsGroup; i > groupCount; i--) {
+                groups.add(i);
+            }
+            competitionDao.deleteGroupFromSequence(sequenceId, groups);
+        }else if(existsGroup < groupCount) {
+            //add groups
+            List<Integer> groups = new ArrayList<>();
+            for(int i = existsGroup + 1; i <= groupCount; i++) {
+                groups.add(i);
+            }
+
+            competitionDao.insertGroupsToSequence(sequenceId, groups);
+        }
+
+        return "success";
+    }
+
+    @RequestMapping(value = "/changeParticipantGroup/{sequenceId}", method = RequestMethod.POST)
+    @ResponseBody
+    public String changeParticipantGroup(@PathVariable Integer sequenceId, @RequestParam Integer participantId,
+                                         @RequestParam Integer groupNum, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        competitionDao.deleteParticipantFromGroup(sequenceId, participantId);
+        if(groupNum != 0) {
+            competitionDao.insertParticipantToGroup(sequenceId, groupNum, participantId);
+        }
 
         return "success";
     }

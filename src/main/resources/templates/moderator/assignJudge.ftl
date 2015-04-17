@@ -31,7 +31,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 col-sm-2 control-label">User</label>
                             <div class="col-sm-10">
-                                <input id="user-input" type="text" class="form-control" placeholder="User name or email" autofocus/>
+                                <input id="user-input" type="text" class="form-control" placeholder="User name" autofocus/>
                             </div>
                         </div>
 

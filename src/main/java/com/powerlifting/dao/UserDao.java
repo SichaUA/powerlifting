@@ -8,7 +8,14 @@ import com.powerlifting.dao.rowMappers.TitleRowMapper;
 import com.powerlifting.dao.rowMappers.UserRowMapper;
 import com.powerlifting.utils.CommonUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,14 +26,32 @@ public class UserDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void createUser(User user) {
+    public Integer createUserReturningId(User user) {
         final String sql =
                 "INSERT INTO user " +
                 "(email, password, firstName, secondName, middleName, gender, birthday) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?);";
 
-        jdbcTemplate.update(sql, user.getEmail(), user.getPassword(), user.getFirstName(),
-                user.getSecondName(), user.getMiddleName(), user.getGender(), user.getBirthday());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(sql, new String[]{"userId"});
+
+                ps.setString(1, user.getEmail().isEmpty() ? null : user.getEmail());
+                ps.setString(2, user.getPassword());
+                ps.setString(3, user.getFirstName());
+                ps.setString(4, user.getSecondName());
+                ps.setString(5, user.getMiddleName());
+                ps.setInt(6, user.getGender());
+                ps.setDate(7, new Date(user.getBirthday().getTime()));
+
+                return ps;
+            }
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
     public Optional<User> getUserByCredentials(User user) {
@@ -105,7 +130,7 @@ public class UserDao {
         final String sql =
                 "SELECT * " +
                 "FROM user " +
-                "WHERE CONCAT(secondName, \" \", firstName, \" \", middleName, \" \", email) LIKE ? " +
+                "WHERE CONCAT(secondName, \" \", firstName, \" \", middleName) LIKE ? " +
                 "AND userId NOT IN (SELECT j.userId " +
                                    "FROM judge j) " +
                 "LIMIT ?";

@@ -25,6 +25,28 @@
             <div class="col-lg-12">
                 <div class="form-panel">
                     <form class="form-horizontal style-form" id="participant-form" data-bind="submit: newParticipant">
+
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">First Name*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="Vasya" data-bind="value: firstName">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Second Name*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="Pupkin" data-bind="value: secondName">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Middle Name*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="Vasylyovych" data-bind="value: middleName">
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-sm-2 col-sm-2 control-label">Email</label>
                             <div class="col-sm-10">
@@ -33,35 +55,14 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">First Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" placeholder="Vasya" data-bind="value: firstName">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Second Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" placeholder="Pupkin" data-bind="value: secondName">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Middle Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" placeholder="Vasylyovych" data-bind="value: middleName">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Birthday</label>
+                            <label class="col-sm-2 col-sm-2 control-label">Birthday*</label>
                             <div class="col-sm-10">
                                 <input id="datepicker" type="text" class="form-control" data-bind="value: birthday">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Gender</label>
+                            <label class="col-sm-2 col-sm-2 control-label">Gender*</label>
                             <div class="col-sm-10">
                                 <div class="radio">
                                     <label>
