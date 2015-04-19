@@ -34,7 +34,7 @@
                 </div>
 
                 <div class="col-md-2">
-                    <select class="form-control group-count-select" data-bind="value: groupCount, event{ change: groupCountChange}">
+                    <select class="form-control group-count-select data-bind="value: groupCount, event{ change: groupCountChange}">-->
                         <option value="1" <#if groupCount == 1>selected</#if>>1</option>
                         <option value="2" <#if groupCount == 2>selected</#if>>2</option>
                         <option value="3" <#if groupCount == 3>selected</#if>>3</option>
@@ -111,8 +111,8 @@
                                         </#if>
                                     </td>
                                     <td>
-                                        <select size="5" class="form-control group-count-select" data-bind="options: availableGroups, value: selectedGroup">
-                                            <option class="judge-option-0" value="0" <#if participant.selectedGroup??>selected</#if>>No group</option>
+                                        <select class="form-control participant-group-select" data-bind="options: availableGroups, value: selectedGroup">
+                                            <#--<option class="judge-option-0" value="0" <#if participant.selectedGroup??>selected</#if>>No group</option>-->
                                             <option class="judge-option-1" value="1" <#if participant.selectedGroup == 1>selected</#if>>1</option>
                                             <option class="judge-option-2 <#if groupCount lt 2>hidden</#if>" value="2" <#if participant.selectedGroup == 2>selected</#if> <#if groupCount lt 0>disabled</#if>>2</option>
                                             <option class="judge-option-3 <#if groupCount lt 3>hidden</#if>" value="3" <#if participant.selectedGroup == 3>selected</#if> <#if groupCount lt 0>disabled</#if>>3</option>

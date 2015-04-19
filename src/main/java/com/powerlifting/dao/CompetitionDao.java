@@ -305,10 +305,44 @@ public class CompetitionDao {
         return sequence;
     }
 
-    public void insertFirstSequenceGroup(Integer sequenceId) {
+    public Integer insertFirstSequenceGroup(Integer sequenceId) {
         final String sql = "INSERT INTO `group` (sequenceId, groupNum) VALUES(?, 1)";
 
-        jdbcTemplate.update(sql, sequenceId);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(sql, new String[]{"groupId"});
+
+                ps.setInt(1, sequenceId);
+
+                return ps;
+            }
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
+    }
+
+    public void insertAllSequenceParticipantToFirstGroup(Integer sequenceId, Integer groupId) {
+        List<ParticipantInfo> sequenceParticipants = getAllSequenceParticipant(sequenceId);
+
+        final String sql =
+                "INSERT INTO group_participant (groupId, participant) " +
+                "VALUES (?, ?) ";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setInt(1, groupId);
+                ps.setInt(2, sequenceParticipants.get(i).getParticipantId());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return sequenceParticipants.size();
+            }
+        });
     }
 
     public Integer getSequenceGroupCount(Integer sequenceId) {

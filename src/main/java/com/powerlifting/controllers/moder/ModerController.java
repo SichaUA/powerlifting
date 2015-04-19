@@ -509,7 +509,9 @@ public class ModerController {
             modelAndView.addObject("judgeTypes", judgeDao.getAllJudgeTypes());*/
             Integer groupsCount = competitionDao.getSequenceGroupCount(sequenceId);
             if(groupsCount == 0) {
-                competitionDao.insertFirstSequenceGroup(sequenceId);
+                Integer groupId = competitionDao.insertFirstSequenceGroup(sequenceId);
+                competitionDao.insertAllSequenceParticipantToFirstGroup(sequenceId, groupId);
+
                 groupsCount = 1;
             }
             modelAndView.addObject("groupCount", groupsCount);
@@ -555,9 +557,7 @@ public class ModerController {
         response.setContentType("text/html; charset=UTF-8");
 
         competitionDao.deleteParticipantFromGroup(sequenceId, participantId);
-        if(groupNum != 0) {
-            competitionDao.insertParticipantToGroup(sequenceId, groupNum, participantId);
-        }
+        competitionDao.insertParticipantToGroup(sequenceId, groupNum, participantId);
 
         return "success";
     }

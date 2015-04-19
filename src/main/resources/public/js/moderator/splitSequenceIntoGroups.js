@@ -51,9 +51,12 @@ $(document).ready(function () {
     }
 
     function checkSelected(groupCount) {
-        $('.group-count-select').each(function () {
+        $('.participant-group-select').each(function () {
             if($(this).val() > groupCount) {
-                $(this).val(0);
+                $(this).val(1);
+
+                var participantId = $(this).parents('tr').find('.participant-id').val();
+                changeParticipantGroup(participantId, 1);
             }
         });
     }
@@ -70,7 +73,7 @@ $(document).ready(function () {
         });
     }
 
-    $('.group-count-select').change(function () {
+    $('.participant-group-select').change(function () {
         var participantId = $(this).parents('tr').find('.participant-id').val();
         var groupNum = $(this).val();
 
