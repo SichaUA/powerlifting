@@ -49,6 +49,7 @@
                                             <button class="btn btn-info btn-round btn-lg" data-bind="click: addJudges.bind()">Add Judges</button>
                                             <button class="btn btn-info btn-round btn-lg" data-bind="click: addParticipants.bind()">Add Participants</button>
                                             <button class="btn btn-info btn-round btn-lg" data-bind="click: splitIntoSequences.bind()">Split Into Sequences</button>
+                                            <button class="btn btn-info btn-round btn-lg" data-bind="click: startCompetition.bind()">Start competition</button>
                                             <!-- Delete Modal -->
                                             <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="delete-modal" class="modal fade">
                                                 <div class="modal-dialog">

@@ -561,4 +561,24 @@ public class ModerController {
 
         return "success";
     }
+
+    @RequestMapping(value = "/startCompetition/{competitionId}")
+    public ModelAndView startCompetition(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response) throws Exception {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("moderator/competitionControlPage");
+
+        modelAndView.addObject("competitionId", competitionId);
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/weighingParticipants/{competitionId}")
+    public ModelAndView weighingParticipants(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response) throws Exception {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("moderator/weighingParticipants");
+
+        modelAndView.addObject("sequences", competitionDao.getCompetitionSequences(competitionId));
+
+        return modelAndView;
+    }
 }

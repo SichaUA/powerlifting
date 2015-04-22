@@ -42,6 +42,10 @@ $(document).ready(function () {
 
         splitIntoSequences : function() {
             window.location = '/moder/splitParticipantsIntoSequences/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1);
+        },
+
+        startCompetition : function() {
+            window.location = '/moder/startCompetition/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1);
         }
     };
 
