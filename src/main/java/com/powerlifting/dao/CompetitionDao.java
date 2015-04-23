@@ -233,7 +233,7 @@ public class CompetitionDao {
         return jdbcTemplate.query(sql, new AgeGroupWithWeightCategoryRowMapper(), competitionId);
     }
 
-    public void addNewSequenceWithCategories(AddSequenceRequest addSequenceRequest, Integer competitionId) {
+    public Integer addNewSequenceWithCategories(AddSequenceRequest addSequenceRequest, Integer competitionId) {
 //        Add new sequence returning generated sequenceId
         final String sql =
                 "INSERT INTO sequence (competition, date, info)\n" +
@@ -273,6 +273,8 @@ public class CompetitionDao {
                 return ageGroupWithWeightCategories.size();
             }
         });
+
+        return sequenceId;
     }
 
     public List<Pair<WeightCategory, AgeGroup>> getCategoriesOfSequence(Integer sequenceId) {
@@ -326,16 +328,22 @@ public class CompetitionDao {
 
     public void insertAllSequenceParticipantToFirstGroup(Integer sequenceId, Integer groupId) {
         List<ParticipantInfo> sequenceParticipants = getAllSequenceParticipant(sequenceId);
+        List<Integer> participantsOrdinalNumbers = new ArrayList<>();
+        for(int i = 1; i <= sequenceParticipants.size(); i++) {
+            participantsOrdinalNumbers.add(i);
+        }
+        Collections.shuffle(participantsOrdinalNumbers);
 
         final String sql =
-                "INSERT INTO group_participant (groupId, participant) " +
-                "VALUES (?, ?) ";
+                "INSERT INTO group_participant (groupId, participant, ordinalNumber) " +
+                "VALUES (?, ?, ?) ";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setInt(1, groupId);
                 ps.setInt(2, sequenceParticipants.get(i).getParticipantId());
+                ps.setInt(3, participantsOrdinalNumbers.get(i));
             }
 
             @Override
@@ -452,5 +460,32 @@ public class CompetitionDao {
                         "WHERE g.sequenceId = ? AND g.groupNum = ?), ?) ";
 
         jdbcTemplate.update(sql, sequenceId, groupId, participantId);
+    }
+
+    public List<ParticipantInfo> getSequenceParticipant(Integer sequenceId) {
+        final String sql = "SELECT * " +
+                "FROM group_participant gp JOIN `group` g ON (gp.groupId = g.groupId) JOIN participant p ON (gp.participant = p.participantId) " +
+                    "JOIN user u ON (p.user = u.userId) JOIN dictionary_age_group da ON (p.ageGroup = da.groupId) JOIN dictionary_weight_category dw ON (p.category = dw.categoryId) " +
+                "WHERE g.sequenceId = ? " +
+                "ORDER BY p.category, gp.ordinalNumber";
+
+        return jdbcTemplate.query(sql, new SequenceParticipantRowMapper(), sequenceId);
+    }
+
+    public void updateParticipantWeight(Integer groupParticipantId, Float weight) {
+        final String sql =
+                "UPDATE group_participant SET participantWeight = ? " +
+                "WHERE groupParticipantId = ? ";
+
+        jdbcTemplate.update(sql, weight, groupParticipantId);
+    }
+
+    public ParticipantStatus getGroupParticipantStatus(Integer groupParticipantId) {
+        final String sql =
+                "SELECT dp.* " +
+                "FROM group_participant gp JOIN dictionary_participant_status dp ON (gp.`status` = dp.statusId) " +
+                "WHERE gp.groupParticipantId = ? ";
+
+        return jdbcTemplate.queryForObject(sql, new ParticipantStatusRowMapper(), groupParticipantId);
     }
 }

@@ -20,6 +20,12 @@ public class ParticipantInfo {
     private WeightCategory weightCategory;
     private Integer selectedGroup;
 
+    private Integer groupParticipantId;
+    private Group group;
+    private Float participantWeight;
+    private Integer ordinalNumber;
+    private Integer statusId;
+
     public Integer getParticipantId() {
         return participantId;
     }
@@ -162,5 +168,45 @@ public class ParticipantInfo {
 
     public void setSelectedGroup(Integer selectedGroup) {
         this.selectedGroup = selectedGroup;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public Integer getOrdinalNumber() {
+        return ordinalNumber;
+    }
+
+    public void setOrdinalNumber(Integer ordinalNumber) {
+        this.ordinalNumber = ordinalNumber;
+    }
+
+    public Integer getGroupParticipantId() {
+        return groupParticipantId;
+    }
+
+    public void setGroupParticipantId(Integer groupParticipantId) {
+        this.groupParticipantId = groupParticipantId;
+    }
+
+    public Float getParticipantWeight() {
+        return participantWeight;
+    }
+
+    public void setParticipantWeight(Float participantWeight) {
+        this.participantWeight = participantWeight;
+    }
+
+    public Integer getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(Integer statusId) {
+        this.statusId = statusId;
     }
 }
