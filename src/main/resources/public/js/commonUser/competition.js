@@ -45,7 +45,7 @@ $(document).ready(function () {
         },
 
         startCompetition : function() {
-            window.location = '/moder/startCompetition/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1);
+            window.location = '/moder/competitionControlPage/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1);
         }
     };
 

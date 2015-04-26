@@ -560,7 +560,7 @@ public class ModerController {
         return "success";
     }
 
-    @RequestMapping(value = "/startCompetition/{competitionId}")
+    @RequestMapping(value = "/competitionControlPage/{competitionId}")
     public ModelAndView startCompetition(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response) throws Exception {
         response.setContentType("text/html; charset=UTF-8");
         ModelAndView modelAndView = new ModelAndView("moderator/competitionControlPage");
@@ -571,7 +571,7 @@ public class ModerController {
     }
 
     @RequestMapping(value = "/weighingParticipants/{competitionId}")
-    public ModelAndView weighingParticipants(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response) throws Exception {
+    public ModelAndView weighingParticipants(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response) {
         response.setContentType("text/html; charset=UTF-8");
         ModelAndView modelAndView = new ModelAndView("moderator/weighingParticipants");
 
@@ -607,5 +607,35 @@ public class ModerController {
             return "Ok";
 
         return "Disqualified";
+    }
+
+    @RequestMapping(value = "/startCompetitionPage/{competitionId}")
+    public ModelAndView startCompetitionPage(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response) {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("moderator/startCompetitionPage");
+
+        modelAndView.addObject("sequences", competitionDao.getCompetitionSequences(competitionId));
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/competitionReports/{competitionId}")
+    public ModelAndView competitionReports(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response) {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("moderator/competitionReports");
+
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/getCompetitionSequenceParticipants/{sequenceId}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String getCompetitionSequenceParticipants(@PathVariable Integer sequenceId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        List<ParticipantInfo> participants = competitionDao.getCompetitionSequenceParticipant(sequenceId);
+
+        return serializer.toJson(participants);
     }
 }

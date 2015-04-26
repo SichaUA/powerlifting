@@ -25,6 +25,11 @@ public class ParticipantInfo {
     private Float participantWeight;
     private Integer ordinalNumber;
     private Integer statusId;
+    private Float weight;
+    private Float declaredSQWeight;
+    private Float declaredBPWeight;
+    private Float declaredDLWeight;
+    private Float currentTotal;
 
     public Integer getParticipantId() {
         return participantId;
@@ -208,5 +213,45 @@ public class ParticipantInfo {
 
     public void setStatusId(Integer statusId) {
         this.statusId = statusId;
+    }
+
+    public Float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Float weight) {
+        this.weight = weight;
+    }
+
+    public Float getDeclaredSQWeight() {
+        return declaredSQWeight;
+    }
+
+    public void setDeclaredSQWeight(Float declaredSQWeight) {
+        this.declaredSQWeight = declaredSQWeight;
+    }
+
+    public Float getDeclaredBPWeight() {
+        return declaredBPWeight;
+    }
+
+    public void setDeclaredBPWeight(Float declaredBPWeight) {
+        this.declaredBPWeight = declaredBPWeight;
+    }
+
+    public Float getDeclaredDLWeight() {
+        return declaredDLWeight;
+    }
+
+    public void setDeclaredDLWeight(Float declaredDLWeight) {
+        this.declaredDLWeight = declaredDLWeight;
+    }
+
+    public Float getCurrentTotal() {
+        return currentTotal;
+    }
+
+    public void setCurrentTotal(Float currentTotal) {
+        this.currentTotal = currentTotal;
     }
 }

@@ -30,14 +30,34 @@
                 <h3><i class="fa fa-angle-right"></i> Competition control</h3>
             </div>
 
-            <div class="row mtbox">
+            <div class="row mtbox col-md-12">
                 <a href="/moder/weighingParticipants/${competitionId}">
-                    <div class="col-md-2 col-sm-2 col-md-offset-1 box0">
+                    <div class="col-md-2 col-md-offset-1 box0">
                         <div class="box1">
-                            <span class="li_heart"></span>
+                            <span class="li_user"></span>
                             <h3>Participant weight</h3>
                         </div>
                         <p>Set participants weight.</p>
+                    </div>
+                </a>
+
+                <a href="/moder/startCompetitionPage/${competitionId}">
+                    <div class="col-md-2 col-md-offset-2 box0">
+                        <div class="box1">
+                            <span class="li_star"></span>
+                            <h3>Start competition</h3>
+                        </div>
+                        <p>Start competition.</p>
+                    </div>
+                </a>
+
+                <a href="/moder/competitionReports/${competitionId}">
+                    <div class="col-md-2 col-md-offset-2 box0">
+                        <div class="box1">
+                            <span class="li_note"></span>
+                            <h3>Competition reports</h3>
+                        </div>
+                        <p>Generate competition reports.</p>
                     </div>
                 </a>
             </div>

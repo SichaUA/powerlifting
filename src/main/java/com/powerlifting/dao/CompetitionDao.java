@@ -472,6 +472,17 @@ public class CompetitionDao {
         return jdbcTemplate.query(sql, new SequenceParticipantRowMapper(), sequenceId);
     }
 
+    public List<ParticipantInfo> getCompetitionSequenceParticipant(Integer sequenceId) {
+        final String sql =
+                "SELECT * " +
+                "FROM group_participant gp JOIN `group` g ON (gp.groupId = g.groupId) JOIN participant p ON (gp.participant = p.participantId) " +
+                    "JOIN user u ON (p.user = u.userId) JOIN dictionary_age_group da ON (p.ageGroup = da.groupId) JOIN dictionary_weight_category dw ON (p.category = dw.categoryId) " +
+                "WHERE g.sequenceId = ? AND gp.`status` = 1 " +
+                "ORDER BY p.category, gp.ordinalNumber ";
+
+        return jdbcTemplate.query(sql, new SequenceParticipantRowMapper(), sequenceId);
+    }
+
     public void updateParticipantWeight(Integer groupParticipantId, Float weight) {
         final String sql =
                 "UPDATE group_participant SET participantWeight = ? " +

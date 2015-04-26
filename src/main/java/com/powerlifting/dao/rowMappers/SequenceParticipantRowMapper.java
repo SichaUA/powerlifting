@@ -25,6 +25,11 @@ public class SequenceParticipantRowMapper implements RowMapper<ParticipantInfo> 
         participantInfo.setParticipantWeight(rs.getFloat("participantWeight"));
         participantInfo.setOrdinalNumber(rs.getInt("ordinalNumber"));
         participantInfo.setStatusId(rs.getInt("status"));
+        participantInfo.setWeight(rs.getFloat("participantWeight"));
+        participantInfo.setDeclaredSQWeight(rs.getFloat("declaredSQWeight"));
+        participantInfo.setDeclaredBPWeight(rs.getFloat("declaredBPWeight"));
+        participantInfo.setDeclaredDLWeight(rs.getFloat("declaredDLWeight"));
+        participantInfo.setCurrentTotal(rs.getFloat("total"));
 
         return participantInfo;
     }
