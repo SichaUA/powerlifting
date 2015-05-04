@@ -395,7 +395,7 @@ public class ModerController {
         Optional<Competition> competition = competitionDao.getCompetition(competitionId);
 
         if(competition.isPresent()) {
-//            modelAndView.addObject("streams", competitionDao.getCompetitionStreams(competitionId));
+            modelAndView.addObject("notUsedWeightGroups", competitionDao.getAllAgeGroupAndWeightCategoriesNotUsedInSequences(competitionId).size());
 
             return modelAndView;
         }
@@ -409,6 +409,17 @@ public class ModerController {
         response.setContentType("text/html; charset=UTF-8");
 
         return serializer.toJson(competitionDao.getCompetitionSequences(competitionId));
+    }
+
+    @RequestMapping(value = "/deleteSequence/{sequenceId}", method = RequestMethod.POST)
+    @ResponseBody
+    public String deleteSequence(@PathVariable Integer sequenceId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        competitionDao.deleteSequence(sequenceId);
+
+        return "success";
     }
 
     @RequestMapping(value = "/addNewSequence/{competitionId}")
@@ -469,6 +480,7 @@ public class ModerController {
             modelAndView.addObject("competitionJudge", judgeDao.getCompetitionJudgeWhichNotInSequence(sequenceId));
             modelAndView.addObject("judgeCategories", judgeDao.getAllCategory());
             modelAndView.addObject("judgeTypes", judgeDao.getAllJudgeTypes());
+            modelAndView.addObject("competitionId", competitionDao.getCompetitionIdBySequence(sequenceId));
 
             return modelAndView;
         }
@@ -554,8 +566,9 @@ public class ModerController {
     {
         response.setContentType("text/html; charset=UTF-8");
 
-        competitionDao.deleteParticipantFromGroup(sequenceId, participantId);
-        competitionDao.insertParticipantToGroup(sequenceId, groupNum, participantId);
+        /*competitionDao.deleteParticipantFromGroup(sequenceId, participantId);
+        competitionDao.insertParticipantToGroup(sequenceId, groupNum, participantId);*/
+        competitionDao.updateParticipantGroup(sequenceId, groupNum, participantId);
 
         return "success";
     }
@@ -609,6 +622,50 @@ public class ModerController {
         return "Disqualified";
     }
 
+    @RequestMapping(value = "/setFirstAttemptWeight", method = RequestMethod.POST)
+    @ResponseBody
+    public String setFirstAttemptWeight(@RequestParam Integer groupParticipantId, @RequestParam String type,
+                                        @RequestParam Float weight, @RequestParam Integer attemptNum, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        if(weight.isNaN()) return "Not a Number";
+
+        if(type.equals("SQ")){
+            competitionDao.deleteAttempt(groupParticipantId, attemptNum, 1/*SQ*/);
+            competitionDao.setAttempt(groupParticipantId, attemptNum, weight, 1/*SQ*/, 1/*firstDeclaredWeight*/);
+        }else if(type.equals("BP")){
+            competitionDao.deleteAttempt(groupParticipantId, attemptNum, 2/*BP*/);
+            competitionDao.setAttempt(groupParticipantId, attemptNum, weight, 2/*BP*/, 1/*firstDeclaredWeight*/);
+        }else{
+            competitionDao.deleteAttempt(groupParticipantId, attemptNum, 3/*DL*/);
+            competitionDao.setAttempt(groupParticipantId, attemptNum, weight, 3/*DL*/, 1/*firstDeclaredWeight*/);
+        }
+
+        return "Ok";
+    }
+
+    @RequestMapping(value = "/changeAttemptStatus", method = RequestMethod.POST)
+    @ResponseBody
+    public String changeAttemptStatus(@RequestParam Integer groupParticipantId, @RequestParam String type,
+                                        @RequestParam Float weight, @RequestParam Integer attemptNum,
+                                      @RequestParam Integer status, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        if(weight.isNaN()) return "Not a Number";
+
+        if(type.equals("SQ")){
+            competitionDao.updateAttemptStatus(groupParticipantId, attemptNum, weight, 1/*SQ*/, status);
+        }else if(type.equals("BP")){
+            competitionDao.updateAttemptStatus(groupParticipantId, attemptNum, weight, 2/*BP*/, status);
+        }else{
+            competitionDao.updateAttemptStatus(groupParticipantId, attemptNum, weight, 3/*DL*/, status);
+        }
+
+        return "Ok";
+    }
+
     @RequestMapping(value = "/startCompetitionPage/{competitionId}")
     public ModelAndView startCompetitionPage(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response) {
         response.setContentType("text/html; charset=UTF-8");
@@ -628,14 +685,25 @@ public class ModerController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/getCompetitionSequenceParticipants/{sequenceId}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/getCompetitionGroupParticipants/{groupId}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @ResponseBody
-    public String getCompetitionSequenceParticipants(@PathVariable Integer sequenceId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    public String getCompetitionGroupParticipants(@PathVariable Integer groupId, HttpServletRequest httpServletRequest, HttpServletResponse response)
     {
         response.setContentType("text/html; charset=UTF-8");
 
-        List<ParticipantInfo> participants = competitionDao.getCompetitionSequenceParticipant(sequenceId);
+        List<ParticipantInfo> participants = competitionDao.getGroupParticipants(groupId);
 
         return serializer.toJson(participants);
+    }
+
+    @RequestMapping(value = "/getCompetitionSequenceGroups/{sequenceId}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String getCompetitionSequenceGroups(@PathVariable Integer sequenceId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        List<Group> groups = competitionDao.getSequenceGroups(sequenceId);
+
+        return serializer.toJson(groups);
     }
 }

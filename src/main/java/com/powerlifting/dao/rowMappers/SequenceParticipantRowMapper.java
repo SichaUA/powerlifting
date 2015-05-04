@@ -26,10 +26,25 @@ public class SequenceParticipantRowMapper implements RowMapper<ParticipantInfo> 
         participantInfo.setOrdinalNumber(rs.getInt("ordinalNumber"));
         participantInfo.setStatusId(rs.getInt("status"));
         participantInfo.setWeight(rs.getFloat("participantWeight"));
-        participantInfo.setDeclaredSQWeight(rs.getFloat("declaredSQWeight"));
-        participantInfo.setDeclaredBPWeight(rs.getFloat("declaredBPWeight"));
-        participantInfo.setDeclaredDLWeight(rs.getFloat("declaredDLWeight"));
         participantInfo.setCurrentTotal(rs.getFloat("total"));
+        participantInfo.setFirstSQAttempt(rs.getFloat("firstAttemptSQ"));
+        participantInfo.setFirstSQAttemptStatus(rs.getInt("firstAttemptSQStatus"));
+        participantInfo.setSecondSQAttempt(rs.getFloat("secondAttemptSQ"));
+        participantInfo.setSecondSQAttemptStatus(rs.getInt("secondAttemptSQStatus"));
+        participantInfo.setThirdSQAttempt(rs.getFloat("thirdAttemptSQ"));
+        participantInfo.setThirdSQAttemptStatus(rs.getInt("thirdAttemptSQStatus"));
+        participantInfo.setFirstBPAttempt(rs.getFloat("firstAttemptBP"));
+        participantInfo.setFirstBPAttemptStatus(rs.getInt("firstAttemptBPStatus"));
+        participantInfo.setSecondBPAttempt(rs.getFloat("secondAttemptBP"));
+        participantInfo.setSecondBPAttemptStatus(rs.getInt("secondAttemptBPStatus"));
+        participantInfo.setThirdBPAttempt(rs.getFloat("thirdAttemptBP"));
+        participantInfo.setThirdBPAttemptStatus(rs.getInt("thirdAttemptBPStatus"));
+        participantInfo.setFirstDLAttempt(rs.getFloat("firstAttemptDL"));
+        participantInfo.setFirstDLAttemptStatus(rs.getInt("firstAttemptDLStatus"));
+        participantInfo.setSecondDLAttempt(rs.getFloat("secondAttemptDL"));
+        participantInfo.setSecondDLAttemptStatus(rs.getInt("secondAttemptDLStatus"));
+        participantInfo.setThirdDLAttempt(rs.getFloat("thirdAttemptDL"));
+        participantInfo.setThirdDLAttemptStatus(rs.getInt("thirdAttemptDLStatus"));
 
         return participantInfo;
     }

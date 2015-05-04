@@ -37,10 +37,10 @@ $(document).ready(function () {
         self.category = ko.observable();
         self.region = ko.observable('');
         self.ownParticipation = ko.observable(false);
-        self.SQ = ko.observable('').extend();
-        self.BP = ko.observable('').extend();
-        self.DL = ko.observable('').extend();
-        self.total = ko.observable('').extend();
+        self.SQ = ko.observable(0).extend();
+        self.BP = ko.observable(0).extend();
+        self.DL = ko.observable(0).extend();
+        self.total = ko.observable(0).extend();
         self.firstCoach = ko.observable('');
         self.personalCoach = ko.observable('');
         self.firstAdditionalCoach = ko.observable('');

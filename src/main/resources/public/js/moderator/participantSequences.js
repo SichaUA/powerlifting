@@ -82,6 +82,18 @@ $(document).ready(function () {
         self.splitIntoGroups = function (sequence) {
             window.location = '/moder/splitIntoGroups/' + sequence.sequenceId;
         };
+
+        self.deleteSequence = function (sequence) {
+            $.ajax({
+                url: '/moder/deleteSequence/' + sequence.sequenceId,
+                method: 'POST'
+            }).done(function (response) {
+                if(response === 'success'){
+                    sequenceViewModel.sequences.remove(sequence);
+                    $('.add-sequence-button').prop('disabled', false);
+                }
+            });
+        };
     }
 
     var sequenceViewModel = new SequenceViewModel();

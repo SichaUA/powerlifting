@@ -15,7 +15,7 @@
 
     <link rel="stylesheet" type="text/css" href="/libs/lineicons/style.css">
 
-<#--<link href="/libs/css/autocomplete.css" rel="stylesheet">-->
+<link href="/css/startCompetition/startCompetitionPage.css" rel="stylesheet">
 
 <#--<link rel="stylesheet" type="text/css" href="/libs/js/gritter/css/jquery.gritter.css" />-->
 
@@ -43,11 +43,23 @@
 
                     <div class="col-md-4">
                         <select class="form-control sequence-select">
-                        <#assign x = 1>
-                        <#list sequences as sequence>
-                            <option value="${sequence.sequenceId}">#${x}, ${sequence.date}, ${sequence.info}</option>
-                            <#assign x = x + 1>
-                        </#list>
+                            <#assign x = 1>
+                            <#list sequences as sequence>
+                                <option value="${sequence.sequenceId}">#${x}, ${sequence.date}, ${sequence.info}</option>
+                                <#assign x = x + 1>
+                            </#list>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        <h4>Select group</h4>
+                    </div>
+
+                    <div id="group-select" class="col-md-4">
+                        <select class="form-control group-select" data-bind="foreach: groups">
+                            <option data-bind="value: groupId, text: groupNum"></option>
                         </select>
                     </div>
                 </div>
@@ -78,14 +90,17 @@
                                         <th><i class="fa fa-group"></i> Age Group</th>
                                         <th>Weight</th>
                                         <th>Group</th>
-                                        <th>SQ First Approach</th>
-                                        <th>SQ Second Approach</th>
-                                        <th>SQ Third Approach</th>
-                                        <th>Current Total</th>
+                                        <th>SQ 1st Approach</th>
+                                        <th></th>
+                                        <th>SQ 2nd Approach</th>
+                                        <th></th>
+                                        <th>SQ 3rd Approach</th>
+                                        <th></th>
+                                        <th>Total</th>
                                         <th></th>
                                     </tr>
                                     </thead>
-                                    <tbody data-bind="foreach: participants">
+                                    <tbody data-bind="foreach: participantsSQ<#--.sort(function (l, r) { return (l.SQFirstDeclared >= r.SQFirstDeclared)? 1 : -1 })-->">
                                     <tr>
                                         <td data-bind="text: ordinalNumber"></td>
                                         <td data-bind="text: name"></td>
@@ -94,20 +109,35 @@
                                         <td data-bind="text: ageGroup"></td>
                                         <td data-bind="text: weight"></td>
                                         <td data-bind="text: group"></td>
-                                        <td>
+                                        <td data-bind="css: SQFirstCss">
                                             <div class="col-md-12">
-                                                <input type="text" class="form-control" data-bind="value: SQFirst<#--, event: {change: $root.changeParticipantWeight}-->"/>
+                                                <input type="text" class="form-control" data-bind="value: SQFirst, event: {change: $root.changeFirstSQAttemptWeight}"/>
                                             </div>
                                         </td>
                                         <td>
+                                            <button class="btn btn-success btn-xs" data-toggle="popover" title="Ok" data-trigger="hover" data-bind="click: $root.changeFirstSQAttemptStatusOK"><i class=" fa fa-thumbs-o-up"></i></button>
+                                            <button class="btn btn-danger btn-xs" data-toggle="popover" title="Cancel" data-trigger="hover" data-bind="click: $root.changeFirstSQAttemptStatusCancel"><i class=" fa fa-thumbs-o-down"></i></button>
+                                            <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover" data-bind="click: $root.changeFirstSQAttemptStatusDoctor"><i class=" fa fa-medkit"></i></button>
+                                        </td>
+                                        <td data-bind="css: SQSecondCss">
                                             <div class="col-md-12">
-                                                <input type="text" class="form-control" data-bind="value: SQSecond<#--, event: {change: $root.changeParticipantWeight}-->"/>
+                                                <input type="text" class="form-control" data-bind="value: SQSecond, event: {change: $root.changeSecondSQAttemptWeight}"/>
                                             </div>
                                         </td>
                                         <td>
+                                            <button class="btn btn-success btn-xs" data-toggle="popover" title="Ok" data-trigger="hover" data-bind="click: $root.changeSecondSQAttemptStatusOK"><i class=" fa fa-thumbs-o-up"></i></button>
+                                            <button class="btn btn-danger btn-xs" data-toggle="popover" title="Cancel" data-trigger="hover" data-bind="click: $root.changeSecondSQAttemptStatusCancel"><i class=" fa fa-thumbs-o-down"></i></button>
+                                            <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover" data-bind="click: $root.changeSecondSQAttemptStatusDoctor"><i class=" fa fa-medkit"></i></button>
+                                        </td>
+                                        <td data-bind="css: SQThirdCss">
                                             <div class="col-md-12">
-                                                <input type="text" class="form-control" data-bind="value: SQThird<#--, event: {change: $root.changeParticipantWeight}-->"/>
+                                                <input type="text" class="form-control" data-bind="value: SQThird, event: {change: $root.changeThirdSQAttemptWeight}"/>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-success btn-xs" data-toggle="popover" title="Ok" data-trigger="hover" data-bind="click: $root.changeThirdSQAttemptStatusOK"><i class=" fa fa-thumbs-o-up"></i></button>
+                                            <button class="btn btn-danger btn-xs" data-toggle="popover" title="Cancel" data-trigger="hover" data-bind="click: $root.changeThirdSQAttemptStatusCancel"><i class=" fa fa-thumbs-o-down"></i></button>
+                                            <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover" data-bind="click: $root.changeThirdSQAttemptStatusDoctor"><i class=" fa fa-medkit"></i></button>
                                         </td>
                                         <td data-bind="text: currentTotal"></td>
                                         <td></td>
@@ -133,14 +163,17 @@
                                         <th><i class="fa fa-group"></i> Age Group</th>
                                         <th>Weight</th>
                                         <th>Group</th>
-                                        <th>BP First Approach</th>
-                                        <th>BP Second Approach</th>
-                                        <th>BP Third Approach</th>
-                                        <th>Current Total</th>
+                                        <th>BP 1st Approach</th>
+                                        <th></th>
+                                        <th>BP 2nd Approach</th>
+                                        <th></th>
+                                        <th>BP 3rd Approach</th>
+                                        <th></th>
+                                        <th>Total</th>
                                         <th></th>
                                     </tr>
                                     </thead>
-                                    <tbody data-bind="foreach: participants">
+                                    <tbody data-bind="foreach: participantsBP">
                                     <tr>
                                         <td data-bind="text: ordinalNumber"></td>
                                         <td data-bind="text: name"></td>
@@ -149,20 +182,35 @@
                                         <td data-bind="text: ageGroup"></td>
                                         <td data-bind="text: weight"></td>
                                         <td data-bind="text: group"></td>
-                                        <td>
+                                        <td data-bind="css: BPFirstCss">
                                             <div class="col-md-12">
-                                                <input type="text" class="form-control" data-bind="value: BPFirst<#--, event: {change: $root.changeParticipantWeight}-->"/>
+                                                <input type="text" class="form-control" data-bind="value: BPFirst, event: {change: $root.changeFirstBPAttemptWeight}"/>
                                             </div>
                                         </td>
                                         <td>
+                                            <button class="btn btn-success btn-xs" data-toggle="popover" title="Ok" data-trigger="hover"><i class=" fa fa-thumbs-o-up"></i></button>
+                                            <button class="btn btn-danger btn-xs" data-toggle="popover" title="Cancel" data-trigger="hover"><i class=" fa fa-thumbs-o-down"></i></button>
+                                            <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover"><i class=" fa fa-medkit"></i></button>
+                                        </td>
+                                        <td data-bind="css: BPSecondCss">
                                             <div class="col-md-12">
-                                                <input type="text" class="form-control" data-bind="value: BPSecond<#--, event: {change: $root.changeParticipantWeight}-->"/>
+                                                <input type="text" class="form-control" data-bind="value: BPSecond, event: {change: $root.changeSecondBPAttemptWeight}"/>
                                             </div>
                                         </td>
                                         <td>
+                                            <button class="btn btn-success btn-xs" data-toggle="popover" title="Ok" data-trigger="hover"><i class=" fa fa-thumbs-o-up"></i></button>
+                                            <button class="btn btn-danger btn-xs" data-toggle="popover" title="Cancel" data-trigger="hover"><i class=" fa fa-thumbs-o-down"></i></button>
+                                            <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover"><i class=" fa fa-medkit"></i></button>
+                                        </td>
+                                        <td data-bind="css: BPThirdCss">
                                             <div class="col-md-12">
-                                                <input type="text" class="form-control" data-bind="value: BPThird<#--, event: {change: $root.changeParticipantWeight}-->"/>
+                                                <input type="text" class="form-control" data-bind="value: BPThird, event: {change: $root.changeThirdBPAttemptWeight}"/>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-success btn-xs" data-toggle="popover" title="Ok" data-trigger="hover"><i class=" fa fa-thumbs-o-up"></i></button>
+                                            <button class="btn btn-danger btn-xs" data-toggle="popover" title="Cancel" data-trigger="hover"><i class=" fa fa-thumbs-o-down"></i></button>
+                                            <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover"><i class=" fa fa-medkit"></i></button>
                                         </td>
                                         <td data-bind="text: currentTotal"></td>
                                         <td></td>
@@ -188,14 +236,17 @@
                                         <th><i class="fa fa-group"></i> Age Group</th>
                                         <th>Weight</th>
                                         <th>Group</th>
-                                        <th>DL First Approach</th>
-                                        <th>DL Second Approach</th>
-                                        <th>DL Third Approach</th>
-                                        <th>Current Total</th>
+                                        <th>DL 1st Approach</th>
+                                        <th></th>
+                                        <th>DL 2nd Approach</th>
+                                        <th></th>
+                                        <th>DL 3rd Approach</th>
+                                        <th></th>
+                                        <th>Total</th>
                                         <th></th>
                                     </tr>
                                     </thead>
-                                    <tbody data-bind="foreach: participants">
+                                    <tbody data-bind="foreach: participantsDL">
                                     <tr>
                                         <td data-bind="text: ordinalNumber"></td>
                                         <td data-bind="text: name"></td>
@@ -204,20 +255,35 @@
                                         <td data-bind="text: ageGroup"></td>
                                         <td data-bind="text: weight"></td>
                                         <td data-bind="text: group"></td>
-                                        <td>
+                                        <td data-bind="css: DLFirstCss">
                                             <div class="col-md-12">
-                                                <input type="text" class="form-control" data-bind="value: DLFirst<#--, event: {change: $root.changeParticipantWeight}-->"/>
+                                                <input type="text" class="form-control" data-bind="value: DLFirst, event: {change: $root.changeFirstDLAttemptWeight}"/>
                                             </div>
                                         </td>
                                         <td>
+                                            <button class="btn btn-success btn-xs" data-toggle="popover" title="Ok" data-trigger="hover"><i class=" fa fa-thumbs-o-up"></i></button>
+                                            <button class="btn btn-danger btn-xs" data-toggle="popover" title="Cancel" data-trigger="hover"><i class=" fa fa-thumbs-o-down"></i></button>
+                                            <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover"><i class=" fa fa-medkit"></i></button>
+                                        </td>
+                                        <td data-bind="css: DLSecondCss">
                                             <div class="col-md-12">
-                                                <input type="text" class="form-control" data-bind="value: DLSecond<#--, event: {change: $root.changeParticipantWeight}-->"/>
+                                                <input type="text" class="form-control" data-bind="value: DLSecond, event: {change: $root.changeSecondDLAttemptWeight}"/>
                                             </div>
                                         </td>
                                         <td>
+                                            <button class="btn btn-success btn-xs" data-toggle="popover" title="Ok" data-trigger="hover"><i class=" fa fa-thumbs-o-up"></i></button>
+                                            <button class="btn btn-danger btn-xs" data-toggle="popover" title="Cancel" data-trigger="hover"><i class=" fa fa-thumbs-o-down"></i></button>
+                                            <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover"><i class=" fa fa-medkit"></i></button>
+                                        </td>
+                                        <td data-bind="css: DLThirdCss">
                                             <div class="col-md-12">
-                                                <input type="text" class="form-control" data-bind="value: DLThird<#--, event: {change: $root.changeParticipantWeight}-->"/>
+                                                <input type="text" class="form-control" data-bind="value: DLThird, event: {change: $root.changeThirdDLAttemptWeight}"/>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-success btn-xs" data-toggle="popover" title="Ok" data-trigger="hover"><i class=" fa fa-thumbs-o-up"></i></button>
+                                            <button class="btn btn-danger btn-xs" data-toggle="popover" title="Cancel" data-trigger="hover"><i class=" fa fa-thumbs-o-down"></i></button>
+                                            <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover"><i class=" fa fa-medkit"></i></button>
                                         </td>
                                         <td data-bind="text: currentTotal"></td>
                                         <td></td>

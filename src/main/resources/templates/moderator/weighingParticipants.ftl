@@ -53,15 +53,18 @@
                         <hr>
                         <thead>
                             <tr>
-                                <th><i class="fa fa-sort-numeric-asc"></i></th>
+                                <th><i class="fa fa-sort-numeric-asc"></i> Ordinal</th>
                                 <th><i class="fa fa-user"></i> Lifter</th>
                                 <th><i class="fa fa-calendar"></i> Birthday</th>
                                 <th><i class="fa "></i> Gender</th>
                                 <th><i class="fa fa-group"></i> Age Group</th>
                                 <th><i class="fa fa-group"></i> Weight Category</th>
                                 <th><i class=" fa"></i> Group</th>
-                                <th><i class=" fa"></i> Status</th>
                                 <th><i class=" fa"></i> Weight</th>
+                                <th><i class=" fa"></i> Status</th>
+                                <th><i class=" fa"></i> 1st Attempt SQ</th>
+                                <th><i class=" fa"></i> 1st Attempt BP</th>
+                                <th><i class=" fa"></i> 1st Attempt DL</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -74,11 +77,18 @@
                                 <td data-bind="text: ageGroup"></td>
                                 <td data-bind="text: weightCategory"></td>
                                 <td data-bind="text: group"></td>
+                                <td>
+                                    <input type="text" class="form-control" data-bind="value: weight, event: {change: $root.changeParticipantWeight}"/>
+                                </td>
                                 <td data-bind="text: status"></td>
                                 <td>
-                                    <div class="row col-md-6">
-                                        <input type="text" class="form-control" data-bind="value: weight, event: {change: $root.changeParticipantWeight}"/>
-                                    </div>
+                                    <input type="text" class="form-control" data-bind="value: firstSQ, event: {change: $root.setFirstSQAttempt}"/>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" data-bind="value: firstBP, event: {change: $root.setFirstBPAttempt}"/>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" data-bind="value: firstDL, event: {change: $root.setFirstDLAttempt}"/>
                                 </td>
                                 <td></td>
                             </tr>

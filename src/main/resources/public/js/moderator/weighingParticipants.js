@@ -35,6 +35,18 @@ $(document).ready(function () {
             numeric: 2
         });
 
+        self.firstSQ = ko.observable(initialParticipant.firstSQAttempt).extend({
+            numeric: 2
+        });
+
+        self.firstBP = ko.observable(initialParticipant.firstBPAttempt).extend({
+            numeric: 2
+        });
+
+        self.firstDL = ko.observable(initialParticipant.firstDLAttempt).extend({
+            numeric: 2
+        });
+
         self.status = ko.observable((initialParticipant.statusId == 2)? 'Disqualified' : '');
     };
 
@@ -54,13 +66,58 @@ $(document).ready(function () {
                 }
             }).done(function (response) {
                 if(response === 'Not a Number') {
-                    participant.weight(0);
-                    self.changeParticipantWeight(participant);
+                    //participant.weight(0);
+                    //self.changeParticipantWeight(participant);
                 }else{
                     participant.status(response);
                 }
             });
-        }
+        };
+
+        self.setFirstSQAttempt = function (participant) {
+            $.ajax({
+                url: '/moder/setFirstAttemptWeight',
+                method: 'POST',
+                data: {
+                    groupParticipantId: participant.groupParticipantId,
+                    type: 'SQ',
+                    weight: participant.firstSQ,
+                    attemptNum: 1
+                }
+            }).done(function (response) {
+
+            });
+        };
+
+        self.setFirstBPAttempt = function (participant) {
+            $.ajax({
+                url: '/moder/setFirstAttemptWeight',
+                method: 'POST',
+                data: {
+                    groupParticipantId: participant.groupParticipantId,
+                    type: 'BP',
+                    weight: participant.firstBP,
+                    attemptNum: 1
+                }
+            }).done(function (response) {
+
+            });
+        };
+
+        self.setFirstDLAttempt = function (participant) {
+            $.ajax({
+                url: '/moder/setFirstAttemptWeight',
+                method: 'POST',
+                data: {
+                    groupParticipantId: participant.groupParticipantId,
+                    type: 'DL',
+                    weight: participant.firstDL,
+                    attemptNum: 1
+                }
+            }).done(function (response) {
+
+            });
+        };
     }
 
     var participantsViewModel = new ParticipantsViewModel();

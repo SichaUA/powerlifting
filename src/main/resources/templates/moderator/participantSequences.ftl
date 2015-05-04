@@ -26,7 +26,7 @@
                 <h3><i class="fa fa-angle-right"></i> Participants Sequences</h3>
             </div>
             <div class="col-md-2">
-                <input type="button" class="btn btn-round btn-primary" value="Add sequence" onclick="addSequence()"/>
+                <input type="button" class="btn btn-round btn-primary add-sequence-button" value="Add sequence" <#if notUsedWeightGroups = 0>disabled="disabled"</#if> onclick="addSequence()"/>
             </div>
             <div id="sequences-table" class="col-lg-12" data-bind="foreach: sequences">
                 <div class="content-panel">
@@ -39,6 +39,7 @@
                         <div class="col-md-4">
                             <input type="button" class="btn btn-round btn-info" value="Add judges" data-bind="click: $root.addJudges"/>
                             <input type="button" class="btn btn-round btn-info" value="Split into groups" data-bind="click: $root.splitIntoGroups"/>
+                            <input type="button" class="btn btn-round btn-danger" value="Delete" data-bind="click: $root.deleteSequence"/>
                         </div>
 
                         <hr>

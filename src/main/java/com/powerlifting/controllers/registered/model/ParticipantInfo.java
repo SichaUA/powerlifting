@@ -26,10 +26,25 @@ public class ParticipantInfo {
     private Integer ordinalNumber;
     private Integer statusId;
     private Float weight;
-    private Float declaredSQWeight;
-    private Float declaredBPWeight;
-    private Float declaredDLWeight;
     private Float currentTotal;
+    private Float firstSQAttempt;
+    private Integer firstSQAttemptStatus;
+    private Float secondSQAttempt;
+    private Integer secondSQAttemptStatus;
+    private Float thirdSQAttempt;
+    private Integer thirdSQAttemptStatus;
+    private Float firstBPAttempt;
+    private Integer firstBPAttemptStatus;
+    private Float secondBPAttempt;
+    private Integer secondBPAttemptStatus;
+    private Float thirdBPAttempt;
+    private Integer thirdBPAttemptStatus;
+    private Float firstDLAttempt;
+    private Integer firstDLAttemptStatus;
+    private Float secondDLAttempt;
+    private Integer secondDLAttemptStatus;
+    private Float thirdDLAttempt;
+    private Integer thirdDLAttemptStatus;
 
     public Integer getParticipantId() {
         return participantId;
@@ -223,35 +238,155 @@ public class ParticipantInfo {
         this.weight = weight;
     }
 
-    public Float getDeclaredSQWeight() {
-        return declaredSQWeight;
-    }
-
-    public void setDeclaredSQWeight(Float declaredSQWeight) {
-        this.declaredSQWeight = declaredSQWeight;
-    }
-
-    public Float getDeclaredBPWeight() {
-        return declaredBPWeight;
-    }
-
-    public void setDeclaredBPWeight(Float declaredBPWeight) {
-        this.declaredBPWeight = declaredBPWeight;
-    }
-
-    public Float getDeclaredDLWeight() {
-        return declaredDLWeight;
-    }
-
-    public void setDeclaredDLWeight(Float declaredDLWeight) {
-        this.declaredDLWeight = declaredDLWeight;
-    }
-
     public Float getCurrentTotal() {
         return currentTotal;
     }
 
     public void setCurrentTotal(Float currentTotal) {
         this.currentTotal = currentTotal;
+    }
+
+    public Float getFirstSQAttempt() {
+        return firstSQAttempt;
+    }
+
+    public void setFirstSQAttempt(Float firstSQAttempt) {
+        this.firstSQAttempt = firstSQAttempt;
+    }
+
+    public Float getSecondSQAttempt() {
+        return secondSQAttempt;
+    }
+
+    public void setSecondSQAttempt(Float secondSQAttempt) {
+        this.secondSQAttempt = secondSQAttempt;
+    }
+
+    public Float getThirdSQAttempt() {
+        return thirdSQAttempt;
+    }
+
+    public void setThirdSQAttempt(Float thirdSQAttempt) {
+        this.thirdSQAttempt = thirdSQAttempt;
+    }
+
+    public Float getFirstBPAttempt() {
+        return firstBPAttempt;
+    }
+
+    public void setFirstBPAttempt(Float firstBPAttempt) {
+        this.firstBPAttempt = firstBPAttempt;
+    }
+
+    public Float getSecondBPAttempt() {
+        return secondBPAttempt;
+    }
+
+    public void setSecondBPAttempt(Float secondBPAttempt) {
+        this.secondBPAttempt = secondBPAttempt;
+    }
+
+    public Float getThirdBPAttempt() {
+        return thirdBPAttempt;
+    }
+
+    public void setThirdBPAttempt(Float thirdBPAttempt) {
+        this.thirdBPAttempt = thirdBPAttempt;
+    }
+
+    public Float getFirstDLAttempt() {
+        return firstDLAttempt;
+    }
+
+    public void setFirstDLAttempt(Float firstDLAttempt) {
+        this.firstDLAttempt = firstDLAttempt;
+    }
+
+    public Float getSecondDLAttempt() {
+        return secondDLAttempt;
+    }
+
+    public void setSecondDLAttempt(Float secondDLAttempt) {
+        this.secondDLAttempt = secondDLAttempt;
+    }
+
+    public Float getThirdDLAttempt() {
+        return thirdDLAttempt;
+    }
+
+    public void setThirdDLAttempt(Float thirdDLAttempt) {
+        this.thirdDLAttempt = thirdDLAttempt;
+    }
+
+    public Integer getFirstSQAttemptStatus() {
+        return firstSQAttemptStatus;
+    }
+
+    public void setFirstSQAttemptStatus(Integer firstSQAttemptStatus) {
+        this.firstSQAttemptStatus = firstSQAttemptStatus;
+    }
+
+    public Integer getSecondSQAttemptStatus() {
+        return secondSQAttemptStatus;
+    }
+
+    public void setSecondSQAttemptStatus(Integer secondSQAttemptStatus) {
+        this.secondSQAttemptStatus = secondSQAttemptStatus;
+    }
+
+    public Integer getThirdSQAttemptStatus() {
+        return thirdSQAttemptStatus;
+    }
+
+    public void setThirdSQAttemptStatus(Integer thirdSQAttemptStatus) {
+        this.thirdSQAttemptStatus = thirdSQAttemptStatus;
+    }
+
+    public Integer getFirstBPAttemptStatus() {
+        return firstBPAttemptStatus;
+    }
+
+    public void setFirstBPAttemptStatus(Integer firstBPAttemptStatus) {
+        this.firstBPAttemptStatus = firstBPAttemptStatus;
+    }
+
+    public Integer getSecondBPAttemptStatus() {
+        return secondBPAttemptStatus;
+    }
+
+    public void setSecondBPAttemptStatus(Integer secondBPAttemptStatus) {
+        this.secondBPAttemptStatus = secondBPAttemptStatus;
+    }
+
+    public Integer getThirdBPAttemptStatus() {
+        return thirdBPAttemptStatus;
+    }
+
+    public void setThirdBPAttemptStatus(Integer thirdBPAttemptStatus) {
+        this.thirdBPAttemptStatus = thirdBPAttemptStatus;
+    }
+
+    public Integer getFirstDLAttemptStatus() {
+        return firstDLAttemptStatus;
+    }
+
+    public void setFirstDLAttemptStatus(Integer firstDLAttemptStatus) {
+        this.firstDLAttemptStatus = firstDLAttemptStatus;
+    }
+
+    public Integer getSecondDLAttemptStatus() {
+        return secondDLAttemptStatus;
+    }
+
+    public void setSecondDLAttemptStatus(Integer secondDLAttemptStatus) {
+        this.secondDLAttemptStatus = secondDLAttemptStatus;
+    }
+
+    public Integer getThirdDLAttemptStatus() {
+        return thirdDLAttemptStatus;
+    }
+
+    public void setThirdDLAttemptStatus(Integer thirdDLAttemptStatus) {
+        this.thirdDLAttemptStatus = thirdDLAttemptStatus;
     }
 }

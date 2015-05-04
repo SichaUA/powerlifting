@@ -52,6 +52,15 @@ public class CompetitionDao {
         return CommonUtils.selectOne(jdbcTemplate, sql, new CompetitionRowMapper(), competitionId);
     }
 
+    public Integer getCompetitionIdBySequence(Integer sequenceId) {
+        final String sql =
+                "SELECT s.competition " +
+                "FROM sequence s " +
+                "WHERE s.sequenceId = ? ";
+
+        return jdbcTemplate.queryForObject(sql, Integer.class, sequenceId);
+    }
+
     public List<Competition> getCompetitionsCreatedByUser(Integer userId) {
         final String sql = "SELECT * " +
                            "FROM competition c " +
@@ -118,6 +127,12 @@ public class CompetitionDao {
         String sql = "DELETE FROM competition WHERE competitionId = ?";
 
         jdbcTemplate.update(sql, competitionId);
+    }
+
+    public void deleteSequence(Integer sequenceId) {
+        String sql = "DELETE FROM sequence WHERE sequenceId = ? ";
+
+        jdbcTemplate.update(sql, sequenceId);
     }
 
     public List<String> getCompetitionAgeGroupsById(Integer ageGroupId) {
@@ -462,25 +477,40 @@ public class CompetitionDao {
         jdbcTemplate.update(sql, sequenceId, groupId, participantId);
     }
 
+    public void updateParticipantGroup(Integer sequenceId, Integer groupNum, Integer participantId) {
+        final String sql =
+                "UPDATE group_participant gp SET gp.groupId = (SELECT g.groupId " +
+                                                              "FROM `group` g " +
+                                                              "WHERE g.sequenceId = ? AND g.groupNum = ?) " +
+                "WHERE gp.participant = ? AND gp.groupId IN (SELECT g.groupId " +
+                                                            "FROM `group` g " +
+                                                            "WHERE g.sequenceId = ?)";
+
+        jdbcTemplate.update(sql, sequenceId, groupNum, participantId, sequenceId);
+    }
+
     public List<ParticipantInfo> getSequenceParticipant(Integer sequenceId) {
-        final String sql = "SELECT * " +
-                "FROM group_participant gp JOIN `group` g ON (gp.groupId = g.groupId) JOIN participant p ON (gp.participant = p.participantId) " +
-                    "JOIN user u ON (p.user = u.userId) JOIN dictionary_age_group da ON (p.ageGroup = da.groupId) JOIN dictionary_weight_category dw ON (p.category = dw.categoryId) " +
+        final String sql =
+                "SELECT * " +
+                "FROM group_participant_with_attempt gpa JOIN `group` g ON (gpa.groupId = g.groupId) JOIN participant p ON (gpa.participant = p.participantId) " +
+                    "JOIN user u ON (p.user = u.userId) JOIN dictionary_age_group da ON (p.ageGroup = da.groupId) " +
+                    "JOIN dictionary_weight_category dw ON (p.category = dw.categoryId)\n" +
                 "WHERE g.sequenceId = ? " +
-                "ORDER BY p.category, gp.ordinalNumber";
+                "ORDER BY p.category, gpa.ordinalNumber ";
 
         return jdbcTemplate.query(sql, new SequenceParticipantRowMapper(), sequenceId);
     }
 
-    public List<ParticipantInfo> getCompetitionSequenceParticipant(Integer sequenceId) {
+    public List<ParticipantInfo> getGroupParticipants(Integer groupId) {
         final String sql =
                 "SELECT * " +
-                "FROM group_participant gp JOIN `group` g ON (gp.groupId = g.groupId) JOIN participant p ON (gp.participant = p.participantId) " +
-                    "JOIN user u ON (p.user = u.userId) JOIN dictionary_age_group da ON (p.ageGroup = da.groupId) JOIN dictionary_weight_category dw ON (p.category = dw.categoryId) " +
-                "WHERE g.sequenceId = ? AND gp.`status` = 1 " +
-                "ORDER BY p.category, gp.ordinalNumber ";
+                "FROM group_participant_with_attempt gpa JOIN `group` g ON (gpa.groupId = g.groupId) JOIN participant p ON (gpa.participant = p.participantId) " +
+                    "JOIN user u ON (p.user = u.userId) JOIN dictionary_age_group da ON (p.ageGroup = da.groupId) " +
+                    "JOIN dictionary_weight_category dw ON (p.category = dw.categoryId) " +
+                "WHERE gpa.groupId = ? AND gpa.`status` = 1 " +
+                "ORDER BY p.category, gpa.ordinalNumber ";
 
-        return jdbcTemplate.query(sql, new SequenceParticipantRowMapper(), sequenceId);
+        return jdbcTemplate.query(sql, new SequenceParticipantRowMapper(), groupId);
     }
 
     public void updateParticipantWeight(Integer groupParticipantId, Float weight) {
@@ -489,6 +519,30 @@ public class CompetitionDao {
                 "WHERE groupParticipantId = ? ";
 
         jdbcTemplate.update(sql, weight, groupParticipantId);
+    }
+
+    public void deleteAttempt(Integer groupParticipantId, Integer attemptNumber, Integer exerciseId) {
+        final String sql =
+                "DELETE FROM attempt " +
+                "WHERE groupParticipant = ? AND attemptNumber = ? AND exercise = ? ";
+
+        jdbcTemplate.update(sql, groupParticipantId, attemptNumber, exerciseId);
+    }
+
+    public void setAttempt(Integer groupParticipantId, Integer attemptNumber, Float weight, Integer exerciseId, Integer statusId) {
+        final String sql =
+                "INSERT INTO attempt (groupParticipant, attemptNumber, weight, exercise, `status`) " +
+                "VALUES(?, ?, ?, ?, ?)";
+
+        jdbcTemplate.update(sql, groupParticipantId, attemptNumber, weight, exerciseId, statusId);
+    }
+
+    public void updateAttemptStatus(Integer groupParticipantId, Integer attemptNumber, Float weight, Integer exerciseId, Integer newStatusId) {
+        final String sql =
+                "UPDATE attempt SET `status` = ? " +
+                "WHERE groupParticipant = ? AND attemptNumber = ? AND weight = ? AND exercise = ? ";
+
+        jdbcTemplate.update(sql, newStatusId, groupParticipantId, attemptNumber, weight, exerciseId);
     }
 
     public ParticipantStatus getGroupParticipantStatus(Integer groupParticipantId) {

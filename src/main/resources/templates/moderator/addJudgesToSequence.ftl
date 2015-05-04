@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <input type="button" class="btn btn-round btn-primary" value="Add judges to competition" onclick="window.location = '/moder/add-judges/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);"/>
+                    <input type="button" class="btn btn-round btn-primary" value="Add judges to competition" onclick="window.location = '/moder/add-judges/' + #{competitionId};"/>
                 </div>
             </div>
 
