@@ -173,4 +173,27 @@ public class UserController {
         throw new Exception("Resource not found");
     }
 
+    @RequestMapping("/competitionOrderRelease/{competitionId}")
+    public ModelAndView competitionOrderRelease(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest,
+                                               HttpServletResponse response) {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("CommonUser/orderRelease");
+
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+
+        Competition competition = competitionDao.getCompetition(competitionId).get();
+        modelAndView.addObject("competition", competition);
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/getCompetition", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String getCompetition(@RequestParam Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        return serializer.toJson(competitionDao.getCompetition(competitionId).get());
+    }
+
 }

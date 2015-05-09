@@ -28,7 +28,7 @@
                 <h3><i class="fa fa-angle-right"></i> Weighing participants</h3>
             </div>
 
-            <div class="row">
+            <div class="row col-md-12">
                 <div class="col-md-12">
                     <div class="col-md-2">
                         <h4>Select sequence</h4>

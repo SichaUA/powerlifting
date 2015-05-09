@@ -20,6 +20,10 @@ public class CompetitionRowMapper implements RowMapper<Competition> {
         competition.setGender(rs.getShort("gender"));
         competition.setInfo(rs.getString("info"));
         competition.setType(rs.getInt("type"));
+        competition.setBroadcasting(rs.getInt("broadcasting"));
+        competition.setBroadcastingSequence(rs.getInt("broadcastingSequence"));
+        competition.setBroadcastingGroup(rs.getInt("broadcastingGroup"));
+        competition.setBroadcastingType(rs.getInt("broadcastingType"));
 
         return competition;
     }

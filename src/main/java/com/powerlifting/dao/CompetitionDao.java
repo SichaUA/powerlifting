@@ -507,7 +507,7 @@ public class CompetitionDao {
                 "FROM group_participant_with_attempt gpa JOIN `group` g ON (gpa.groupId = g.groupId) JOIN participant p ON (gpa.participant = p.participantId) " +
                     "JOIN user u ON (p.user = u.userId) JOIN dictionary_age_group da ON (p.ageGroup = da.groupId) " +
                     "JOIN dictionary_weight_category dw ON (p.category = dw.categoryId) " +
-                "WHERE gpa.groupId = ? AND gpa.`status` = 1 " +
+                "WHERE gpa.groupId = ? " +
                 "ORDER BY p.category, gpa.ordinalNumber ";
 
         return jdbcTemplate.query(sql, new SequenceParticipantRowMapper(), groupId);
@@ -545,6 +545,14 @@ public class CompetitionDao {
         jdbcTemplate.update(sql, newStatusId, groupParticipantId, attemptNumber, weight, exerciseId);
     }
 
+    public void updateGroupParticipantStatus(Integer groupParticipantId, Integer newStatusId) {
+        final String sql =
+                "UPDATE group_participant SET `status` = ? " +
+                "WHERE groupParticipantId = ? ";
+
+        jdbcTemplate.update(sql, newStatusId, groupParticipantId);
+    }
+
     public ParticipantStatus getGroupParticipantStatus(Integer groupParticipantId) {
         final String sql =
                 "SELECT dp.* " +
@@ -552,5 +560,29 @@ public class CompetitionDao {
                 "WHERE gp.groupParticipantId = ? ";
 
         return jdbcTemplate.queryForObject(sql, new ParticipantStatusRowMapper(), groupParticipantId);
+    }
+
+    public void startBroadcasting(Integer competitionId) {
+        final String sql =
+                "UPDATE competition SET broadcasting = 1 " +
+                "WHERE competitionId = ? ";
+
+        jdbcTemplate.update(sql, competitionId);
+    }
+
+    public void stopBroadcasting(Integer competitionId) {
+        final String sql =
+                "UPDATE competition SET broadcasting = 0 " +
+                "WHERE competitionId = ? ";
+
+        jdbcTemplate.update(sql, competitionId);
+    }
+
+    public void updateBroadcastingInfo(Integer competitionId, Integer sequenceId, Integer groupId, Integer type) {
+        final String sql =
+                "UPDATE competition SET broadcastingSequence = ?, broadcastingGroup = ?, broadcastingType = ? " +
+                "WHERE competitionId = ? ";
+
+        jdbcTemplate.update(sql, sequenceId, groupId, type, competitionId);
     }
 }

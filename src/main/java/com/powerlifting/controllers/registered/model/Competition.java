@@ -13,6 +13,10 @@ public class Competition {
     private Short gender;
     private String info;
     private Integer type;
+    private Integer broadcasting;
+    private Integer broadcastingSequence;
+    private Integer broadcastingGroup;
+    private Integer broadcastingType;
 
     public Integer getId() {
         return id;
@@ -84,5 +88,37 @@ public class Competition {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Integer getBroadcasting() {
+        return broadcasting;
+    }
+
+    public void setBroadcasting(Integer broadcasting) {
+        this.broadcasting = broadcasting;
+    }
+
+    public Integer getBroadcastingSequence() {
+        return broadcastingSequence;
+    }
+
+    public void setBroadcastingSequence(Integer broadcastingSequence) {
+        this.broadcastingSequence = broadcastingSequence;
+    }
+
+    public Integer getBroadcastingGroup() {
+        return broadcastingGroup;
+    }
+
+    public void setBroadcastingGroup(Integer broadcastingGroup) {
+        this.broadcastingGroup = broadcastingGroup;
+    }
+
+    public Integer getBroadcastingType() {
+        return broadcastingType;
+    }
+
+    public void setBroadcastingType(Integer broadcastingType) {
+        this.broadcastingType = broadcastingType;
     }
 }

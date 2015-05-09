@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>${competition.name}</title>
     <!-- Bootstrap core CSS -->
     <link href="/libs/css/bootstrap.css" rel="stylesheet">
     <!--external css-->
@@ -32,9 +32,19 @@
 
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    <input type="button" class="btn btn-round btn-info" value="Nomination" onclick="goToNomination()"/>
+                                    <a href="/participantsNomination/${competition.id}"><input type="button" class="btn btn-round btn-info" value="Nomination" onclick=""/></a>
                                 </div>
                             </div>
+
+                            <#if competition.broadcasting == 1>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <a href="/competitionOrderRelease/${competition.id}"><input type="button" class="btn btn-round btn-info" value="Order release" /></a>
+                                        <a href="/competitionStandings/${competition.id}"><input type="button" class="btn btn-round btn-info" value="Standings" /></a>
+                                        <#--<a href="/competitionInformationBoard/${competition.id}"><input type="button" class="btn btn-round btn-info" value="Information board" /></a>-->
+                                    </div>
+                                </div>
+                            </#if>
 
                             <#--TODO finish this to every type of user-->
                             <#if user?? && competition.author == user.userId>
@@ -46,10 +56,10 @@
                                         <#if competition.author == user.userId>
                                         <#--<button class="btn btn-info btn-round btn-lg">Edit</button>-->
                                             <a data-toggle="modal" href="${competition.id}#delete-modal"><button class="btn btn-info btn-danger btn-lg">Delete</button></a>
-                                            <button class="btn btn-info btn-round btn-lg" data-bind="click: addJudges.bind()">Add Judges</button>
-                                            <button class="btn btn-info btn-round btn-lg" data-bind="click: addParticipants.bind()">Add Participants</button>
-                                            <button class="btn btn-info btn-round btn-lg" data-bind="click: splitIntoSequences.bind()">Split Into Sequences</button>
-                                            <button class="btn btn-info btn-round btn-lg" data-bind="click: startCompetition.bind()">Competition control</button>
+                                            <a href="/moder/add-judges/${competition.id}"><button class="btn btn-info btn-round btn-lg" data-bind="click: addJudges.bind()">Add Judges</button></a>
+                                            <a href="/moder/add-participants/${competition.id}"><button class="btn btn-info btn-round btn-lg" data-bind="click: addParticipants.bind()">Add Participants</button></a>
+                                            <a href="/moder/splitParticipantsIntoSequences/${competition.id}"><button class="btn btn-info btn-round btn-lg" data-bind="click: splitIntoSequences.bind()">Split Into Sequences</button></a>
+                                            <a href="/moder/competitionControlPage/${competition.id}"><button class="btn btn-info btn-round btn-lg" data-bind="click: startCompetition.bind()">Competition control</button></a>
                                             <!-- Delete Modal -->
                                             <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="delete-modal" class="modal fade">
                                                 <div class="modal-dialog">

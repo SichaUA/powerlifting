@@ -1,7 +1,3 @@
-function goToNomination() {
-    window.location = '/participantsNomination/' + window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1);
-}
-
 $(document).ready(function () {
     var userViewModel = {
         participate : function () {

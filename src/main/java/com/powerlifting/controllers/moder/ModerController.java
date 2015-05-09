@@ -655,6 +655,21 @@ public class ModerController {
 
         if(weight.isNaN()) return "Not a Number";
 
+//        Refuse
+        if(status == -1) {
+            competitionDao.updateGroupParticipantStatus(groupParticipantId, 1);
+            if(type.equals("SQ")){
+                competitionDao.updateAttemptStatus(groupParticipantId, attemptNum, weight, 1/*SQ*/, 1);
+            }else if(type.equals("BP")){
+                competitionDao.updateAttemptStatus(groupParticipantId, attemptNum, weight, 2/*BP*/, 1);
+            }else{
+                competitionDao.updateAttemptStatus(groupParticipantId, attemptNum, weight, 3/*DL*/, 1);
+            }
+
+            return "Ok";
+        }
+
+//        Change attempt status
         if(type.equals("SQ")){
             competitionDao.updateAttemptStatus(groupParticipantId, attemptNum, weight, 1/*SQ*/, status);
         }else if(type.equals("BP")){
@@ -666,12 +681,25 @@ public class ModerController {
         return "Ok";
     }
 
+    @RequestMapping(value = "/changeGroupParticipantStatus", method = RequestMethod.POST)
+    @ResponseBody
+    public String changeGroupParticipantStatus(@RequestParam Integer groupParticipantId, @RequestParam Integer status, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        competitionDao.updateGroupParticipantStatus(groupParticipantId, status);
+
+        return "Ok";
+    }
+
     @RequestMapping(value = "/startCompetitionPage/{competitionId}")
     public ModelAndView startCompetitionPage(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response) {
         response.setContentType("text/html; charset=UTF-8");
         ModelAndView modelAndView = new ModelAndView("moderator/startCompetitionPage");
 
         modelAndView.addObject("sequences", competitionDao.getCompetitionSequences(competitionId));
+        Competition competition = competitionDao.getCompetition(competitionId).get();
+        modelAndView.addObject("competition", competition);
 
         return modelAndView;
     }
@@ -705,5 +733,45 @@ public class ModerController {
         List<Group> groups = competitionDao.getSequenceGroups(sequenceId);
 
         return serializer.toJson(groups);
+    }
+
+    @RequestMapping(value = "/startBroadcasting", method = RequestMethod.POST)
+    @ResponseBody
+    public String startBroadcasting(@RequestParam Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        competitionDao.startBroadcasting(competitionId);
+
+        return "success";
+    }
+
+    @RequestMapping(value = "/stopBroadcasting", method = RequestMethod.POST)
+    @ResponseBody
+    public String stopBroadcasting(@RequestParam Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        competitionDao.stopBroadcasting(competitionId);
+
+        return "success";
+    }
+
+    @RequestMapping(value = "/updateBroadcastingInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public String updateBroadcastingInfo(@RequestParam Integer competitionId, @RequestParam Integer sequenceId,
+                                         @RequestParam Integer groupId, @RequestParam String type,HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        if(type.equals("SQ")){
+            competitionDao.updateBroadcastingInfo(competitionId, sequenceId, groupId, 1);
+        }else if(type.equals("BP")){
+            competitionDao.updateBroadcastingInfo(competitionId, sequenceId, groupId, 2);
+        }else{
+            competitionDao.updateBroadcastingInfo(competitionId, sequenceId, groupId, 3);
+        }
+
+        return "success";
     }
 }
