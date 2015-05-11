@@ -25,9 +25,32 @@
 
 <section id="main-content">
     <section class="wrapper">
-        <div class="row mt">
+        <div id="viewModelBind" class="row mt">
             <div class="row col-md-12">
-                <h3><i class="fa fa-angle-right"></i> Order release</h3>
+                <#--<h3><i class="fa fa-angle-right"></i> Order release</h3>-->
+            </div>
+
+            <div class="row col-md-12">
+                <div class="form-panel">
+
+                    <form id="curr-participant-form" class="form-horizontal style-form">
+                        <div class="form-group centered">
+                            <h4>Current Participant:</h4>
+                        </div>
+
+                        <div class="form-group centered">
+                            <div class="col-md-6">
+                                <h4 data-bind="text: participants()[0].name"></h4>
+                                <img height="200" data-bind="attr: {src: participants()[0].photo}">
+                            </div>
+                            <div class="col-md-6">
+                                <h3 data-bind="text: participants()[0].type"></h3>
+                                <h3 data-bind="text: participants()[0].attempt"></h3>
+                                <h3 data-bind="text: participants()[0].attemptWeight"></h3>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
 
             <div id="participants-all-info" class="row col-md-12">
@@ -37,8 +60,8 @@
                     <div id="sequence-table" class="col-lg-12">
                         <div class="content-panel">
                             <table id="participant-table" class="table table-striped table-advance table-hover">
-                                <h3><i class="fa fa-angle-right"></i> Type: <#if competition.broadcastingType == 1>SQ<#elseif competition.broadcastingType == 2>BP<#else>DL</#if></h3>
-                                <h4><i class="fa fa-angle-right"></i> Participants:</h4>
+                                <#--<h3><i class="fa fa-angle-right"></i> Type: <#if competition.broadcastingType == 1>SQ<#elseif competition.broadcastingType == 2>BP<#else>DL</#if></h3>-->
+                                <h4><i class="fa fa-angle-right"></i> Participants Order Release:</h4>
                                 <hr>
                                 <thead>
                                 <tr>

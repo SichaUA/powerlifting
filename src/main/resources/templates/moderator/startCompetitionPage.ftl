@@ -91,11 +91,11 @@
                                         <th><i class="fa "></i> Gender</th>
                                         <#--<th><i class="fa fa-group"></i> Age Group</th>-->
                                         <th>Weight</th>
-                                        <th>SQ 1st Approach</th>
+                                        <th class="centered">SQ 1st Approach</th>
                                         <th></th>
-                                        <th>SQ 2nd Approach</th>
+                                        <th class="centered">SQ 2nd Approach</th>
                                         <th></th>
-                                        <th>SQ 3rd Approach</th>
+                                        <th class="centered">SQ 3rd Approach</th>
                                         <th></th>
                                         <th>Total</th>
                                         <th></th>
@@ -182,11 +182,11 @@
                                         <th><i class="fa "></i> Gender</th>
                                         <#--<th><i class="fa fa-group"></i> Age Group</th>-->
                                         <th>Weight</th>
-                                        <th>BP 1st Approach</th>
+                                        <th class="centered">BP 1st Approach</th>
                                         <th></th>
-                                        <th>BP 2nd Approach</th>
+                                        <th class="centered">BP 2nd Approach</th>
                                         <th></th>
-                                        <th>BP 3rd Approach</th>
+                                        <th class="centered">BP 3rd Approach</th>
                                         <th></th>
                                         <th>Total</th>
                                         <th></th>
@@ -274,11 +274,11 @@
                                         <th><i class="fa "></i> Gender</th>
                                         <#--<th><i class="fa fa-group"></i> Age Group</th>-->
                                         <th>Weight</th>
-                                        <th>DL 1st Approach</th>
+                                        <th class="centered">DL 1st Approach</th>
                                         <th></th>
-                                        <th>DL 2nd Approach</th>
+                                        <th class="centered">DL 2nd Approach</th>
                                         <th></th>
-                                        <th>DL 3rd Approach</th>
+                                        <th class="centered">DL 3rd Approach</th>
                                         <th></th>
                                         <th>Total</th>
                                         <th></th>

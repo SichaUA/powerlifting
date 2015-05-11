@@ -1,0 +1,50 @@
+.declared-weight {
+    background-color: #b6b6b6;
+    color: #011000;
+}
+
+.good-lift-weight {
+    background-color: #419641;
+    color: #011000;
+}
+
+.bad-lift-weight {
+    background-color: #c12e2a;
+    color: #011000;
+}
+
+.doctor-weight {
+    background-color: #2aabd2;
+    color: #011000;
+}
+
+.refuse-weight {
+    background-color: #967adc;
+    color: #011000;
+}
+
+.disq-participant {
+    background-color: #000000;
+    color: #011000;
+}
+
+.judge-mistake {
+    background-color: #245269;
+    color: #011000;
+}
+
+.btn-theme-disq {
+    color: #fff;
+    background-color: #011000;
+    border-color: #000000;
+    color: #011000;
+}
+.btn-theme-disq:hover,
+.btn-theme-disq:focus,
+.btn-theme-disq:active,
+.btn-theme-disq.active,
+.open .dropdown-toggle.btn-theme-disq {
+    color: #fff;
+    background-color: #000000;
+    border-color: #000000;
+}

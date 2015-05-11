@@ -30,18 +30,20 @@
                 <h3><i class="fa fa-angle-right"></i> Competition reports</h3>
             </div>
 
-        <#--<div class="row mtbox col-md-12">
-            <a href="/moder/weighingParticipants/${competitionId}">
+            <input type="hidden" value="${competitionId}" class="competition-id"/>
+
+        <div class="row mtbox col-md-12">
+            <a href="" onclick="generateMainProtocol()">
                 <div class="col-md-2 col-md-offset-1 box0">
                     <div class="box1">
-                        <span class="li_user"></span>
-                        <h3>Participant weight</h3>
+                        <span class="li_pen"></span>
+                        <h3>Main protocol</h3>
                     </div>
-                    <p>Set participants weight.</p>
+                    <p>Generate main protocol.</p>
                 </div>
             </a>
 
-            <a href="/moder/startCompetitionPage/${competitionId}">
+        <#--    <a href="/moder/startCompetitionPage/${competitionId}">
                 <div class="col-md-2 col-md-offset-2 box0">
                     <div class="box1">
                         <span class="li_star"></span>
@@ -59,8 +61,8 @@
                     </div>
                     <p>Generate competition reports.</p>
                 </div>
-            </a>
-        </div>-->
+            </a>-->
+        </div>
         </div>
     </section>
 </section>
@@ -74,6 +76,6 @@
 <#--<script type="text/javascript" src="/libs/js/gritter/js/jquery.gritter.js"></script>-->
 <#--<script type="text/javascript" src="/libs/js/gritter-conf.js"></script>-->
 
-<#--<script type="text/javascript" charset="UTF-8" src="/js/moderator/splitSequenceIntoGroups.js"></script>-->
+<script type="text/javascript" charset="UTF-8" src="/js/moderator/competitionReports.js"></script>
 </body>
 </html>

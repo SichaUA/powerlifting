@@ -148,4 +148,16 @@ public class JudgeDao {
 
         jdbcTemplate.update(sql, sequenceId, judgeId);
     }
+
+    public List<JudgeAllInfo> getAllSequenceJudges(Integer sequenceId) {
+        final String sql =
+                "SELECT *\n" +
+                "FROM sequence_judge sj JOIN judge j ON(sj.judge = j.userId) JOIN user u ON (j.userId = u.userId)\n" +
+                "\tJOIN dictionary_judge_type djt ON (djt.typeId = sj.judgeType)\n" +
+                "\tJOIN dictionary_judge_category djc ON (j.category = djc.categoryId)\n" +
+                "WHERE sj.sequenceId = ?\n" +
+                "ORDER BY sj.judgeType\n";
+
+        return jdbcTemplate.query(sql, new JudgeAllInfoRowMapper(), sequenceId);
+    }
 }

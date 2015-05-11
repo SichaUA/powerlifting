@@ -12,7 +12,7 @@ public class JudgeCategoryRowMapper implements RowMapper<JudgeCategory>{
         JudgeCategory category = new JudgeCategory();
 
         category.setCategoryId(rs.getInt("categoryId"));
-        category.setCategory(rs.getString("category"));
+        category.setCategory(rs.getString("categoryName"));
 
         return category;
     }

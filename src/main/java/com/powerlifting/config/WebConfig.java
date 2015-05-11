@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.powerlifting.mail.ApplicationMailer;
 import com.powerlifting.mail.Email;
+import com.powerlifting.reports.ReportsGenerating;
 import freemarker.template.TemplateException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -131,4 +132,7 @@ public class WebConfig extends WebMvcConfigurerAdapter{
     Email email() {
         return new Email();
     }
+
+    @Bean
+    ReportsGenerating reportsGenerating() {return new ReportsGenerating();}
 }

@@ -196,4 +196,40 @@ public class UserController {
         return serializer.toJson(competitionDao.getCompetition(competitionId).get());
     }
 
+    @RequestMapping(value = "/getNotDisqualifiedCompetitionGroupParticipants/{groupId}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String getNotDisqualifiedCompetitionGroupParticipants(@PathVariable Integer groupId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        List<ParticipantInfo> participants = competitionDao.getNotDisquelifiedGroupParticipants(groupId);
+
+        return serializer.toJson(participants);
+    }
+
+    @RequestMapping("/competitionStandings/{competitionId}")
+    public ModelAndView competitionStandings(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest,
+                                                HttpServletResponse response) {
+        response.setContentType("text/html; charset=UTF-8");
+        ModelAndView modelAndView = new ModelAndView("CommonUser/standings");
+
+        CommonUtils.addUserToModel(httpServletRequest, modelAndView);
+
+        Competition competition = competitionDao.getCompetition(competitionId).get();
+        modelAndView.addObject("competition", competition);
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/getCompetitionGroupParticipants/{groupId}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String getCompetitionGroupParticipants(@PathVariable Integer groupId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        List<ParticipantInfo> participants = competitionDao.getGroupParticipants(groupId);
+
+        return serializer.toJson(participants);
+    }
+
 }

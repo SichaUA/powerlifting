@@ -513,6 +513,18 @@ public class CompetitionDao {
         return jdbcTemplate.query(sql, new SequenceParticipantRowMapper(), groupId);
     }
 
+    public List<ParticipantInfo> getNotDisquelifiedGroupParticipants(Integer groupId) {
+        final String sql =
+                "SELECT * " +
+                        "FROM group_participant_with_attempt gpa JOIN `group` g ON (gpa.groupId = g.groupId) JOIN participant p ON (gpa.participant = p.participantId) " +
+                        "JOIN user u ON (p.user = u.userId) JOIN dictionary_age_group da ON (p.ageGroup = da.groupId) " +
+                        "JOIN dictionary_weight_category dw ON (p.category = dw.categoryId) " +
+                        "WHERE gpa.groupId = ? AND gpa.`status` = 1 " +
+                        "ORDER BY p.category, gpa.ordinalNumber ";
+
+        return jdbcTemplate.query(sql, new SequenceParticipantRowMapper(), groupId);
+    }
+
     public void updateParticipantWeight(Integer groupParticipantId, Float weight) {
         final String sql =
                 "UPDATE group_participant SET participantWeight = ? " +
@@ -584,5 +596,62 @@ public class CompetitionDao {
                 "WHERE competitionId = ? ";
 
         jdbcTemplate.update(sql, sequenceId, groupId, type, competitionId);
+    }
+
+    public List<WeightCategory> getCompetitionParticipantsWeightCategories(Integer gender, Integer competitionId) {
+        final String sql =
+                "SELECT *\n" +
+                "FROM dictionary_weight_category dw\n" +
+                "WHERE dw.gender = ? \n" +
+                "\tAND dw.categoryId IN (SELECT p.category\n" +
+                "\t\t\t\t\t\t\t\t FROM participant p\n" +
+                "\t\t\t\t\t\t\t\t WHERE p.competition = ? AND p.participantId IN (SELECT gp.participant\n" +
+                "\t\t\t\t\t\t\t\t \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t FROM group_participant gp\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  WHERE gp.groupId IN (SELECT g.groupId\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  \t\t\t\t\t\t\t\t\t\t\t  FROM `group` g\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  WHERE g.sequenceId IN (SELECT s.sequenceId\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  \t\t\t\t\t\t\t\t FROM sequence s\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t WHERE s.competition = ?))))\n" +
+                "ORDER BY dw.categoryId ";
+
+        return jdbcTemplate.query(sql, new WeightCategoryRowMapper(), gender, competitionId, competitionId);
+    }
+
+    public List<ReportParticipantInfo> getCompetitionParticipantsInWeightCategories(Integer competitionId, Integer weightCategoryId, Integer ageGroupId) {
+        final String sql =
+                "SELECT\n" +
+                "\tgpa.`status` as participantStatus,\n" +
+                "\tCONCAT(u.secondName, ' ', u.firstName, ' ', u.middleName) as participantName,\n" +
+                "\tu.birthday as birthday,\n" +
+                "\tdt.name as title,\n" +
+                "\tdr.name as region,\n" +
+                "\tgpa.participantWeight as ownWeight,\n" +
+                "\tgpa.wilks as wilks,\n" +
+                "\tGREATEST(IF(gpa.firstAttemptSQStatus = 2, gpa.firstAttemptSQ, 0), IF(gpa.secondAttemptSQStatus = 2, gpa.secondAttemptSQ, 0), IF(gpa.thirdAttemptSQStatus = 2, gpa.thirdAttemptSQ, 0) ) as SQ,\n" +
+                "\tGREATEST(IF(gpa.firstAttemptBPStatus = 2, gpa.firstAttemptBP, 0), IF(gpa.secondAttemptBPStatus = 2, gpa.secondAttemptBP, 0), IF(gpa.thirdAttemptBPStatus = 2, gpa.thirdAttemptBP, 0) ) AS BP,\n" +
+                "\tGREATEST(IF(gpa.firstAttemptDLStatus = 2, gpa.firstAttemptDL, 0), IF(gpa.secondAttemptDLStatus = 2, gpa.secondAttemptDL, 0), IF(gpa.thirdAttemptDLStatus = 2, gpa.thirdAttemptDL, 0) ) as DL, \n" +
+                "\t\n" +
+                "\tGREATEST(IF(gpa.firstAttemptSQStatus = 2, gpa.firstAttemptSQ, 0), IF(gpa.secondAttemptSQStatus = 2, gpa.secondAttemptSQ, 0), IF(gpa.thirdAttemptSQStatus = 2, gpa.thirdAttemptSQ, 0) ) + \n" +
+                "\tGREATEST(IF(gpa.firstAttemptBPStatus = 2, gpa.firstAttemptBP, 0), IF(gpa.secondAttemptBPStatus = 2, gpa.secondAttemptBP, 0), IF(gpa.thirdAttemptBPStatus = 2, gpa.thirdAttemptBP, 0) ) +\n" +
+                "\tGREATEST(IF(gpa.firstAttemptDLStatus = 2, gpa.firstAttemptDL, 0), IF(gpa.secondAttemptDLStatus = 2, gpa.secondAttemptDL, 0), IF(gpa.thirdAttemptDLStatus = 2, gpa.thirdAttemptDL, 0) ) as totalSum, \n" +
+                "\t\n" +
+                "\t(GREATEST(IF(gpa.firstAttemptSQStatus = 2, gpa.firstAttemptSQ, 0), IF(gpa.secondAttemptSQStatus = 2, gpa.secondAttemptSQ, 0), IF(gpa.thirdAttemptSQStatus = 2, gpa.thirdAttemptSQ, 0) ) + \n" +
+                "\tGREATEST(IF(gpa.firstAttemptBPStatus = 2, gpa.firstAttemptBP, 0), IF(gpa.secondAttemptBPStatus = 2, gpa.secondAttemptBP, 0), IF(gpa.thirdAttemptBPStatus = 2, gpa.thirdAttemptBP, 0) ) +\n" +
+                "\tGREATEST(IF(gpa.firstAttemptDLStatus = 2, gpa.firstAttemptDL, 0), IF(gpa.secondAttemptDLStatus = 2, gpa.secondAttemptDL, 0), IF(gpa.thirdAttemptDLStatus = 2, gpa.thirdAttemptDL, 0) )) * gpa.wilks as totalWilks,\n" +
+                "\t\n" +
+                "\tCONCAT(IF(p.firstCoach = '', '', CONCAT(p.firstCoach, ' (f); ')), \n" +
+                "\t\t\tIF(p.personalCoach = '', '', CONCAT(p.personalCoach, '; ')),\n" +
+                "\t\t\tIF(p.firstAdditionalCoach = '', '', CONCAT(p.firstAdditionalCoach, '; ')),\n" +
+                "\t\t\tIF(p.secondAdditionalCoach = '', '', CONCAT(p.secondAdditionalCoach, '; '))) as coaches\n" +
+                "FROM group_participant_with_attempt gpa JOIN `group` g ON (gpa.groupId = g.groupId) JOIN participant p ON (gpa.participant = p.participantId) \n" +
+                "\tJOIN user u ON (p.user = u.userId) JOIN dictionary_age_group da ON (p.ageGroup = da.groupId) \n" +
+                "\tJOIN dictionary_weight_category dw ON (p.category = dw.categoryId) \n" +
+                "\tJOIN sequence s ON (g.sequenceId = s.sequenceId)\n" +
+                "\tJOIN dictionary_region dr ON (p.`from` = dr.regionId)\n" +
+                "\tLEFT JOIN `dictionary_title/discharge` dt ON (u.`title/discharge` = dt.id)\n" +
+                "WHERE s.competition = ? AND p.category = ? AND p.ageGroup = ?\n" +
+                "ORDER BY participantStatus, totalSum DESC";
+
+        return jdbcTemplate.query(sql, new ReportParticipantInfoRowMapper() , competitionId, weightCategoryId, ageGroupId);
     }
 }

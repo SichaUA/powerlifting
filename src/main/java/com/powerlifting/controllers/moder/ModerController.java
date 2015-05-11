@@ -7,6 +7,7 @@ import com.powerlifting.dao.ParticipantDao;
 import com.powerlifting.dao.UserDao;
 import com.powerlifting.dao.JudgeDao;
 import com.powerlifting.mail.Email;
+import com.powerlifting.reports.ReportsGenerating;
 import com.powerlifting.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,7 @@ public class ModerController {
     @Autowired private JudgeDao judgeDao;
     @Autowired private ParticipantDao participantDao;
     @Autowired private Email email;
+    @Autowired private ReportsGenerating reportsGenerating;
 
     @RequestMapping(value = "/createCompetition")
     public ModelAndView createCompetition(HttpServletRequest httpServletRequest, HttpServletResponse response) {
@@ -711,6 +713,17 @@ public class ModerController {
 
 
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/createMainProtocol/{competitionId}", method = RequestMethod.POST)
+    @ResponseBody
+    public String createMainProtocol(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    {
+        response.setContentType("text/html; charset=UTF-8");
+
+        String s = reportsGenerating.generateMainProtocol(competitionId);
+
+        return "success";
     }
 
     @RequestMapping(value = "/getCompetitionGroupParticipants/{groupId}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")

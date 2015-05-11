@@ -24,6 +24,7 @@ public class ParticipantInfo {
     private Group group;
     private Float participantWeight;
     private Integer ordinalNumber;
+    private Float wilks;
     private Integer statusId;
     private Float weight;
     private Float currentTotal;
@@ -388,5 +389,13 @@ public class ParticipantInfo {
 
     public void setThirdDLAttemptStatus(Integer thirdDLAttemptStatus) {
         this.thirdDLAttemptStatus = thirdDLAttemptStatus;
+    }
+
+    public Float getWilks() {
+        return wilks;
+    }
+
+    public void setWilks(Float wilks) {
+        this.wilks = wilks;
     }
 }

@@ -1,13 +1,6 @@
 $(document).ready(function () {
-    var singleton = 0;
     var competition;
-    var participants = [{
-        ordinalNumber : 0, groupParticipantId: 0, birthday: '', gender: '', ageGroup: '', weight: 0,
-        group: '', currentTotal: 0, participantStatus: 0,
-        SQFirst: 0, SQFirstStatus: 0, SQSecond: 0, SQSecondStatus: 0, SQThird: 0, SQThirdStatus: 0,
-        BPFirst: 0, BPFirstStatus: 0, BPSecond: 0, BPSecondStatus: 0, BPThird: 0, BPThirdStatus: 0,
-        DLFirst: 0, DLFirstStatus: 0, DLSecond: 0, DLSecondStatus: 0, DLThird: 0, DLThirdStatus: 0,
-        name: '', photo: '', type: '', attempt: '', attemptWeight: ''}];
+    var participants = [];
 
     //Competition
     function getCompetition() {
@@ -27,38 +20,32 @@ $(document).ready(function () {
     //Participants
     function getParticipants() {
         $.ajax({
-            url: '/getNotDisqualifiedCompetitionGroupParticipants/' + competition.broadcastingGroup,
+            url: '/getCompetitionGroupParticipants/' + competition.broadcastingGroup,
             method: 'POST'
         }).done(function (response) {
-            //participants = response;
-            //participantsViewModel.participants([]);
-            var newParticipants = [];
-            for(var i = 0; i < response.length; i++) {
-                newParticipants.push(new Participant(response[i]));
-                //participantsViewModel.participants.push(new Participant(response[i]));
+            participants = response;
+            participantsViewModel.participants([]);
+            for(var i = 0; i < participants.length; i++) {
+                participantsViewModel.participants.push(new Participant(participants[i]));
             }
 
-            participantsViewModel.participants(newParticipants);
-            if(competition.broadcastingType == 1){
-                participantsViewModel.participants.sort(SQSort);
-            }else if(competition.broadcastingType == 2) {
-                participantsViewModel.participants.sort(BPSort);
-            }else{
-                participantsViewModel.participants.sort(DLSort);
-            }
+            participantsViewModel.participants.sort(standingsParticipantSort);
 
-            if(singleton === 0) {
-                ko.applyBindings(participantsViewModel, document.getElementById('viewModelBind'));
-                singleton++;
-            }
-
-            //participantsViewModel.firstParticipant(new CurrParticipant(participantsViewModel.participants()[0]));
-            //currParticipantViewModel.currParticipant(participantsViewModel.participants()[0]);
-
-            /*participantsViewModel.participantsSQ(participantsViewModel.participants.sort(SQSort));
-            participantsViewModel.participantsBP(participantsViewModel.participants.sort(BPSort));
-            participantsViewModel.participantsDL(participantsViewModel.participants.sort(DLSort));*/
         });
+    }
+
+    function standingsParticipantSort(l, r) {
+        if(l.currentTotal() > r.currentTotal()) return -1;
+        if(l.currentTotal() < r.currentTotal()) return 1;
+
+        return ordinalNumberSort(l, r);
+    }
+
+    function ordinalNumberSort(l, r) {
+        if(l.ordinalNumber > r.ordinalNumber)
+            return 1;
+
+        return -1;
     }
 
     var Participant = function (initialParticipant) {
@@ -198,70 +185,8 @@ $(document).ready(function () {
             return (self.participantStatus() == 2)? 'disq-participant' : (self.DLThirdStatus() == 5)? 'refuse-weight' : (self.DLThirdStatus() == 6)? 'judge-mistake' :
                 (self.DLThirdStatus() == 4 || self.participantStatus() == 3)? 'doctor-weight' : (self.DLThirdStatus() == 2)? 'good-lift-weight' : (self.DLThirdStatus() == 3)? 'bad-lift-weight' : 'declared-weight';
         }, self);
-
-        self.photo = ko.observable('/img/avatars/' + initialParticipant.user.photo);
-        self.type = ko.observable((competition.broadcastingType === 1)? 'SQ' : (competition.broadcastingType === 2)? 'BP' : 'DL');
-
-        var attempt;
-        var attemptWeight;
-
-        if(self.type() == 'SQ') {
-            if(self.SQFirstStatus() == 1 || self.SQFirstStatus() == 6) {
-                attempt = '1st Attempt';
-                attemptWeight = self.SQFirst();
-            }
-            else if(self.SQSecondStatus() == 1 || self.SQSecondStatus() == 6) {
-                attempt = '2nd Attempt';
-                attemptWeight = self.SQSecond();
-            }
-            else {
-                attempt = '3rd Attempt';
-                attemptWeight = self.SQThird();
-            }
-        }else if(self.type() == 'BP') {
-            if(self.BPFirstStatus() == 1 || self.BPFirstStatus() == 6) {
-                attempt = '1st Attempt';
-                attemptWeight = self.BPFirst();
-            }
-            else if(self.BPSecondStatus() == 1 || self.BPSecondStatus() == 6) {
-                attempt = '2nd Attempt';
-                attemptWeight = self.BPSecond();
-            }
-            else {
-                attempt = '3rd Attempt';
-                attemptWeight = self.BPThird();
-            }
-        }else{
-            if(self.DLFirstStatus() == 1 || self.DLFirstStatus() == 6) {
-                attempt = '1st Attempt';
-                attemptWeight = self.DLFirst();
-            }
-            else if(self.DLSecondStatus() == 1 || self.DLSecondStatus() == 6) {
-                attempt = '2nd Attempt';
-                attemptWeight = self.DLSecond();
-            }
-            else {
-                attempt = '3rd Attempt';
-                attemptWeight = self.DLThird();
-            }
-        }
-
-        self.attempt = ko.observable(attempt);
-        self.attemptWeight = ko.observable(attemptWeight + ' kg');
     };
 
-    /*var CurrParticipant = function (initialParticipant) {
-        var self = this;
-
-        self.name = initialParticipant.name;
-        self.photo = initialParticipant.photo();
-        self.type = initialParticipant.type();
-        self.attempt = initialParticipant.attempt();
-        self.attemptWeight = initialParticipant.attemptWeight();
-
-        return self;
-    };
-*/
 
     function ParticipantsViewModel() {
         var self = this;
@@ -274,19 +199,9 @@ $(document).ready(function () {
     }
 
     var participantsViewModel = new ParticipantsViewModel();
-
+    ko.applyBindings(participantsViewModel, document.getElementById('participants-all-info'));
 
     window.setInterval(function () {
         getCompetition();
     }, 1000);
-
-    /*function CurrParticipantViewModel() {
-        var self = this;
-
-        self.currParticipant = ko.observable(participants[0]);
-    }
-
-    var currParticipantViewModel = new CurrParticipantViewModel();
-    ko.applyBindings(currParticipantViewModel, document.getElementById('curr-participant-form'));*/
-
 });
