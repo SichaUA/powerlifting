@@ -318,7 +318,7 @@ public class ReportsGenerating {
         }
         try {
             FileOutputStream out =
-                    new FileOutputStream(new File("C:\\new.xls"));
+                    new FileOutputStream(new File("C:\\powerlifting\\powerlifting\\src\\main\\resources\\public\\reports\\" + competitionId + ".xls"));
             workbook.write(out);
             out.close();
             System.out.println("Excel written successfully..");

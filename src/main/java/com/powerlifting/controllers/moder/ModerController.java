@@ -14,9 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.*;
 import java.util.*;
 
 @Controller
@@ -715,16 +717,74 @@ public class ModerController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/createMainProtocol/{competitionId}", method = RequestMethod.POST)
-    @ResponseBody
-    public String createMainProtocol(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response)
+    /*@RequestMapping(value = "/createMainProtocol/{competitionId}"*//*, method = RequestMethod.POST*//*)
+    public class ProtocolCreateAndDownload {
+        private static final int BUFFER_SIZE = 4096;
+
+
+
+    }*/
+
+    @RequestMapping(value = "/createMainProtocol/{competitionId}", method = RequestMethod.GET)
+    public void doDownload(@PathVariable Integer competitionId, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        final int BUFFER_SIZE = 4096;
+
+        response.setContentType("text/html; charset=UTF-8");
+
+        String s = reportsGenerating.generateMainProtocol(competitionId);
+
+        final String filePath = "C:\\powerlifting\\powerlifting\\src\\main\\resources\\public\\reports\\" + competitionId + ".xls";
+
+        // get absolute path of the application
+        ServletContext context = request.getServletContext();
+        String appPath = context.getRealPath("");
+        System.out.println("appPath = " + appPath);
+
+        // construct the complete absolute path of the file
+        File downloadFile = new File(filePath);
+        FileInputStream inputStream = new FileInputStream(downloadFile);
+
+        // get MIME type of the file
+        String mimeType = context.getMimeType(filePath);
+        if (mimeType == null) {
+            // set to binary type if MIME mapping not found
+            mimeType = "application/octet-stream";
+        }
+        System.out.println("MIME type: " + mimeType);
+
+        // set content attributes for the response
+        response.setContentType(mimeType);
+        response.setContentLength((int) downloadFile.length());
+
+        // set headers for the response
+        String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"",
+                downloadFile.getName());
+        response.setHeader(headerKey, headerValue);
+
+        // get output stream of the response
+        OutputStream outStream = response.getOutputStream();
+
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead = -1;
+
+        // write bytes read from the input stream into the output stream
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outStream.write(buffer, 0, bytesRead);
+        }
+
+        inputStream.close();
+        outStream.close();
+    }
+
+    /*public String createMainProtocol(@PathVariable Integer competitionId, HttpServletRequest httpServletRequest, HttpServletResponse response)
     {
         response.setContentType("text/html; charset=UTF-8");
 
         String s = reportsGenerating.generateMainProtocol(competitionId);
 
         return "success";
-    }
+    }*/
 
     @RequestMapping(value = "/getCompetitionGroupParticipants/{groupId}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @ResponseBody

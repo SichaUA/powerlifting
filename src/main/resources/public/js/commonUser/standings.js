@@ -99,19 +99,19 @@ $(document).ready(function () {
 
         self.BPThirdStatus = ko.observable(initialParticipant.thirdBPAttemptStatus);
 
-        self.DLFirst = ko.observable(initialParticipant.firstBPAttempt).extend({
+        self.DLFirst = ko.observable(initialParticipant.firstDLAttempt).extend({
             numeric: 2
         });
 
         self.DLFirstStatus = ko.observable(initialParticipant.firstDLAttemptStatus);
 
-        self.DLSecond = ko.observable(initialParticipant.secondBPAttempt).extend({
+        self.DLSecond = ko.observable(initialParticipant.secondDLAttempt).extend({
             numeric: 2
         });
 
         self.DLSecondStatus = ko.observable(initialParticipant.secondDLAttemptStatus);
 
-        self.DLThird = ko.observable(initialParticipant.thirdBPAttempt).extend({
+        self.DLThird = ko.observable(initialParticipant.thirdDLAttempt).extend({
             numeric: 2
         });
 

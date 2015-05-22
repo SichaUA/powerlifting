@@ -33,7 +33,7 @@
             <input type="hidden" value="${competitionId}" class="competition-id"/>
 
         <div class="row mtbox col-md-12">
-            <a href="" onclick="generateMainProtocol()">
+            <a href="/moder/createMainProtocol/${competitionId}" <#--onclick="generateMainProtocol()"-->>
                 <div class="col-md-2 col-md-offset-1 box0">
                     <div class="box1">
                         <span class="li_pen"></span>

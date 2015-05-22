@@ -226,7 +226,7 @@
                                                 <button class="btn btn-success btn-xs" data-toggle="popover" title="Good lift" data-trigger="hover" data-bind="click: $root.changeSecondBPAttemptStatusGoodLift"><i class=" fa fa-thumbs-o-up"></i></button>
                                                 <button class="btn btn-danger btn-xs" data-toggle="popover" title="Bad lift" data-trigger="hover" data-bind="click: $root.changeSecondBPAttemptStatusBadLift"><i class=" fa fa-thumbs-o-down"></i></button>
                                                 <button class="btn btn-theme02 btn-xs" data-toggle="popover" title="Refuse" data-trigger="hover" data-bind="click: $root.refuseSecomdBPAttempt"><i class=" fa fa-flag"></i></button>
-                                                <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover"><i class=" fa fa-medkit"></i></button>
+                                                <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover" data-bind="click: $root.changeSecondBPAttemptStatusDoctor"><i class=" fa fa-medkit"></i></button>
                                                 <button class="btn btn-theme-disq btn-xs" data-toggle="popover" title="Disqualification" data-trigger="hover" data-bind="click: $root.participantDisqualification"><i class=" fa fa-times-circle"></i></button>
                                             </div>
                                         </td>
@@ -241,9 +241,9 @@
 
                                             <div class="col-md-12 btn-group">
                                                 <button class="btn btn-success btn-xs" data-toggle="popover" title="Good lift" data-trigger="hover" data-bind="click: $root.changeThirdBPAttemptStatusGoodLift"><i class=" fa fa-thumbs-o-up"></i></button>
-                                                <button class="btn btn-danger btn-xs" data-toggle="popover" title="Bad lift" data-trigger="hover" data-bind="click: $root.changeSecondBPAttemptStatusBadLift"><i class=" fa fa-thumbs-o-down"></i></button>
-                                                <button class="btn btn-theme02 btn-xs" data-toggle="popover" title="Refuse" data-trigger="hover" data-bind="click: $root.refuseSecondBPAttempt"><i class=" fa fa-flag"></i></button>
-                                                <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover"><i class=" fa fa-medkit"></i></button>
+                                                <button class="btn btn-danger btn-xs" data-toggle="popover" title="Bad lift" data-trigger="hover" data-bind="click: $root.changeThirdBPAttemptStatusBadLift"><i class=" fa fa-thumbs-o-down"></i></button>
+                                                <button class="btn btn-theme02 btn-xs" data-toggle="popover" title="Refuse" data-trigger="hover" data-bind="click: $root.refuseThirdBPAttempt"><i class=" fa fa-flag"></i></button>
+                                                <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover" data-bind="click: $root.changeThirdBPAttemptStatusDoctor"><i class=" fa fa-medkit"></i></button>
                                                 <button class="btn btn-theme-disq btn-xs" data-toggle="popover" title="Disqualification" data-trigger="hover" data-bind="click: $root.participantDisqualification"><i class=" fa fa-times-circle"></i></button>
                                             </div>
                                         </td>
@@ -298,16 +298,16 @@
                                             </div>
 
                                             <div class="col-md-12 btn-group">
-                                                <button class="btn btn-success btn-xs" data-toggle="popover" title="Good lift" data-trigger="hover"><i class=" fa fa-thumbs-o-up"></i></button>
-                                                <button class="btn btn-danger btn-xs" data-toggle="popover" title="Bad lift" data-trigger="hover"><i class=" fa fa-thumbs-o-down"></i></button>
-                                                <button class="btn btn-theme02 btn-xs" data-toggle="popover" title="Refuse" data-trigger="hover" <#--data-bind="click: $root.changeFirstSQAttemptStatusDoctor"-->><i class=" fa fa-flag"></i></button>
-                                                <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover"><i class=" fa fa-medkit"></i></button>
-                                                <button class="btn btn-theme-disq btn-xs" data-toggle="popover" title="Disqualification" data-trigger="hover" <#--data-bind="click: $root.changeFirstSQAttemptStatusDoctor"-->><i class=" fa fa-times-circle"></i></button>
+                                                <button class="btn btn-success btn-xs" data-toggle="popover" title="Good lift" data-trigger="hover" data-bind="click: $root.changeFirstDLAttemptStatusGoodLift"><i class=" fa fa-thumbs-o-up"></i></button>
+                                                <button class="btn btn-danger btn-xs" data-toggle="popover" title="Bad lift" data-trigger="hover" data-bind="click: $root.changeFirstDLAttemptStatusBadLift"><i class=" fa fa-thumbs-o-down"></i></button>
+                                                <button class="btn btn-theme02 btn-xs" data-toggle="popover" title="Refuse" data-trigger="hover" data-bind="click: $root.refuseFirstDLAttempt"><i class=" fa fa-flag"></i></button>
+                                                <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover" data-bind="click: $root.changeFirstDLAttemptStatusDoctor"><i class=" fa fa-medkit"></i></button>
+                                                <button class="btn btn-theme-disq btn-xs" data-toggle="popover" title="Disqualification" data-trigger="hover" data-bind="click: $root.participantDisqualification"><i class=" fa fa-times-circle"></i></button>
                                             </div>
                                         </td>
                                         <td>
-                                            <button class="btn btn-theme btn-xs" data-toggle="popover" title="Judge mistake" data-trigger="hover" <#--data-bind="click: $root.changeFirstSQAttemptStatusDoctor"-->><i class=" fa fa-exclamation-circle"></i></button>
-                                            <button class="btn btn-default btn-xs" data-toggle="popover" title="Cancel" data-trigger="hover" <#--data-bind="click: $root.changeFirstSQAttemptStatusDoctor"-->><i class=" fa fa-undo"></i></button>
+                                            <button class="btn btn-theme btn-xs" data-toggle="popover" title="Judge mistake" data-trigger="hover" data-bind="click: $root.changeFirstDLAttemptStatusJudgeMistake"><i class=" fa fa-exclamation-circle"></i></button>
+                                            <button class="btn btn-default btn-xs" data-toggle="popover" title="Cancel" data-trigger="hover" data-bind="click: $root.changeFirstDLAttemptStatusCancel"><i class=" fa fa-undo"></i></button>
                                         </td>
                                         <td data-bind="css: DLSecondCss">
                                             <div class="col-md-12">
@@ -315,16 +315,16 @@
                                             </div>
 
                                             <div class="col-md-12 btn-group">
-                                                <button class="btn btn-success btn-xs" data-toggle="popover" title="Good lift" data-trigger="hover"><i class=" fa fa-thumbs-o-up"></i></button>
-                                                <button class="btn btn-danger btn-xs" data-toggle="popover" title="Bad lift" data-trigger="hover"><i class=" fa fa-thumbs-o-down"></i></button>
-                                                <button class="btn btn-theme02 btn-xs" data-toggle="popover" title="Refuse" data-trigger="hover" <#--data-bind="click: $root.changeFirstSQAttemptStatusDoctor"-->><i class=" fa fa-flag"></i></button>
-                                                <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover"><i class=" fa fa-medkit"></i></button>
-                                                <button class="btn btn-theme-disq btn-xs" data-toggle="popover" title="Disqualification" data-trigger="hover" <#--data-bind="click: $root.changeFirstSQAttemptStatusDoctor"-->><i class=" fa fa-times-circle"></i></button>
+                                                <button class="btn btn-success btn-xs" data-toggle="popover" title="Good lift" data-trigger="hover" data-bind="click: $root.changeSecondDLAttemptStatusGoodLift"><i class=" fa fa-thumbs-o-up"></i></button>
+                                                <button class="btn btn-danger btn-xs" data-toggle="popover" title="Bad lift" data-trigger="hover" data-bind="click: $root.changeSecondDLAttemptStatusBadLift"><i class=" fa fa-thumbs-o-down"></i></button>
+                                                <button class="btn btn-theme02 btn-xs" data-toggle="popover" title="Refuse" data-trigger="hover" data-bind="click: $root.refuseSecondDLAttempt"><i class=" fa fa-flag"></i></button>
+                                                <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover" data-bind="click: $root.changeSecondDLAttemptStatusDoctor"><i class=" fa fa-medkit"></i></button>
+                                                <button class="btn btn-theme-disq btn-xs" data-toggle="popover" title="Disqualification" data-trigger="hover" data-bind="click: $root.participantDisqualification"><i class=" fa fa-times-circle"></i></button>
                                             </div>
                                         </td>
                                         <td>
-                                            <button class="btn btn-theme btn-xs" data-toggle="popover" title="Judge mistake" data-trigger="hover" <#--data-bind="click: $root.changeFirstSQAttemptStatusDoctor"-->><i class=" fa fa-exclamation-circle"></i></button>
-                                            <button class="btn btn-default btn-xs" data-toggle="popover" title="Cancel" data-trigger="hover" <#--data-bind="click: $root.changeFirstSQAttemptStatusDoctor"-->><i class=" fa fa-undo"></i></button>
+                                            <button class="btn btn-theme btn-xs" data-toggle="popover" title="Judge mistake" data-trigger="hover" data-bind="click: $root.changeSecondDLAttemptStatusJudgeMistake"><i class=" fa fa-exclamation-circle"></i></button>
+                                            <button class="btn btn-default btn-xs" data-toggle="popover" title="Cancel" data-trigger="hover" data-bind="click: $root.changeSecondDLAttemptStatusCancel"><i class=" fa fa-undo"></i></button>
                                         </td>
                                         <td data-bind="css: DLThirdCss">
                                             <div class="col-md-12">
@@ -332,16 +332,16 @@
                                             </div>
 
                                             <div class="col-md-12 btn-group">
-                                                <button class="btn btn-success btn-xs" data-toggle="popover" title="Good lift" data-trigger="hover"><i class=" fa fa-thumbs-o-up"></i></button>
-                                                <button class="btn btn-danger btn-xs" data-toggle="popover" title="Bad lift" data-trigger="hover"><i class=" fa fa-thumbs-o-down"></i></button>
-                                                <button class="btn btn-theme02 btn-xs" data-toggle="popover" title="Refuse" data-trigger="hover" <#--data-bind="click: $root.changeFirstSQAttemptStatusDoctor"-->><i class=" fa fa-flag"></i></button>
-                                                <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover"><i class=" fa fa-medkit"></i></button>
-                                                <button class="btn btn-theme-disq btn-xs" data-toggle="popover" title="Disqualification" data-trigger="hover" <#--data-bind="click: $root.changeFirstSQAttemptStatusDoctor"-->><i class=" fa fa-times-circle"></i></button>
+                                                <button class="btn btn-success btn-xs" data-toggle="popover" title="Good lift" data-trigger="hover" data-bind="click: $root.changeThirdDLAttemptStatusGoodLift"><i class=" fa fa-thumbs-o-up"></i></button>
+                                                <button class="btn btn-danger btn-xs" data-toggle="popover" title="Bad lift" data-trigger="hover" data-bind="click: $root.changeThirdDLAttemptStatusBadLift"><i class=" fa fa-thumbs-o-down"></i></button>
+                                                <button class="btn btn-theme02 btn-xs" data-toggle="popover" title="Refuse" data-trigger="hover" data-bind="click: $root.refuseThirdDLAttempt"><i class=" fa fa-flag"></i></button>
+                                                <button class="btn btn-info btn-xs" data-toggle="popover" title="Removed by doctor" data-trigger="hover" data-bind="click: $root.changeThirdDLAttemptStatusDoctor"><i class=" fa fa-medkit"></i></button>
+                                                <button class="btn btn-theme-disq btn-xs" data-toggle="popover" title="Disqualification" data-trigger="hover" data-bind="click: $root.participantDisqualification"><i class=" fa fa-times-circle"></i></button>
                                             </div>
                                         </td>
                                         <td>
-                                            <button class="btn btn-theme btn-xs" data-toggle="popover" title="Judge mistake" data-trigger="hover" <#--data-bind="click: $root.changeFirstSQAttemptStatusDoctor"-->><i class=" fa fa-exclamation-circle"></i></button>
-                                            <button class="btn btn-default btn-xs" data-toggle="popover" title="Cancel" data-trigger="hover" <#--data-bind="click: $root.changeFirstSQAttemptStatusDoctor"-->><i class=" fa fa-undo"></i></button>
+                                            <button class="btn btn-theme btn-xs" data-toggle="popover" title="Judge mistake" data-trigger="hover" data-bind="click: $root.changeThirdDLAttemptStatusJudgeMistake"><i class=" fa fa-exclamation-circle"></i></button>
+                                            <button class="btn btn-default btn-xs" data-toggle="popover" title="Cancel" data-trigger="hover" data-bind="click: $root.changeThirdDLAttemptStatusCancel"><i class=" fa fa-undo"></i></button>
                                         </td>
                                         <td data-bind="text: currentTotal"></td>
                                         <td></td>

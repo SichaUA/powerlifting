@@ -47,11 +47,11 @@
                             </#if>
 
                             <#--TODO finish this to every type of user-->
-                            <#if user?? && competition.author == user.userId>
+                            <#if user?? <#--&& competition.author == user.userId-->>
                                 <div class="form-group">
                                     <div id="controls" class="col-md-12">
                                         <#if competition.author != user.userId>
-                                            <#--<button class="btn btn-primary btn-round btn-lg" data-bind="click: participate.bind()">Participate</button>-->
+                                            <button class="btn btn-primary btn-round btn-lg" data-bind="click: participate.bind()">Participate</button>
                                         </#if>
                                         <#if competition.author == user.userId>
                                         <#--<button class="btn btn-info btn-round btn-lg">Edit</button>-->
